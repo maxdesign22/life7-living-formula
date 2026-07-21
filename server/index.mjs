@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto'
 import { createServer } from 'node:http'
+import { mkdir, readFile, rename, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import OpenAI from 'openai'
 import { zodTextFormat } from 'openai/helpers/zod'
 import { z } from 'zod'
@@ -9,6 +11,7 @@ const PORT = Number(process.env.PORT ?? 8787)
 const MODEL = process.env.OPENAI_MODEL ?? 'gpt-5.6-sol'
 const API_KEY = process.env.OPENAI_API_KEY
 const SAFETY_SALT = process.env.LIFE7_SAFETY_SALT ?? 'life7-local-development'
+const DATA_DIR = process.env.LIFE7_DATA_DIR ?? '/var/lib/life7'
 
 const openai = API_KEY ? new OpenAI({ apiKey: API_KEY, maxRetries: 1, timeout: 25_000 }) : null
 
@@ -69,6 +72,26 @@ const AnalysisSchema = z.object({
   safetyNote: z.string().min(1).max(220),
 })
 
+const JournalEntrySchema = z.object({
+  id: z.string().min(1).max(120),
+  createdAt: z.string().datetime(),
+  meal: z.enum(['Breakfast', 'Lunch', 'Snack', 'Dinner']),
+  description: z.string().min(1).max(500),
+  source: z.enum(['voice', 'text', 'demo']),
+  estimate: z.object({
+    kcal: z.number().min(0).max(20_000),
+    protein: z.number().min(0).max(2_000),
+    fibre: z.number().min(0).max(1_000),
+    fruitVeg: z.number().min(0).max(10_000),
+    freeSugar: z.number().min(0).max(2_000),
+    sodium: z.number().min(0).max(100),
+  }),
+  confidence: z.enum(['high', 'medium', 'low']),
+  portionGrams: z.number().min(1).max(10_000).default(250),
+})
+
+const JournalPayloadSchema = z.object({ entries: z.array(JournalEntrySchema).max(1500) })
+
 const rateWindowMs = 15 * 60 * 1000
 const maxRequestsPerWindow = 12
 const rateBuckets = new Map()
@@ -104,15 +127,57 @@ function json(res, status, body) {
   res.end(JSON.stringify(body))
 }
 
-async function readJson(req) {
+async function readJson(req, limit = 32_768) {
   const chunks = []
   let size = 0
   for await (const chunk of req) {
     size += chunk.length
-    if (size > 32_768) throw new Error('PAYLOAD_TOO_LARGE')
+    if (size > limit) throw new Error('PAYLOAD_TOO_LARGE')
     chunks.push(chunk)
   }
   return JSON.parse(Buffer.concat(chunks).toString('utf8'))
+}
+
+function journalIdentity(req) {
+  const raw = req.headers['x-life7-user']
+  if (typeof raw !== 'string' || !/^[a-zA-Z0-9-]{8,100}$/.test(raw)) return null
+  return createHash('sha256').update(`${SAFETY_SALT}:journal:${raw}`).digest('hex')
+}
+
+function journalPath(identity) {
+  return join(DATA_DIR, `journal-${identity}.json`)
+}
+
+async function readJournal(req, res) {
+  const identity = journalIdentity(req)
+  if (!identity) return json(res, 401, { error: 'Journal identity is required.' })
+  try {
+    const stored = JSON.parse(await readFile(journalPath(identity), 'utf8'))
+    const parsed = JournalPayloadSchema.parse(stored)
+    return json(res, 200, { entries: parsed.entries, syncedAt: stored.syncedAt ?? new Date(0).toISOString() })
+  } catch (error) {
+    if (error?.code === 'ENOENT') return json(res, 200, { entries: [], syncedAt: new Date(0).toISOString() })
+    throw error
+  }
+}
+
+async function writeJournal(req, res) {
+  const identity = journalIdentity(req)
+  if (!identity) return json(res, 401, { error: 'Journal identity is required.' })
+  let payload
+  try {
+    payload = JournalPayloadSchema.parse(await readJson(req, 512_000))
+  } catch (error) {
+    const status = error instanceof Error && error.message === 'PAYLOAD_TOO_LARGE' ? 413 : 400
+    return json(res, status, { error: 'Invalid journal payload.' })
+  }
+  await mkdir(DATA_DIR, { recursive: true })
+  const syncedAt = new Date().toISOString()
+  const target = journalPath(identity)
+  const temporary = `${target}.${Date.now()}.tmp`
+  await writeFile(temporary, JSON.stringify({ entries: payload.entries, syncedAt }), { mode: 0o600 })
+  await rename(temporary, target)
+  return json(res, 200, { entries: payload.entries, syncedAt })
 }
 
 function sanitizedAnalysis(parsed, input) {
@@ -187,6 +252,8 @@ const server = createServer(async (req, res) => {
       return json(res, 200, { ok: true, configured: Boolean(openai), service: 'life7-api', model: MODEL })
     }
     if (req.method === 'POST' && req.url === '/api/architect/analyze') return await analyze(req, res)
+    if (req.url === '/api/journal' && req.method === 'GET') return await readJournal(req, res)
+    if (req.url === '/api/journal' && req.method === 'PUT') return await writeJournal(req, res)
     return json(res, 404, { error: 'Not found.' })
   } catch (error) {
     const status = error?.status === 429 ? 429 : 502

@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { AlertTriangle, BarChart3, Check, ChevronRight, Clock3, Info, Leaf, Mic, Plus, Sparkles, Trash2, Utensils, X } from 'lucide-react'
+import { AlertTriangle, BarChart3, Check, ChevronRight, Clock3, Cloud, Info, Leaf, LoaderCircle, Mic, Plus, Sparkles, Trash2, Utensils, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { buildSignals, journalDays, parseJournalText, readJournal, saveJournal, type JournalEntry, type JournalMeal } from '@/lib/foodJournal'
+import { syncJournal } from '@/lib/journalSync'
 
 type Period = 'today' | 'week' | 'month'
 type VoiceState = 'idle' | 'listening' | 'unsupported' | 'error'
+type SyncState = 'idle' | 'syncing' | 'synced' | 'error'
 interface SpeechRecognitionLike { lang: string; continuous: boolean; interimResults: boolean; onstart: (() => void) | null; onresult: ((event: { results: { length: number; [index: number]: { isFinal: boolean; [index: number]: { transcript: string } } } }) => void) | null; onerror: (() => void) | null; onend: (() => void) | null; start(): void; abort(): void }
 type SpeechRecognitionConstructor = new () => SpeechRecognitionLike
 
@@ -22,6 +24,8 @@ export default function Journal() {
   const [meal, setMeal] = useState<JournalMeal>('Lunch')
   const [draft, setDraft] = useState<JournalEntry | null>(null)
   const [voice, setVoice] = useState<VoiceState>('idle')
+  const [syncState, setSyncState] = useState<SyncState>('idle')
+  const [syncedAt, setSyncedAt] = useState<string | null>(null)
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
 
   useEffect(() => () => recognitionRef.current?.abort(), [])
@@ -44,6 +48,28 @@ export default function Journal() {
     setEntries(next); saveJournal(next); setText(''); setDraft(null)
   }
   const remove = (id: string) => { const next = entries.filter((entry) => entry.id !== id); setEntries(next); saveJournal(next) }
+  const updatePortion = (grams: number) => {
+    if (!draft || !Number.isFinite(grams) || grams < 1) return
+    const ratio = grams / draft.portionGrams
+    const scale = (value: number) => Math.round(value * ratio * 10) / 10
+    const estimate: JournalEntry['estimate'] = {
+      kcal: scale(draft.estimate.kcal), protein: scale(draft.estimate.protein),
+      fibre: scale(draft.estimate.fibre), fruitVeg: scale(draft.estimate.fruitVeg),
+      freeSugar: scale(draft.estimate.freeSugar), sodium: scale(draft.estimate.sodium),
+    }
+    setDraft({ ...draft, portionGrams: grams, estimate, confidence: 'high' })
+  }
+  const updateEstimate = (key: keyof JournalEntry['estimate'], value: number) => {
+    if (!draft || !Number.isFinite(value) || value < 0) return
+    setDraft({ ...draft, estimate: { ...draft.estimate, [key]: value }, confidence: 'high' })
+  }
+  const sync = async () => {
+    setSyncState('syncing')
+    try {
+      const result = await syncJournal(entries)
+      setEntries(result.entries); saveJournal(result.entries); setSyncedAt(result.syncedAt); setSyncState('synced')
+    } catch { setSyncState('error') }
+  }
   const listen = () => {
     const Recognition = (window as typeof window & { SpeechRecognition?: SpeechRecognitionConstructor; webkitSpeechRecognition?: SpeechRecognitionConstructor }).SpeechRecognition
       ?? (window as typeof window & { webkitSpeechRecognition?: SpeechRecognitionConstructor }).webkitSpeechRecognition
@@ -63,7 +89,14 @@ export default function Journal() {
   return <div className="mx-auto max-w-[1280px]">
     <header className="mb-7 flex flex-col justify-between gap-5 min-[760px]:flex-row min-[760px]:items-end">
       <div><span className="t-label text-gold-deep">LIFE7 MEMORY · YOUR FOOD, REMEMBERED</span><h1 className="t-display-lg mt-2 text-ink">Food Journal</h1><p className="t-serif-quote mt-2 text-ink-soft">Say what you ate. See the pattern, not just the plate.</p></div>
-      <div className="inline-flex w-fit rounded-r-pill border border-line bg-soft-white/80 p-1 shadow-e-1">{(['today','week','month'] as Period[]).map((item) => <button key={item} onClick={() => setPeriod(item)} className={cn('t-ui-sm rounded-r-pill px-4 py-2 capitalize', period === item ? 'bg-forest text-soft-white' : 'text-ink-soft')}>{item === 'week' ? '7 days' : item === 'month' ? '30 days' : item}</button>)}</div>
+      <div className="flex flex-wrap items-center gap-2">
+        <button type="button" onClick={sync} disabled={syncState === 'syncing'} className={cn('t-ui-sm inline-flex h-10 items-center gap-2 rounded-r-pill border px-4 shadow-e-1', syncState === 'synced' ? 'border-sage bg-sage-mist text-forest' : syncState === 'error' ? 'border-burgundy/35 bg-[#fbf0ec] text-burgundy' : 'border-line bg-soft-white/80 text-ink-soft')}>
+          {syncState === 'syncing' ? <LoaderCircle size={15} className="animate-spin"/> : syncState === 'synced' ? <Check size={15}/> : <Cloud size={15}/>}
+          {syncState === 'syncing' ? 'Syncing…' : syncState === 'synced' ? 'Synced' : syncState === 'error' ? 'Retry sync' : 'Sync journal'}
+        </button>
+        <div className="inline-flex w-fit rounded-r-pill border border-line bg-soft-white/80 p-1 shadow-e-1">{(['today','week','month'] as Period[]).map((item) => <button key={item} onClick={() => setPeriod(item)} className={cn('t-ui-sm rounded-r-pill px-4 py-2 capitalize', period === item ? 'bg-forest text-soft-white' : 'text-ink-soft')}>{item === 'week' ? '7 days' : item === 'month' ? '30 days' : item}</button>)}</div>
+        {syncedAt && <span className="sr-only">Last synced {new Date(syncedAt).toLocaleString()}</span>}
+      </div>
     </header>
 
     <section className="mb-6 overflow-hidden rounded-r-xl border border-champagne/35 bg-soft-white/85 shadow-e-2">
@@ -77,7 +110,18 @@ export default function Journal() {
       </div>
     </section>
 
-    <AnimatePresence>{draft && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-6 rounded-r-xl border border-champagne bg-[#fff8e8] p-5 shadow-gold-glow"><div className="flex items-start justify-between gap-4"><div><span className="t-label text-gold-deep">Review before adding · estimated</span><h3 className="t-display-sm mt-2 text-ink">{draft.description}</h3></div><button onClick={() => setDraft(null)} aria-label="Close"><X size={18}/></button></div><div className="mt-4 flex flex-wrap items-center gap-2"><select value={meal} onChange={(event) => { const nextMeal = event.target.value as JournalMeal; setMeal(nextMeal); setDraft({ ...draft, meal: nextMeal }) }} className="t-ui-sm h-10 rounded-r-pill border border-sand bg-soft-white px-3">{(['Breakfast','Lunch','Snack','Dinner'] as JournalMeal[]).map((item) => <option key={item}>{item}</option>)}</select><span className="t-ui-sm rounded-r-pill bg-soft-white px-3 py-2">{draft.estimate.kcal} kcal</span><span className="t-ui-sm rounded-r-pill bg-soft-white px-3 py-2">P {draft.estimate.protein} g</span><span className="t-ui-sm rounded-r-pill bg-soft-white px-3 py-2">Fibre {draft.estimate.fibre} g</span><span className="t-ui-sm mr-auto rounded-r-pill bg-soft-white px-3 py-2">Confidence: {draft.confidence}</span><button onClick={confirm} className="t-ui-sm inline-flex h-10 items-center gap-2 rounded-r-pill bg-forest px-5 font-bold text-soft-white"><Plus size={15}/> Add to journal</button></div><p className="mt-3 flex items-center gap-2 text-xs text-ink-faint"><Info size={13}/> Nutrition is an estimate. Edit portions in the full product version before relying on totals.</p></motion.div>}</AnimatePresence>
+    <AnimatePresence>{draft && <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="mb-6 rounded-r-xl border border-champagne bg-[#fff8e8] p-5 shadow-gold-glow">
+      <div className="flex items-start justify-between gap-4"><div><span className="t-label text-gold-deep">Review and correct before adding</span><h3 className="t-display-sm mt-2 text-ink">{draft.description}</h3></div><button onClick={() => setDraft(null)} aria-label="Close"><X size={18}/></button></div>
+      <div className="mt-5 grid gap-3 min-[560px]:grid-cols-3 min-[900px]:grid-cols-6">
+        <label className="t-label text-[9px] text-ink-faint">Meal<select value={meal} onChange={(event) => { const nextMeal = event.target.value as JournalMeal; setMeal(nextMeal); setDraft({ ...draft, meal: nextMeal }) }} className="t-ui-sm mt-1 h-11 w-full rounded-r-md border border-sand bg-soft-white px-3 text-ink">{(['Breakfast','Lunch','Snack','Dinner'] as JournalMeal[]).map((item) => <option key={item}>{item}</option>)}</select></label>
+        <label className="t-label text-[9px] text-ink-faint">Portion<input aria-label="Portion grams" type="number" min="1" value={draft.portionGrams} onChange={(event) => updatePortion(Number(event.target.value))} className="t-ui-sm tnum mt-1 h-11 w-full rounded-r-md border border-sand bg-soft-white px-3 text-ink"/></label>
+        <label className="t-label text-[9px] text-ink-faint">Energy<input aria-label="Energy kcal" type="number" min="0" value={draft.estimate.kcal} onChange={(event) => updateEstimate('kcal', Number(event.target.value))} className="t-ui-sm tnum mt-1 h-11 w-full rounded-r-md border border-sand bg-soft-white px-3 text-ink"/></label>
+        <label className="t-label text-[9px] text-ink-faint">Protein g<input aria-label="Protein grams" type="number" min="0" value={draft.estimate.protein} onChange={(event) => updateEstimate('protein', Number(event.target.value))} className="t-ui-sm tnum mt-1 h-11 w-full rounded-r-md border border-sand bg-soft-white px-3 text-ink"/></label>
+        <label className="t-label text-[9px] text-ink-faint">Fibre g<input aria-label="Fibre grams" type="number" min="0" value={draft.estimate.fibre} onChange={(event) => updateEstimate('fibre', Number(event.target.value))} className="t-ui-sm tnum mt-1 h-11 w-full rounded-r-md border border-sand bg-soft-white px-3 text-ink"/></label>
+        <label className="t-label text-[9px] text-ink-faint">Plants g<input aria-label="Fruit and vegetables grams" type="number" min="0" value={draft.estimate.fruitVeg} onChange={(event) => updateEstimate('fruitVeg', Number(event.target.value))} className="t-ui-sm tnum mt-1 h-11 w-full rounded-r-md border border-sand bg-soft-white px-3 text-ink"/></label>
+      </div>
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-3"><p className="flex items-center gap-2 text-xs text-ink-faint"><Info size={13}/>Changing the portion rescales every estimate; any direct correction becomes confirmed data.</p><button onClick={confirm} className="t-ui-sm inline-flex h-11 items-center gap-2 rounded-r-pill bg-forest px-6 font-bold text-soft-white"><Plus size={15}/> Add confirmed entry</button></div>
+    </motion.div>}</AnimatePresence>
 
     <div className="grid gap-6 min-[1024px]:grid-cols-[1.08fr_.92fr]">
       <section className="rounded-r-xl border border-line bg-soft-white/80 p-5 shadow-e-2 min-[640px]:p-6"><div className="flex items-center justify-between"><div><span className="t-label text-gold-deep">Today · {todayEntries.length} entries</span><h2 className="t-display-sm mt-2">What actually happened</h2></div><Utensils className="text-green"/></div><div className="mt-5 space-y-3">{todayEntries.map((entry) => <article key={entry.id} className="group flex gap-3 rounded-r-lg border border-line bg-ivory/45 p-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sage-mist text-forest"><Clock3 size={17}/></div><div className="min-w-0 flex-1"><div className="flex flex-wrap items-center gap-x-3"><strong className="t-ui-sm text-ink">{entry.meal}</strong><span className="text-xs text-ink-faint">{new Date(entry.createdAt).toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' })}</span><span className="text-xs capitalize text-gold-deep">{entry.source}</span></div><p className="t-ui-md mt-1 text-ink">{entry.description}</p><p className="mt-1 text-xs text-ink-faint">{entry.estimate.kcal} kcal · {entry.estimate.protein} g protein · {entry.estimate.fibre} g fibre</p></div><button onClick={() => remove(entry.id)} aria-label={`Remove ${entry.description}`} className="self-center p-2 text-ink-faint opacity-70 hover:text-burgundy min-[900px]:opacity-0 min-[900px]:group-hover:opacity-100"><Trash2 size={15}/></button></article>)}{!todayEntries.length && <div className="py-12 text-center text-ink-faint"><Leaf className="mx-auto mb-3"/><p>No meals logged yet. Tell LIFE7 what you ate.</p></div>}</div></section>

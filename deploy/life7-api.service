@@ -16,6 +16,9 @@ NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=strict
 ProtectHome=true
+StateDirectory=life7
+StateDirectoryMode=0700
+Environment=LIFE7_DATA_DIR=/var/lib/life7
 ProtectKernelTunables=true
 ProtectKernelModules=true
 ProtectControlGroups=true

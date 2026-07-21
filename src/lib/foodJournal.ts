@@ -18,6 +18,7 @@ export interface JournalEntry {
   source: JournalSource
   estimate: NutritionEstimate
   confidence: 'high' | 'medium' | 'low'
+  portionGrams: number
 }
 
 export interface JournalDay {
@@ -94,12 +95,13 @@ const seed = (): JournalEntry[] => [
   description: String(description), source: 'demo' as const,
   estimate: { kcal: Number(kcal), protein: Number(protein), fibre: Number(fibre), fruitVeg: Number(fruitVeg), freeSugar: Number(freeSugar), sodium: Number(sodium) },
   confidence: 'high' as const,
+  portionGrams: 420,
 }))
 
 export function readJournal(): JournalEntry[] {
   try {
     const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored) return JSON.parse(stored) as JournalEntry[]
+    if (stored) return (JSON.parse(stored) as JournalEntry[]).map((entry) => ({ ...entry, portionGrams: entry.portionGrams ?? 250 }))
   } catch { /* use demo data */ }
   const entries = seed()
   saveJournal(entries)
@@ -124,6 +126,7 @@ export function parseJournalText(description: string, meal: JournalMeal, source:
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     createdAt: new Date().toISOString(), meal, description: description.trim(), source, estimate,
     confidence: matches >= 3 ? 'high' : matches >= 1 ? 'medium' : 'low',
+    portionGrams: Math.max(120, matches * 150),
   }
 }
 
