@@ -74,7 +74,7 @@ const PlateVisual = memo(function PlateVisual({ empty, count, totalKcal, flashKe
           alt=""
           aria-hidden="true"
           draggable={false}
-          className="pointer-events-none absolute inset-0 h-full w-full select-none rounded-full object-cover"
+          className="pointer-events-none absolute inset-0 h-full w-full select-none rounded-[28px] object-cover"
           style={{ boxShadow: '0 30px 64px -24px rgba(59,48,26,0.24)' }}
         />
         <div
