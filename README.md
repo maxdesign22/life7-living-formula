@@ -25,6 +25,37 @@ identified in [What is mocked vs what is real](#what-is-mocked-vs-what-is-real).
 [What is mocked](#what-is-mocked-vs-what-is-real) and
 [What should be replaced in production](#what-should-be-replaced-in-production).
 
+## How I collaborated with Codex during Build Week
+
+LIFE7 entered the submission period as a broad deterministic visual prototype.
+During Build Week, I used Codex as an engineering and product collaborator to
+turn that prototype into the deployed, testable full-stack experience in this
+repository. The work added during the submission period is visible in the dated
+commit history and includes:
+
+- auditing the existing domain model and preserving the deterministic nutrition
+  engine as the owner of scores, quantities, prices and recommendation deltas;
+- designing and implementing the secure server-side GPT-5.6 Sol boundary with
+  structured output, allow-listed recommendation IDs, validation, timeouts,
+  rate limiting, `store: false` and graceful deterministic fallback;
+- integrating the live Meal Architect states and verifying the canonical 58 →
+  86 transformation against a real public GPT request;
+- creating Continuum Shift, Protected Constants, the reversible Change Ledger
+  and Voice Continuum as the differentiated product direction;
+- diagnosing and fixing mobile overflow, incomplete scrolling, overlapping
+  planner cards, dense statistics and low-contrast states across the product;
+- deploying the frontend and API to Hetzner with HTTPS, Nginx, systemd, health
+  checks and atomic releases, then running public desktop and mobile QA.
+
+Codex accelerated repository inspection, implementation, refactoring, server
+diagnosis, deployment scripting and repeatable browser verification. I retained
+the key product and design decisions: the calm premium editorial direction,
+the choice to keep generative AI away from numeric truth, the smallest-useful-
+change interaction, user-controlled Protected Constants, the honest prototype
+boundary and the decision to use voice as an input to the LIFE7 system rather
+than as a generic chatbot. GPT-5.6 ranks and explains verified interventions;
+it does not calculate or silently change the plan.
+
 Companion docs:
 
 | File | Contents |
@@ -32,6 +63,12 @@ Companion docs:
 | [`DESIGN_SYSTEM.md`](./DESIGN_SYSTEM.md) | Colour, typography, spacing, motion, components, iconography, visual rules. |
 | [`CODEX_HANDOFF.md`](./CODEX_HANDOFF.md) | Architecture, integration points (formula engine, GPT-5.6), API boundaries, test & deployment plans. |
 | [`SUBMISSION.md`](./SUBMISSION.md) | Devpost-ready copy, judging evidence, test instructions and the sub-three-minute video script. |
+| [`DEMO_RUNBOOK.md`](./DEMO_RUNBOOK.md) | Deterministic recording checklist, exact 2:42 narration and live-demo recovery paths. |
+| [`FINAL_QA.md`](./FINAL_QA.md) | Final public-route, GPT, responsive, server, TLS and demo-repeatability evidence. |
+
+Source is public for Build Week evaluation under the repository's
+[all-rights-reserved notice](./LICENSE); third-party dependencies retain their
+own licenses.
 
 ---
 

@@ -363,6 +363,7 @@ export default function Continuum() {
   const [selectedId, setSelectedId] = useState<ShiftId>('sleep')
   const [phase, setPhase] = useState<Phase>('idle')
   const [protections, setProtections] = useState<ReadonlySet<string>>(new Set(PROTECTIONS))
+  const [demoKey, setDemoKey] = useState(0)
   const timerRef = useRef<number | null>(null)
   const { toast } = useToast()
   const scenario = useMemo(() => SCENARIOS.find((item) => item.id === selectedId) ?? SCENARIOS[0], [selectedId])
@@ -394,18 +395,33 @@ export default function Continuum() {
     setPhase('idle')
   }
 
+  const restartDemo = () => {
+    if (timerRef.current) window.clearTimeout(timerRef.current)
+    setSelectedId('sleep')
+    setPhase('idle')
+    setProtections(new Set(PROTECTIONS))
+    setDemoKey((current) => current + 1)
+    window.requestAnimationFrame(() => document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }))
+    toast('Demo reset — ready for a clean Continuum run.', { tone: 'sage' })
+  }
+
   return (
     <div className="mx-auto max-w-[1280px]">
-      <header className="mb-7">
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="t-label text-gold-deep">LIFE7 flagship intelligence</span>
-          <span className="t-label rounded-r-pill border border-champagne/30 bg-sunrise/55 px-2.5 py-1 text-[8px] text-gold-deep">Interactive prototype</span>
+      <header className="mb-7 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="t-label text-gold-deep">LIFE7 flagship intelligence</span>
+            <span className="t-label rounded-r-pill border border-champagne/30 bg-sunrise/55 px-2.5 py-1 text-[8px] text-gold-deep">Interactive prototype</span>
+          </div>
+          <h1 className="t-display-lg mt-2 text-ink">Continuum Shift</h1>
+          <p className="t-serif-quote mt-2 max-w-[720px] text-ink-soft">One real-life change. Seven days recompose — without breaking what matters.</p>
         </div>
-        <h1 className="t-display-lg mt-2 text-ink">Continuum Shift</h1>
-        <p className="t-serif-quote mt-2 max-w-[720px] text-ink-soft">One real-life change. Seven days recompose — without breaking what matters.</p>
+        <button type="button" onClick={restartDemo} className="t-ui-sm flex min-h-10 items-center gap-2 rounded-r-pill border border-line bg-soft-white/70 px-3.5 font-semibold text-ink-soft shadow-e-1 transition-colors hover:border-champagne hover:text-forest">
+          <RotateCcw size={14} /> Restart demo
+        </button>
       </header>
 
-      <VoiceShiftInput onRecognised={recogniseVoiceChange} />
+      <VoiceShiftInput key={demoKey} onRecognised={recogniseVoiceChange} />
 
       <div className="grid gap-6 min-[1100px]:grid-cols-[300px_minmax(0,1fr)]">
         <section aria-label="Choose a life change">

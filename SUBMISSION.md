@@ -179,10 +179,10 @@ End on the applied Continuum Shift and the four connected systems.
    limited to Greek yoghurt, broccoli and olive oil.
 5. Press **Apply all** and confirm the score reaches 86.
 6. Use Undo in the toast if you want to repeat the transformation.
-7. Open https://life7.maxdesign.rs/continuum, choose any life change, press
-   **Compose the shift**, inspect the four-system Change Ledger and apply it.
-8. Optionally use **Try the winning demo phrase** to test Voice Continuum without
-   granting microphone access.
+7. Open https://life7.maxdesign.rs/continuum and press **Restart demo**.
+8. Use **Try the winning demo phrase** to test Voice Continuum without granting
+   microphone access; confirm the extracted sleep, recovery and training signals.
+9. Press **Compose the shift**, inspect the four-system Change Ledger and apply it.
 
 The app remains usable if model access is temporarily unavailable: the
 deterministic recommendations and calculations stay active.
