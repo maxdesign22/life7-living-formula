@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Check, ScanBarcode } from 'lucide-react'
+import { ArrowRight, Check, ScanBarcode, ShieldCheck, ShoppingBasket } from 'lucide-react'
 import { MagneticButton } from '@/components/life7'
 import { EASE_GLIDE } from './bits'
 import DrawerShell from './DrawerShell'
@@ -8,7 +8,8 @@ import DrawerShell from './DrawerShell'
 /**
  * Scan item placeholder drawer (pantry.md header): dark scan frame with a
  * sweeping laser line (1.8s loop); after 2.6s the mock recognition fires —
- * "Greek yoghurt 500 g detected" → Add to pantry (adds a real card).
+ * "Spinach 300 g detected" → add to Pantry and hand the expiry signal to
+ * Continuum, where the user reviews the coordinated change before applying it.
  */
 export default function ScanDrawer({
   open,
@@ -62,11 +63,11 @@ export default function ScanDrawer({
                 className="glass mx-6 flex w-full items-center gap-3 rounded-r-md p-3.5"
               >
                 <span className="flex h-12 w-12 items-center justify-center rounded-r-sm bg-cream">
-                  <img src="/ing-yoghurt.png" alt="" className="h-11 w-11 object-contain" />
+                  <img src="/ing-spinach.png" alt="" className="h-11 w-11 object-contain" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="t-ui-md block font-bold text-ink">Greek yoghurt 500 g detected</span>
-                  <span className="t-ui-sm text-ink-soft">Dairy · fridge · expires in 7 days</span>
+                  <span className="t-ui-md block font-bold text-ink">Spinach · 300 g detected</span>
+                  <span className="t-ui-sm text-ink-soft">Fridge · use by tomorrow</span>
                 </span>
                 <Check size={18} strokeWidth={2} className="shrink-0 text-green" />
               </motion.div>
@@ -80,14 +81,29 @@ export default function ScanDrawer({
         </div>
       </div>
 
-      <p className="t-serif-quote mt-4 text-[17px] text-ink-soft">
-        Camera scanning arrives with the LIFE7 mobile app. For now, add items manually.
-      </p>
+      {recognised ? (
+        <div className="mt-4 grid gap-2 min-[420px]:grid-cols-2" aria-label="Detected system impact">
+          <div className="rounded-r-md border border-sage bg-sage-mist/65 p-3">
+            <ShieldCheck size={15} className="text-green" />
+            <span className="t-label mt-2 block text-green">Expiry signal</span>
+            <span className="t-ui-sm mt-1 block font-semibold text-forest">300 g protected for tomorrow</span>
+          </div>
+          <div className="rounded-r-md border border-champagne/45 bg-sunrise/45 p-3">
+            <ShoppingBasket size={15} className="text-gold-deep" />
+            <span className="t-label mt-2 block text-gold-deep">Shopping impact</span>
+            <span className="t-ui-sm mt-1 block font-semibold text-ink">Duplicate purchase −€1.80</span>
+          </div>
+        </div>
+      ) : (
+        <p className="t-serif-quote mt-4 text-[17px] text-ink-soft">
+          LIFE7 reads the food, quantity and use-by label, then checks the whole week before changing anything.
+        </p>
+      )}
 
       <div className="mt-5 flex flex-col gap-2.5">
         {recognised && (
-          <MagneticButton variant="primary" size="lg" className="w-full" onClick={onDetected}>
-            Add to pantry
+          <MagneticButton variant="primary" size="lg" className="w-full" onClick={onDetected} icon={<ArrowRight size={16} />}>
+            Add & coordinate the week
           </MagneticButton>
         )}
         <MagneticButton variant="glass" size="md" className="w-full" onClick={onAddManually}>

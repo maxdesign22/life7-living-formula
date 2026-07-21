@@ -1,6 +1,7 @@
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Plus, ScanBarcode } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { EmptyState, MagneticButton, ScoreRing, useToast } from '@/components/life7'
 import {
@@ -17,6 +18,14 @@ import {
   type PantryState,
 } from '@/lib/pantry'
 import { INGREDIENT_CATEGORIES, type Ingredient, type IngredientCategory, type StorageLocation } from '@/data/ingredients'
+import {
+  applyScannerToPantry,
+  applyScannerPlanToPantry,
+  clearScannerDemoState,
+  readScannerDemoState,
+  saveScannerDemoState,
+} from '@/lib/scannerDemo'
+import { clearContinuumDemoState, CONTINUUM_DEMO_EVENT, readContinuumDemoState } from '@/lib/continuumDemo'
 import { EASE_GLIDE, ingredientOf, KineticWords, labelFor } from './pantry/bits'
 import PantryCard from './pantry/PantryCard'
 import FilterRail, { type SortId } from './pantry/FilterRail'
@@ -32,7 +41,15 @@ const relabel = (p: PantryState): PantryState => ({
 
 export default function Pantry() {
   const { toast } = useToast()
-  const [pantry, setPantry] = useState<PantryState>(() => createDemoPantry())
+  const navigate = useNavigate()
+  const [pantry, setPantry] = useState<PantryState>(() => {
+    const scanned = readScannerDemoState()
+    const continuum = readContinuumDemoState()
+    return applyScannerPlanToPantry(
+      applyScannerToPantry(createDemoPantry(), scanned),
+      scanned !== null && continuum?.scenarioId === 'expiry',
+    )
+  })
   const [category, setCategory] = useState<IngredientCategory | 'all'>('all')
   const [location, setLocation] = useState<StorageLocation | 'all'>('all')
   const [sort, setSort] = useState<SortId>('expiring')
@@ -40,6 +57,15 @@ export default function Pantry() {
   const [addOpen, setAddOpen] = useState(false)
   const [scanOpen, setScanOpen] = useState(false)
   const [detailId, setDetailId] = useState<string | null>(null)
+
+  useEffect(() => {
+    const syncContinuumPlan = () => {
+      const approved = readScannerDemoState() !== null && readContinuumDemoState()?.scenarioId === 'expiry'
+      setPantry((current) => applyScannerPlanToPantry(current, approved))
+    }
+    window.addEventListener(CONTINUUM_DEMO_EVENT, syncContinuumPlan)
+    return () => window.removeEventListener(CONTINUUM_DEMO_EVENT, syncContinuumPlan)
+  }, [])
 
   const wasteScore = wasteReductionScore(pantry)
   const expiring = expiringCount(pantry)
@@ -112,18 +138,22 @@ export default function Pantry() {
   }
 
   const onScanDetected = () => {
-    const yoghurt: PantryItem = {
-      ingredientId: 'greek-yoghurt',
-      quantityG: 500,
-      quantityLabel: '500 g',
-      freshnessPct: 92,
-      expiresInDays: 7,
-      location: 'fridge',
-      plannedUsage: [],
-    }
-    setPantry((p) => relabel(addPantryItem(p, yoghurt)))
+    const existingScan = readScannerDemoState()
+    const scan = existingScan ?? saveScannerDemoState()
+    if (!existingScan) setPantry((p) => applyScannerToPantry(p, scan))
     setScanOpen(false)
-    toast('Greek yoghurt 500 g added, scan recognised.', { tone: 'sage' })
+    toast('Spinach added. Expiry signal sent to Continuum.', {
+      tone: 'gold',
+      duration: 6500,
+      action: {
+        label: 'Undo scan',
+        onClick: () => {
+          clearScannerDemoState()
+          clearContinuumDemoState()
+        },
+      },
+    })
+    navigate('/continuum?source=scanner')
   }
 
   const onFreezeBananas = () => {

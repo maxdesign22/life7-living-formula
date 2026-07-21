@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import {
   Activity,
   ArrowRight,
@@ -13,6 +13,7 @@ import {
   MoonStar,
   PackageCheck,
   RotateCcw,
+  ScanBarcode,
   ShieldCheck,
   ShoppingBasket,
   Sparkles,
@@ -23,6 +24,7 @@ import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/life7'
 import { applyContinuumDemoState, clearContinuumDemoState } from '@/lib/continuumDemo'
+import { readScannerDemoState } from '@/lib/scannerDemo'
 
 const EASE_GLIDE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -132,15 +134,15 @@ const SCENARIOS: readonly ShiftScenario[] = [
     icon: Leaf,
     eyebrow: 'Pantry signal',
     title: 'Spinach expires tomorrow',
-    signal: 'Freshness 18% · 300 g at risk · planned use too late',
-    before: 63,
+    signal: 'Use-by label · 1 day · 300 g at risk · planned use too late',
+    before: 58,
     after: 86,
     protected: 'Tonight’s cooking time and Thursday’s protein target',
     changes: [
-      { system: 'Today', title: 'Dinner resolves the risk', detail: 'Spinach moves into the omelette with no extra preparation step.', impact: '+300 g used' },
+      { system: 'Today', title: 'Dinner resolves the risk', detail: 'Spinach moves into the omelette; the verified protein side stays intact.', impact: '58 → 86 meal' },
       { system: 'Week', title: 'Saturday gains variety', detail: 'The displaced greens slot becomes broccoli instead of repeating spinach.', impact: '+1 plant' },
       { system: 'Shopping', title: 'One line disappears', detail: 'A replacement spinach bag is removed from the market list.', impact: '−€1.80' },
-      { system: 'Pantry', title: 'Waste score recovers', detail: 'The expiry queue clears and the month’s saved-food total increases.', impact: '86 waste score' },
+      { system: 'Pantry', title: 'Scanned pack gets a purpose', detail: 'The newly recognised spinach is assigned before its use-by date.', impact: '88 waste score' },
     ],
   },
 ]
@@ -367,9 +369,13 @@ function ContinuumCore({ phase }: { phase: Phase }) {
 }
 
 export default function Continuum() {
-  const [selectedId, setSelectedId] = useState<ShiftId>('sleep')
+  const location = useLocation()
+  const scannerHandoff = useMemo(() => readScannerDemoState(), [])
+  const startsFromScanner = scannerHandoff !== null && new URLSearchParams(location.search).get('source') === 'scanner'
+  const initialScenario: ShiftId = startsFromScanner ? 'expiry' : 'sleep'
+  const [selectedId, setSelectedId] = useState<ShiftId>(initialScenario)
   const [phase, setPhase] = useState<Phase>('idle')
-  const [protections, setProtections] = useState<ReadonlySet<string>>(new Set(PROTECTIONS_BY_SCENARIO.sleep))
+  const [protections, setProtections] = useState<ReadonlySet<string>>(new Set(PROTECTIONS_BY_SCENARIO[initialScenario]))
   const [demoKey, setDemoKey] = useState(0)
   const timerRef = useRef<number | null>(null)
   const { toast } = useToast()
@@ -407,9 +413,10 @@ export default function Continuum() {
 
   const restartDemo = () => {
     if (timerRef.current) window.clearTimeout(timerRef.current)
-    setSelectedId('sleep')
+    const restartScenario: ShiftId = scannerHandoff ? 'expiry' : 'sleep'
+    setSelectedId(restartScenario)
     setPhase('idle')
-    setProtections(new Set(PROTECTIONS_BY_SCENARIO.sleep))
+    setProtections(new Set(PROTECTIONS_BY_SCENARIO[restartScenario]))
     setDemoKey((current) => current + 1)
     clearContinuumDemoState()
     window.requestAnimationFrame(() => document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }))
@@ -422,7 +429,7 @@ export default function Continuum() {
         <div>
           <div className="flex flex-wrap items-center gap-2">
             <span className="t-label text-gold-deep">LIFE7 flagship intelligence</span>
-            <span className="t-label rounded-r-pill border border-champagne/30 bg-sunrise/55 px-2.5 py-1 text-[8px] text-gold-deep">Interactive prototype</span>
+            <span className="t-label rounded-r-pill border border-champagne/30 bg-sunrise/55 px-2.5 py-1 text-[8px] text-gold-deep">Live connected demo</span>
           </div>
           <h1 className="t-display-lg mt-2 text-ink">Continuum Shift</h1>
           <p className="t-serif-quote mt-2 max-w-[720px] text-ink-soft">One real-life change. Seven days recompose without breaking what matters.</p>
@@ -454,6 +461,25 @@ export default function Continuum() {
           </ol>
         </div>
       </section>
+
+      {startsFromScanner && scannerHandoff && (
+        <section className="mb-6 overflow-hidden rounded-r-xl border border-sage bg-sage-mist/85 shadow-e-2" aria-label="Scanner handoff">
+          <div className="grid gap-4 p-4 min-[720px]:grid-cols-[auto_minmax(0,1fr)_auto] min-[720px]:items-center min-[720px]:p-5">
+            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-forest text-soft-white">
+              <ScanBarcode size={21} />
+            </span>
+            <div>
+              <span className="t-label text-green">Scanner signal received</span>
+              <h2 className="t-ui-md mt-1 font-bold text-forest">Spinach · 300 g · use by tomorrow</h2>
+              <p className="t-ui-sm mt-1 text-ink-soft">Pantry has the pack. Shopping can remove the duplicate, but nothing changes until you review and apply the coordinated update.</p>
+            </div>
+            <div className="flex gap-2 min-[720px]:flex-col min-[720px]:items-end">
+              <span className="t-label rounded-r-pill bg-soft-white/80 px-2.5 py-1.5 text-green">Pantry +300 g</span>
+              <span className="t-label rounded-r-pill bg-sunrise px-2.5 py-1.5 text-gold-deep">Shopping −€1.80</span>
+            </div>
+          </div>
+        </section>
+      )}
 
       <VoiceShiftInput key={demoKey} onRecognised={recogniseVoiceChange} />
 
@@ -534,7 +560,7 @@ export default function Continuum() {
 
               <div className="mt-5 rounded-r-lg border border-white/10 bg-white/[0.06] p-4">
                 <div className="flex items-center justify-between gap-3">
-                  <span className="t-label text-soft-white/55">Continuum score</span>
+                  <span className="t-label text-soft-white/55">{selectedId === 'expiry' ? 'Meal score' : 'Continuum score'}</span>
                   <span className="flex items-baseline gap-2">
                     <span className="t-metric-sm tnum text-soft-white/45 line-through">{scenario.before}</span>
                     <ArrowRight size={14} className="text-champagne" />

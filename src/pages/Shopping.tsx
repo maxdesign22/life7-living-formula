@@ -12,6 +12,8 @@ import {
   type Substitution,
 } from '@/lib/shopping'
 import { round2 } from '@/lib/nutrition'
+import { applyScannerToShoppingList, readScannerDemoState } from '@/lib/scannerDemo'
+import { readContinuumDemoState } from '@/lib/continuumDemo'
 import { EASE_GLIDE, KineticWords, TweenMoney, eur } from './shopping/bits'
 import { deriveSections, remainingTotal, rowKey, viewProgress, type RowPatch, type RowPatches, type ViewItem } from './shopping/model'
 import ShoppingPath, { ShoppingPathRail } from './shopping/ShoppingPath'
@@ -43,7 +45,14 @@ function optimisationPatches(list: ShoppingList): RowPatches {
 
 export default function Shopping() {
   const { toast } = useToast()
-  const list = useMemo(() => getCanonicalShoppingList(), [])
+  const list = useMemo(
+    () => {
+      const continuum = readContinuumDemoState()
+      const approvedScan = continuum?.scenarioId === 'expiry' ? readScannerDemoState() : null
+      return applyScannerToShoppingList(getCanonicalShoppingList(), approvedScan)
+    },
+    [],
+  )
   const substitutions = useMemo(() => getSubstitutions(list), [list])
   const optimisation = useMemo(() => optimiseBudget(list), [list])
 

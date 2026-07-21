@@ -240,12 +240,12 @@ demo data.
 | 1 | **Splash** (`/`, first load) | Let it play (or click to skip) | LIFE7 mark assembles segment-by-segment, tagline types character-by-character: *"Seven days. One intelligent system. Better living."* |
 | 2 | **Today** (`/today`) | Point at the hero; tap the hydration chip; press **Start cooking (18 min)**, then **Mark as eaten** | Living score hero (ScoreRing 300 px, value 74, ghost target 85), energy 72 % / hydration 1.4 of 2.4 L chips, cooking-mode overlay with step timers; marking lunch eaten sweeps a sage wave and nudges the ring 74 → 76. |
 | 3 | **Meal Architect** (`/architect`) — the money moment | Press **Apply all** in the intelligence panel | Thursday Lunch starts at **58**; three recommendation cards (＋ Greek yoghurt 120 g, ＋ broccoli 80 g, − olive oil 8 g; Σ Δ +28); the ring tweens **58 → 86**, dimension bars re-render, a light wave sweeps the panel, toast offers undo. |
-| 4 | **Continuum Shift** (`/continuum`) — the product moat | Press **Try the winning demo phrase** (or use the microphone), confirm the extracted signals and Protected Constants, press **Preview the coordinated update**, then apply | Voice or text turns one real-life change into the smallest coordinated decision set across Today, Week, Shopping and Pantry. The verified before/after Change Ledger is visible and reversible; each affected screen confirms the active demo sync, and audio is not stored. |
+| 4 | **Continuum Shift** (`/continuum`) — the product moat | For the connected path, start in Pantry and press **Scan item → Add & coordinate the week**. Or use the winning voice phrase. Review Protected Constants, preview, then apply. | A scanned use-by signal or a spoken real-life change becomes the smallest coordinated decision set across Today, Week, Shopping and Pantry. The expiry path shows the verified **58 → 86 Meal Score**, removes a duplicate **€1.80** purchase only after approval, assigns the pack to dinner and supports immediate undo. |
 | 5 | **LIFE7 Week** (`/week`) | Press **Optimise week** | Breathing honeycomb of seven days (Mon 82 · Tue 78 · Wed 74 · Thu 71 · Fri 86 · Sat 80 · Sun 84; avg 79 · €62.40 · 22 min). Optimise ticks **Thu 71→74, Wed 74→77, Sat 80→82**, toast *"Week rebalanced — protein evened across 7 days."* Undo available. |
 | 6 | **AI Week Generator** (`/generator`) | Step through the intake wizard (defaults = Alex's profile) and generate | Four deterministic "thinking" lines → full 7-day plan with summary band: **week score 84 · €62.40 total (€7.60 under budget) · prep avg 22 min · pantry usage 71 %**, shopping preview, leftovers and expiry plan, Sunday 17:00 prep schedule (35 min saves 52). |
 | 7 | **AI Coach** (`/coach`) | Click quick-command chips: **Make the week cheaper.**, **I missed lunch.**, **Use what expires first.** | Shimmer-thinking (900–1400 ms, deterministic per command), then scripted replies with cards and actions — e.g. *"I found €9.40 without touching your protein."* Free text pattern-matches the same 8 scripts; unmatched input gets the fallback. |
 | 8 | **Shopping** (`/shopping`) | Press **Optimise budget** (header or optimiser card) | Store-grouped list — Supermarket €31.20 · Farmers market €12.60 · Pharmacy €8.40 · Online €10.20 — total **€62.40 / €70** with pantry already deducted (€8.20 saved). Optimise runs the 3-step swap script: total tweens **€62.40 → €57.80**. Export downloads a real `life7-week24-shopping.txt`. |
-| 9 | **Pantry** (`/pantry`) | Toggle **Use soon**, open the spinach card, try **Scan item** | 11 living freshness cards (green → champagne → burgundy rings; ≤ 48 h items pulse), expiry queue led by spinach (82 %, 2 days), waste score **86** with *"on track to waste nothing"* panel. Scan is a placeholder drawer that "recognises" Greek yoghurt after 2.6 s. |
+| 9 | **Pantry** (`/pantry`) | Toggle **Use soon**, then press **Scan item** and follow the connected handoff | 11 living freshness cards plus a simulated camera/label scan that recognises **spinach · 300 g · use by tomorrow**. The pack persists for the demo session, becomes a Continuum expiry signal and, after approval, appears as **520 g** assigned to Thursday dinner while Shopping falls **€62.40 → €60.60**. |
 | 10 | **Planner** (`/planner`) | Drag a timeline event; toggle WhatsApp; press **Send test** | Thursday sunlight timeline (06:30 wake → 23:00 sleep), the four verbatim notifications (*"Your lunch is ready in 8 minutes."* …), quiet hours 22:30–06:30 (everything held except expiry alerts), WhatsApp/Telegram toggles return *"Coming with the mobile app — you're on the list."* |
 | 11 | **Progress** (`/progress`) | Switch Week / Month / Quarter | Hand-built SVG analytics (no chart library): meal-score river (28 points), stat row (avg meal score 78 +6 · goal alignment 82 % · cooking 21 min −4 · waste 0.3 kg −38 %), declining waste bars. |
 | 12 | **Settings** (`/settings`) | Open **LIFE7 Continuum** and reserve the founding preview; press **Export my data** | Transparent upgrade concept with indicative €29/month founding price, no checkout and no charge; export downloads a real `life7-alex-data.json`; import and reset-prototype round out the data zone. |
@@ -258,11 +258,11 @@ demo data.
 |---|---|---|
 | AI insight, coach and week-generation narrative | `src/lib/aiService.ts` → `MockAIService` | Pattern-matched scripts; the generator still composes real planning/scoring/shopping modules. |
 | Online grocery ordering | Shopping screen actions | Buttons produce toasts/state only; no store API. |
-| Barcode scan / camera | Pantry → Scan item drawer | Simulated laser sweep; "detects" a demo item after 2.6 s. |
+| Barcode scan / camera capture | Pantry → Scan item drawer | Camera/OCR input is simulated by a timed label recognition. Its output is real session state and drives Pantry, Continuum and Shopping. |
 | WhatsApp / Telegram channels | `src/lib/reminders.ts` (`placeholder: true`) | Toggling returns the *"Coming with the mobile app"* toast. |
 | Send-to-phone / push delivery | Planner notification stack | Rendered cards + `sendTest()` toast previews; nothing leaves the browser. |
 | Subscription/payment | Settings → LIFE7 Continuum | Founding-preview reservation only; no checkout, card collection or payment. |
-| Continuum Shift composition | `/continuum` | Deterministic interactive scenarios; rule-verified demo changes are not persisted or model-generated. |
+| Continuum Shift composition | `/continuum` | Deterministic, rule-verified scenarios rather than unrestricted model mutations. Approved demo state is session-persisted, visible across affected routes and reversible. |
 
 **Real (actual computation, not theater):**
 
@@ -276,8 +276,9 @@ demo data.
   it at runtime.
 - All nutrition, price, planning, recommendation, pantry-freshness, expiry,
   shopping-list and budget-optimisation math (`src/lib/*` over `src/data/*`).
-- Local state — plan edits, day-type changes, locks, purchased items, pantry
-  quantities, channel toggles all behave within the session.
+- Connected local state — plan edits, day-type changes, locks, purchased items,
+  pantry quantities and scanner/Continuum handoffs behave within the session;
+  approved cross-system changes are carried by an explicit reversible ledger.
 - File export — shopping list (`.txt`) and profile data (`.json`) are real
   downloads generated in-browser.
 
