@@ -42,6 +42,8 @@ commit history and includes:
   86 transformation against a real public GPT request;
 - creating Continuum Shift, Protected Constants, the reversible Change Ledger
   and Voice Continuum as the differentiated product direction;
+- adding the voice-first Food Journal, confirmation-before-save flow,
+  seven/thirty-day summaries and non-diagnostic nutrition trend signals;
 - diagnosing and fixing mobile overflow, incomplete scrolling, overlapping
   planner cards, dense statistics and low-contrast states across the product;
 - deploying the frontend and API to Hetzner with HTTPS, Nginx, systemd, health

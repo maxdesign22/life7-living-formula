@@ -16,6 +16,7 @@ import {
   X,
   Orbit,
   Truck,
+  NotebookPen,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -34,6 +35,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { to: '/today', label: 'Today', icon: Sun },
+  { to: '/journal', label: 'Food Journal', icon: NotebookPen, dot: 'gold' },
   { to: '/architect', label: 'Meal Architect', icon: ChefHat },
   { to: '/week', label: 'LIFE7 Week', icon: Hexagon },
   { to: '/continuum', label: 'Continuum Shift', icon: Orbit, dot: 'gold' },
@@ -280,7 +282,7 @@ function MobileDock() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const path = location.pathname
-  const moreActive = MORE_ITEMS.some((i) => i.to !== '/continuum' && path.startsWith(i.to))
+  const moreActive = MORE_ITEMS.some((i) => i.to !== '/continuum' && i.to !== '/journal' && path.startsWith(i.to))
 
   return (
     <>
@@ -289,7 +291,7 @@ function MobileDock() {
         className="glass fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 flex h-16 items-stretch rounded-r-pill px-2 shadow-e-3 min-[900px]:hidden"
       >
         <DockSlot item={NAV_ITEMS[0]} active={path.startsWith('/today')} />
-        <DockSlot item={NAV_ITEMS[1]} active={path.startsWith('/architect')} />
+        <DockSlot item={NAV_ITEMS[1]} active={path.startsWith('/journal')} />
 
         {/* center: LIFE7 Week — a deliberately simple, high-contrast mark stays
             legible at mobile dock size (the full living mark is too detailed). */}
@@ -317,7 +319,7 @@ function MobileDock() {
           <span className={cn('t-label absolute bottom-1 text-[7px]', path.startsWith('/continuum') ? 'text-gold-deep' : 'text-ink-faint')}>Shift</span>
         </Link>
 
-        <DockSlot item={NAV_ITEMS[7]} active={path.startsWith('/pantry')} />
+        <DockSlot item={NAV_ITEMS[8]} active={path.startsWith('/pantry')} />
 
         <button
           type="button"
