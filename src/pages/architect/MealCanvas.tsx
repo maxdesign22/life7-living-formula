@@ -67,29 +67,20 @@ const PlateVisual = memo(function PlateVisual({ empty, count, totalKcal, flashKe
         animate={{ scale: [1, 1.012, 1] }}
         transition={{ duration: 6.5, repeat: Infinity, ease: 'easeInOut' }}
       >
-        {/* soft cast halo grounding the plate on the placemat */}
+        {/* Photographic ceramic plate. The clean centre remains available for
+            interactive ingredients and the live nutrition summary. */}
+        <img
+          src="/plate-photorealistic.webp"
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="pointer-events-none absolute inset-0 h-full w-full select-none rounded-full object-cover"
+          style={{ boxShadow: '0 30px 64px -24px rgba(59,48,26,0.24)' }}
+        />
         <div
           aria-hidden="true"
-          className="absolute -inset-5 rounded-full"
-          style={{ background: 'radial-gradient(52% 52% at 50% 56%, rgba(59,48,26,0.10), transparent 70%)' }}
-        />
-        {/* ceramic body: sunlight highlight + warm inner shadow */}
-        <div
-          className="absolute inset-0 rounded-full"
-          style={{
-            background:
-              'radial-gradient(56% 46% at 30% 22%, rgba(247,223,167,0.38), transparent 68%), radial-gradient(78% 78% at 50% 46%, #FFFDF7 0%, #FCF7EB 70%, #F2E7D2 100%)',
-            boxShadow:
-              '0 30px 64px -22px rgba(59,48,26,0.26), 0 6px 18px rgba(59,48,26,0.06), inset 0 2px 8px rgba(255,255,255,0.95), inset 0 -22px 42px rgba(59,48,26,0.07)',
-          }}
-        />
-        {/* rim hairline */}
-        <div aria-hidden="true" className="absolute inset-[3.5%] rounded-full border border-champagne/30" />
-        {/* well depression ring */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-[10.5%] rounded-full border border-sand/90"
-          style={{ boxShadow: 'inset 0 3px 12px rgba(59,48,26,0.07), inset 0 -2px 6px rgba(255,255,255,0.75)' }}
+          className="pointer-events-none absolute inset-[7%] rounded-full"
+          style={{ boxShadow: 'inset 0 0 22px rgba(255,253,247,0.18)' }}
         />
 
         {/* sage flash on drop */}
