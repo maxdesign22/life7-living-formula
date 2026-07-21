@@ -37,6 +37,11 @@ and Pantry while preserving explicit Protected Constants such as a protein
 floor, budget ceiling, sleep window or family dinner. A Change Ledger explains
 every downstream effect before the user accepts the reversible shift.
 
+Voice Continuum makes that input feel native to real life: the user simply says
+what changed, LIFE7 shows the transcript and extracted signals, then asks for
+confirmation before composing anything. Audio is not stored, and a complete
+text fallback keeps the flow available without microphone support.
+
 The result is not a chatbot attached to a dashboard. It is a coherent consumer
 product in which AI explains decisions, a domain engine remains the source of
 truth, and adaptation stays visible and reversible.
@@ -56,6 +61,8 @@ truth, and adaptation stays visible and reversible.
 - Built Continuum Shift: four real-life change scenarios, user-controlled
   Protected Constants, an animated cross-system composition and a transparent
   before/after Change Ledger.
+- Added Voice Continuum with browser speech recognition, visible signal
+  extraction, a privacy disclosure and a permission-independent text fallback.
 - Deployed the frontend and API to Hetzner using Nginx, HTTPS, systemd hardening
   and atomic releases.
 - Used Codex to inspect the domain model, implement the API/UI boundary, run
@@ -143,10 +150,11 @@ Let the ring, cards, light wave and toast finish.
 
 ### 1:58–2:30 — Continuum Shift — the product moat
 
-Open **Continuum Shift**, select **I slept only 5 hours**, then press
-**Compose the shift**.
+Open **Continuum Shift** and press **Try the winning demo phrase** (or say: “I
+slept only five hours and still want to protect Friday training”). Point to the
+transcript and the three extracted signals, then press **Compose the shift**.
 
-> One real-life change now moves four systems as one. LIFE7 protects the protein
+> I do not edit four screens. I tell LIFE7 what changed. It protects the protein
 > floor, budget, sleep window and family dinner, then reveals the smallest
 > coordinated changes across Today, Week, Shopping and Pantry. Nothing important
 > changes silently, and the entire shift is reversible.
@@ -173,6 +181,8 @@ End on the applied Continuum Shift and the four connected systems.
 6. Use Undo in the toast if you want to repeat the transformation.
 7. Open https://life7.maxdesign.rs/continuum, choose any life change, press
    **Compose the shift**, inspect the four-system Change Ledger and apply it.
+8. Optionally use **Try the winning demo phrase** to test Voice Continuum without
+   granting microphone access.
 
 The app remains usable if model access is temporarily unavailable: the
 deterministic recommendations and calculations stay active.
@@ -194,7 +204,9 @@ deterministic recommendations and calculations stay active.
 
 The Meal Architect uses the real GPT-5.6 Sol integration described above.
 Continuum Shift is a deterministic interactive product prototype; its changes
-are rule-verified demo scenarios, not model-generated or persisted. Coach,
+are rule-verified demo scenarios, not model-generated or persisted. Voice
+capture uses the browser speech-recognition capability when available; signal
+matching is deterministic and audio is not stored by LIFE7. Coach,
 week-generation narrative, scanning, messaging delivery and commerce remain
 deterministic or simulated demo experiences. Nutrition guidance is
 informational and not medical advice.

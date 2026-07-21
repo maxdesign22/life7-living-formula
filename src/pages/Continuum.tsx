@@ -6,6 +6,9 @@ import {
   CalendarClock,
   Check,
   Leaf,
+  LockKeyhole,
+  Mic,
+  MicOff,
   MoonStar,
   PackageCheck,
   RotateCcw,
@@ -23,6 +26,36 @@ const EASE_GLIDE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 type ShiftId = 'sleep' | 'schedule' | 'budget' | 'expiry'
 type Phase = 'idle' | 'composing' | 'ready' | 'applied'
+type VoiceState = 'idle' | 'listening' | 'understood' | 'unsupported' | 'error'
+
+interface SpeechRecognitionResultLike {
+  readonly isFinal: boolean
+  readonly length: number
+  readonly [index: number]: { readonly transcript: string }
+}
+
+interface SpeechRecognitionEventLike {
+  readonly resultIndex: number
+  readonly results: {
+    readonly length: number
+    readonly [index: number]: SpeechRecognitionResultLike
+  }
+}
+
+interface SpeechRecognitionLike {
+  lang: string
+  continuous: boolean
+  interimResults: boolean
+  onstart: (() => void) | null
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  onerror: ((event: { error: string }) => void) | null
+  onend: (() => void) | null
+  start: () => void
+  stop: () => void
+  abort: () => void
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike
 
 interface ShiftChange {
   system: 'Today' | 'Week' | 'Shopping' | 'Pantry'
@@ -119,6 +152,184 @@ const SYSTEM_ICONS: Record<ShiftChange['system'], LucideIcon> = {
 
 const PROTECTIONS = ['Protein floor', 'Budget ceiling', 'Sleep window', 'Family dinner'] as const
 
+const VOICE_SIGNALS: Record<ShiftId, readonly string[]> = {
+  sleep: ['Sleep · 5 hours', 'Recovery risk', 'Protect training'],
+  schedule: ['Dinner · 21:00', 'Late meal window', 'Protect sleep'],
+  budget: ['Budget · −€15', 'Cost pressure', 'Protect protein'],
+  expiry: ['Spinach · 1 day', 'Expiry risk', 'Protect prep time'],
+}
+
+function matchVoiceScenario(value: string): ShiftId | null {
+  const text = value.toLowerCase()
+  if (/spinach|expir|pantry|use it up|go bad/.test(text)) return 'expiry'
+  if (/budget|cheaper|money|cost|€|euro|tight/.test(text)) return 'budget'
+  if (/dinner|late|21|nine|schedule|calendar/.test(text)) return 'schedule'
+  if (/sleep|slept|tired|recovery|five hours|5 hours/.test(text)) return 'sleep'
+  return null
+}
+
+function VoiceShiftInput({ onRecognised }: { onRecognised: (id: ShiftId) => void }) {
+  const [transcript, setTranscript] = useState('')
+  const [voiceState, setVoiceState] = useState<VoiceState>('idle')
+  const [matchedId, setMatchedId] = useState<ShiftId | null>(null)
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
+
+  useEffect(() => () => recognitionRef.current?.abort(), [])
+
+  const interpret = (value: string) => {
+    const clean = value.trim()
+    setTranscript(clean)
+    const match = matchVoiceScenario(clean)
+    setMatchedId(match)
+    if (!match) {
+      setVoiceState('error')
+      return
+    }
+    setVoiceState('understood')
+    onRecognised(match)
+  }
+
+  const beginListening = () => {
+    const voiceWindow = window as Window & {
+      SpeechRecognition?: SpeechRecognitionConstructor
+      webkitSpeechRecognition?: SpeechRecognitionConstructor
+    }
+    const Recognition = voiceWindow.SpeechRecognition ?? voiceWindow.webkitSpeechRecognition
+    if (!Recognition) {
+      setVoiceState('unsupported')
+      return
+    }
+
+    if (voiceState === 'listening') {
+      recognitionRef.current?.stop()
+      return
+    }
+
+    const recognition = new Recognition()
+    recognitionRef.current = recognition
+    recognition.lang = 'en-US'
+    recognition.continuous = false
+    recognition.interimResults = true
+    recognition.onstart = () => {
+      setTranscript('')
+      setMatchedId(null)
+      setVoiceState('listening')
+    }
+    recognition.onresult = (event) => {
+      let spoken = ''
+      let final = false
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        spoken += event.results[index][0]?.transcript ?? ''
+        if (event.results[index].isFinal) final = true
+      }
+      setTranscript(spoken)
+      if (final) interpret(spoken)
+    }
+    recognition.onerror = () => setVoiceState('error')
+    recognition.onend = () => setVoiceState((current) => current === 'listening' ? 'idle' : current)
+    recognition.start()
+  }
+
+  const useDemoPhrase = () => interpret('I slept only five hours and still want to protect Friday training.')
+  const matchedScenario = matchedId ? SCENARIOS.find((item) => item.id === matchedId) : null
+
+  return (
+    <section className="mb-6 overflow-hidden rounded-r-xl border border-champagne/35 bg-soft-white/85 shadow-e-2" aria-label="Tell LIFE7 what changed">
+      <div className="grid min-[760px]:grid-cols-[220px_minmax(0,1fr)]">
+        <div className="relative flex min-h-[180px] flex-col items-center justify-center overflow-hidden bg-forest p-5 text-center">
+          <span className="pointer-events-none absolute h-36 w-36 rounded-full border border-champagne/15" />
+          <span className="pointer-events-none absolute h-24 w-24 rounded-full border border-champagne/25" />
+          <motion.button
+            type="button"
+            onClick={beginListening}
+            aria-label={voiceState === 'listening' ? 'Stop listening' : 'Tell LIFE7 what changed'}
+            className={cn(
+              'relative z-10 flex h-16 w-16 items-center justify-center rounded-full border shadow-e-2 transition-colors',
+              voiceState === 'listening'
+                ? 'border-burgundy/60 bg-burgundy text-white'
+                : 'border-champagne bg-sunrise text-forest hover:bg-champagne',
+            )}
+            animate={voiceState === 'listening' ? { scale: [1, 1.08, 1] } : { scale: 1 }}
+            transition={{ duration: 1.1, repeat: voiceState === 'listening' ? Infinity : 0 }}
+          >
+            {voiceState === 'listening' ? <MicOff size={23} /> : <Mic size={23} />}
+          </motion.button>
+          <div className="relative z-10 mt-4 flex h-4 items-center gap-1" aria-hidden="true">
+            {[7, 13, 9, 16, 10, 14, 7].map((height, index) => (
+              <motion.span
+                key={`${height}-${index}`}
+                className="w-0.5 rounded-r-pill bg-champagne"
+                animate={voiceState === 'listening' ? { height: [height, Math.max(4, 18 - height), height] } : { height: 4 }}
+                transition={{ duration: 0.65, repeat: voiceState === 'listening' ? Infinity : 0, delay: index * 0.06 }}
+              />
+            ))}
+          </div>
+          <span className="t-label relative z-10 mt-2 text-champagne">
+            {voiceState === 'listening' ? 'Listening… tap to stop' : 'Voice Continuum'}
+          </span>
+        </div>
+
+        <div className="p-5 min-[760px]:p-6">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div>
+              <span className="t-label text-gold-deep">Speak one real-life change</span>
+              <h2 className="t-display-sm mt-1 text-ink">Tell LIFE7 what changed.</h2>
+            </div>
+            <span className="t-label flex items-center gap-1.5 rounded-r-pill bg-sage-mist px-2.5 py-1.5 text-green">
+              <LockKeyhole size={12} /> Audio is not stored
+            </span>
+          </div>
+
+          <form
+            className="mt-4"
+            onSubmit={(event) => {
+              event.preventDefault()
+              interpret(transcript)
+            }}
+          >
+            <div className="flex flex-col gap-2 min-[620px]:flex-row">
+              <label className="sr-only" htmlFor="continuum-voice-transcript">What changed?</label>
+              <input
+                id="continuum-voice-transcript"
+                value={transcript}
+                onChange={(event) => {
+                  setTranscript(event.target.value)
+                  setVoiceState('idle')
+                  setMatchedId(null)
+                }}
+                placeholder="e.g. I slept five hours and dinner is late…"
+                className="min-h-11 min-w-0 flex-1 rounded-r-pill border border-line bg-white/65 px-4 t-ui-sm text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-champagne"
+              />
+              <button type="submit" disabled={!transcript.trim()} className="min-h-11 rounded-r-pill bg-forest px-5 t-ui-sm font-bold text-soft-white transition-colors hover:bg-green disabled:cursor-not-allowed disabled:opacity-40">
+                Interpret change
+              </button>
+            </div>
+          </form>
+
+          <div className="mt-3" aria-live="polite">
+            {voiceState === 'understood' && matchedScenario && matchedId && (
+              <div className="rounded-r-lg border border-sage bg-sage-mist/70 p-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <span className="t-ui-sm font-bold text-forest"><Check size={14} className="mr-1.5 inline" /> Understood · {matchedScenario.eyebrow}</span>
+                  <span className="t-label text-green">Ready to compose</span>
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {VOICE_SIGNALS[matchedId].map((signal) => <span key={signal} className="t-label rounded-r-pill border border-sage bg-soft-white/70 px-2 py-1 text-[8px] text-green">{signal}</span>)}
+                </div>
+              </div>
+            )}
+            {voiceState === 'unsupported' && <p className="t-ui-sm text-ink-soft">Voice capture is not available in this browser. Type the change below — Continuum works the same way.</p>}
+            {voiceState === 'error' && <p className="t-ui-sm text-burgundy">I need one clearer signal — mention sleep, dinner time, budget or an expiring ingredient.</p>}
+            {(voiceState === 'idle' || voiceState === 'unsupported') && !transcript && (
+              <button type="button" onClick={useDemoPhrase} className="t-ui-sm font-semibold text-gold-deep underline decoration-champagne underline-offset-4">Try the winning demo phrase</button>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function ContinuumCore({ phase }: { phase: Phase }) {
   const active = phase === 'composing' || phase === 'ready' || phase === 'applied'
   return (
@@ -166,6 +377,8 @@ export default function Continuum() {
     setPhase('idle')
   }
 
+  const recogniseVoiceChange = (id: ShiftId) => choose(id)
+
   const compose = () => {
     setPhase('composing')
     timerRef.current = window.setTimeout(() => setPhase('ready'), 1350)
@@ -191,6 +404,8 @@ export default function Continuum() {
         <h1 className="t-display-lg mt-2 text-ink">Continuum Shift</h1>
         <p className="t-serif-quote mt-2 max-w-[720px] text-ink-soft">One real-life change. Seven days recompose — without breaking what matters.</p>
       </header>
+
+      <VoiceShiftInput onRecognised={recogniseVoiceChange} />
 
       <div className="grid gap-6 min-[1100px]:grid-cols-[300px_minmax(0,1fr)]">
         <section aria-label="Choose a life change">
