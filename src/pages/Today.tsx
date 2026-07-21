@@ -8,11 +8,13 @@ import {
   Moon,
   ShoppingBasket,
   Leaf,
-  Waves,
   Check,
   Plus,
   X,
   ChefHat,
+  Clock3,
+  Sparkles,
+  Watch,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -117,6 +119,7 @@ function StatChip({
         transition={{ duration: 0.2, ease: EASE_GLIDE }}
         className={cn(
           'w-full rounded-r-md border border-line bg-soft-white/45 p-3.5 text-left transition-colors duration-220 hover:bg-soft-white/75',
+          def.attention && 'border-gold-deep/30 bg-gradient-to-br from-sunrise/65 via-soft-white/75 to-soft-white/55 shadow-[0_8px_22px_-14px_rgba(176,138,62,0.7)] hover:border-gold-deep/45',
           active && 'border-champagne/60 bg-soft-white/80',
         )}
       >
@@ -124,13 +127,16 @@ function StatChip({
           <span className="flex min-w-0 items-center gap-2">
             <span
               className={cn(
-                'flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sage-mist/70',
+                'relative flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sage-mist/70',
                 def.attention && 'bg-sunrise/70',
               )}
             >
+              {def.attention && (
+                <span className="animate-halo-ping absolute inset-0 rounded-full border border-gold-deep/45" aria-hidden="true" />
+              )}
               <Icon size={14} strokeWidth={1.6} className={def.attention ? 'text-gold-deep' : 'text-forest'} />
             </span>
-            <span className="t-label truncate text-[9px] text-ink-faint">{def.name}</span>
+            <span className={cn('t-label truncate text-[9px] text-ink-faint', def.attention && 'text-gold-deep')}>{def.name}</span>
           </span>
           <span
             className={cn(
@@ -163,6 +169,45 @@ function StatChip({
         )}
       </AnimatePresence>
     </motion.div>
+  )
+}
+
+/** A compact, literal mobility scene: stretch, time and daylight in one glance. */
+function MobilityScene() {
+  return (
+    <div className="relative h-[112px] w-[126px] shrink-0 overflow-hidden rounded-r-lg border border-champagne/25 bg-gradient-to-br from-sunrise/55 via-ivory to-sage-mist/65" aria-label="Mobility stretch illustration">
+      <motion.span
+        className="absolute right-3 top-3 h-6 w-6 rounded-full bg-sunlight/75 shadow-[0_0_22px_rgba(242,193,78,0.45)]"
+        animate={{ opacity: [0.7, 1, 0.7], scale: [0.96, 1.04, 0.96] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+        aria-hidden="true"
+      />
+      <svg viewBox="0 0 126 112" className="absolute inset-0 h-full w-full" fill="none" aria-hidden="true">
+        <path d="M12 91C38 84 88 86 116 92" stroke="#C9D6C0" strokeWidth="2" strokeLinecap="round" />
+        <path d="M78 36C86 31 93 27 101 22" stroke="#D9B26A" strokeWidth="2" strokeLinecap="round" strokeDasharray="3 5" />
+        <circle cx="58" cy="37" r="7" fill="#2E4630" />
+        <motion.g
+          animate={{ rotate: [-1.5, 2, -1.5] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ transformOrigin: '58px 47px' }}
+          stroke="#2E4630"
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M57 48L62 68" />
+          <path d="M60 55L79 45" />
+          <path d="M59 55L43 66" />
+          <path d="M62 68L78 84" />
+          <path d="M62 68L48 87" />
+        </motion.g>
+        <path d="M35 56C39 48 44 43 50 40" stroke="#B08A3E" strokeWidth="1.5" strokeLinecap="round" />
+        <path d="M31 62C35 51 42 44 49 38" stroke="#B08A3E" strokeWidth="1.5" strokeLinecap="round" opacity="0.45" />
+      </svg>
+      <span className="t-label absolute bottom-2.5 left-3 flex items-center gap-1 text-[8px] text-forest/70">
+        <Clock3 size={10} /> daylight window
+      </span>
+    </div>
   )
 }
 
@@ -561,12 +606,20 @@ export default function Today() {
           type="button"
           onClick={() => navigate('/coach')}
           aria-label="Open AI Coach"
-          className="glass relative mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-full shadow-e-1 hover:shadow-gold-glow"
+          className="glass group relative mt-1 flex h-11 shrink-0 items-center gap-2 rounded-r-pill border border-champagne/35 px-2.5 shadow-e-1 transition-all hover:border-champagne/70 hover:shadow-gold-glow min-[480px]:px-3"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 220, damping: 18, delay: 0.2 }}
         >
-          <Life7Mark size={26} state={coreState} />
+          <span className="relative flex h-7 w-7 items-center justify-center rounded-full bg-sunrise/65 text-gold-deep">
+            {coreState === 'thinking' && <span className="animate-halo-ping absolute inset-0 rounded-full border border-champagne" aria-hidden="true" />}
+            <Sparkles size={15} strokeWidth={1.8} />
+          </span>
+          <span className="t-label text-[8px] text-gold-deep min-[480px]:hidden">AI</span>
+          <span className="hidden text-left min-[480px]:block">
+            <span className="t-label block text-[8px] text-gold-deep">Ask LIFE7</span>
+            <span className="t-ui-sm block font-bold leading-tight text-forest">AI Coach</span>
+          </span>
         </motion.button>
       </header>
 
@@ -622,7 +675,11 @@ export default function Today() {
                   <span className="t-label text-ink-faint">Today’s signals</span>
                   <p className="t-ui-sm mt-1 text-ink-soft">Four numbers. One priority.</p>
                 </div>
-                <span className="rounded-r-pill bg-sunrise/70 px-2.5 py-1 text-[10px] font-bold text-gold-deep">
+                <span className="relative inline-flex items-center gap-2 rounded-r-pill border border-gold-deep/20 bg-sunrise px-3 py-1.5 text-[10px] font-bold text-gold-deep shadow-[0_6px_18px_-12px_rgba(176,138,62,0.8)]">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-halo-ping absolute inset-0 rounded-full bg-gold-deep/55" />
+                    <span className="relative h-2 w-2 rounded-full bg-gold-deep" />
+                  </span>
                   Protein needs attention
                 </span>
               </div>
@@ -896,40 +953,29 @@ export default function Today() {
           transition={{ duration: 0.56, delay: 0.18, ease: EASE_GLIDE }}
           className="w-[82vw] max-w-[340px] shrink-0 snap-start lg:w-auto lg:max-w-none"
         >
-          <GlassCard className="relative flex h-full flex-col p-6">
-            <div className="mb-3 flex items-center justify-between">
+          <GlassCard className="relative flex h-full flex-col overflow-hidden p-5">
+            <span className="pointer-events-none absolute -right-12 -top-14 h-36 w-36 rounded-full bg-sunrise/35 blur-2xl" aria-hidden="true" />
+            <div className="relative mb-3 flex items-center justify-between gap-2">
               <span className="t-label text-ink-soft">Next activity</span>
-              <Waves size={20} strokeWidth={1.5} className="text-forest" />
+              <span className="t-label flex items-center gap-1 rounded-r-pill bg-sage-mist/70 px-2.5 py-1 text-[8px] text-forest">
+                <Watch size={11} /> Watch synced
+              </span>
             </div>
-            <p className="t-ui-lg text-ink">
-              Mobility — <b className="tnum">{activityTime}</b>, 20 min
-            </p>
-            <p className="t-ui-sm mt-1 text-ink-faint">Synced to your watch</p>
-            {/* mini sun-arc: daylight remaining */}
-            <svg width="100%" height="34" viewBox="0 0 220 34" fill="none" className="mt-3">
-              <path d="M 10 30 A 100 100 0 0 1 210 30" stroke="#F3EBDA" strokeWidth="3" strokeLinecap="round" />
-              <motion.path
-                d="M 10 30 A 100 100 0 0 1 210 30"
-                stroke="#F2C14E"
-                strokeWidth="3"
-                strokeLinecap="round"
-                initial={{ pathLength: 0 }}
-                whileInView={{ pathLength: 0.62 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.1, ease: EASE_GLIDE }}
-              />
-              <motion.circle
-                r="4"
-                fill="#F2C14E"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: 1.0 }}
-                cx={110 - 100 * Math.cos(Math.PI * 0.62)}
-                cy={30 - 100 * Math.sin(Math.PI * 0.62) * 0.24}
-              />
-            </svg>
-            <div className="relative mt-3 flex justify-end">
+
+            <div className="relative flex items-center justify-between gap-3">
+              <div className="min-w-0">
+                <span className="t-label text-gold-deep">Mobility reset</span>
+                <p className="t-display-sm mt-1 text-[24px] text-ink"><b className="tnum">{activityTime}</b></p>
+                <p className="t-ui-sm mt-1 font-medium text-ink-soft">20 min · hips, spine, shoulders</p>
+                <p className="t-ui-sm mt-2 leading-snug text-ink-faint">Timed before the evening energy drop.</p>
+              </div>
+              <MobilityScene />
+            </div>
+
+            <div className="relative mt-4 flex items-center justify-between gap-2 border-t border-line pt-3">
+              <span className="t-ui-sm flex items-center gap-1.5 font-semibold text-forest">
+                <Clock3 size={14} className="text-gold-deep" /> Next in 3 h 10 min
+              </span>
               <MagneticButton variant="ghost" size="sm" onClick={() => setReschedOpen((v) => !v)}>
                 Reschedule
               </MagneticButton>
