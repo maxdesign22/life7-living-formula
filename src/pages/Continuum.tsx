@@ -276,7 +276,7 @@ function VoiceShiftInput({ onRecognised }: { onRecognised: (id: ShiftId) => void
               <h2 className="t-display-sm mt-1 text-ink">Tell LIFE7 what changed.</h2>
             </div>
             <span className="t-label flex items-center gap-1.5 rounded-r-pill bg-sage-mist px-2.5 py-1.5 text-green">
-              <LockKeyhole size={12} /> Audio is not stored
+              <LockKeyhole size={12} /> LIFE7 does not store audio
             </span>
           </div>
 
