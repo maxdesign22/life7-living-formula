@@ -47,10 +47,10 @@ export default function AddEventPopover({
         <>
           <div className="fixed inset-0 z-[60]" onClick={onClose} aria-hidden="true" />
           <motion.div
-            className="glass-strong absolute right-0 top-[calc(100%+10px)] z-[61] w-[320px] rounded-r-lg p-4 shadow-e-3"
-            initial={{ opacity: 0, y: -8, scale: 0.97 }}
+            className="glass-strong fixed inset-x-4 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-[61] max-h-[calc(100dvh-8rem)] overflow-y-auto rounded-r-xl p-4 shadow-e-3 min-[640px]:absolute min-[640px]:inset-x-auto min-[640px]:bottom-auto min-[640px]:right-0 min-[640px]:top-[calc(100%+10px)] min-[640px]:w-[320px] min-[640px]:rounded-r-lg"
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.97 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
             transition={{ duration: 0.24, ease: EASE_GLIDE }}
             role="dialog"
             aria-label="Add event"

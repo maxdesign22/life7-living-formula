@@ -30,11 +30,14 @@ function DustCanvas() {
 
     let raf = 0
     let running = true
+    let scrolling = false
+    let scrollTimer = 0
     let particles: Particle[] = []
-    const dpr = Math.min(window.devicePixelRatio || 1, 2)
+    const mobile = window.innerWidth < 900
+    const dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 2)
 
     const spawn = (w: number, h: number): Particle[] => {
-      const count = window.innerWidth < 900 ? 18 : 42
+      const count = window.innerWidth < 900 ? 12 : 42
       return Array.from({ length: count }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
@@ -65,6 +68,10 @@ function DustCanvas() {
       last = now
       const w = window.innerWidth
       const h = window.innerHeight
+      if (scrolling) {
+        raf = requestAnimationFrame(step)
+        return
+      }
       ctx.clearRect(0, 0, w, h)
       const t = now / 1000
       for (const p of particles) {
@@ -100,11 +107,24 @@ function DustCanvas() {
     }
     document.addEventListener('visibilitychange', onVis)
 
+    const appScroll = document.querySelector('[data-app-scroll]')
+    const onScroll = () => {
+      scrolling = true
+      window.clearTimeout(scrollTimer)
+      scrollTimer = window.setTimeout(() => {
+        scrolling = false
+        last = performance.now()
+      }, 120)
+    }
+    appScroll?.addEventListener('scroll', onScroll, { passive: true })
+
     return () => {
       running = false
       cancelAnimationFrame(raf)
+      window.clearTimeout(scrollTimer)
       window.removeEventListener('resize', resize)
       document.removeEventListener('visibilitychange', onVis)
+      appScroll?.removeEventListener('scroll', onScroll)
     }
   }, [])
 

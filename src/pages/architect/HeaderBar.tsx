@@ -33,6 +33,9 @@ export function KineticWords({ text, className }: { text: string; className?: st
   )
 }
 
+// Shared with Architect for the saved-meal label; keeping the canonical meal
+// metadata beside the selector prevents the UI and orchestration from drifting.
+// eslint-disable-next-line react-refresh/only-export-components
 export const MEAL_CONTEXTS: readonly {
   readonly type: MealType
   readonly label: string
@@ -135,39 +138,54 @@ export default function HeaderBar({ mealType, onMealType, onOpenTour }: HeaderBa
 
           <AnimatePresence>
             {open && (
-              <motion.ul
-                role="listbox"
-                initial={{ opacity: 0, y: 8, scale: 0.97 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 6, scale: 0.98 }}
-                transition={{ duration: 0.24, ease: EASE_GLIDE }}
-                className="glass-strong absolute right-0 top-[calc(100%+8px)] z-50 w-[240px] rounded-r-lg p-1.5 shadow-e-2"
-              >
-                {MEAL_CONTEXTS.map((m) => (
-                  <li key={m.type}>
-                    <button
-                      type="button"
-                      role="option"
-                      aria-selected={m.type === mealType}
-                      onClick={() => {
-                        onMealType(m.type)
-                        setOpen(false)
-                      }}
-                      className={cn(
-                        'flex w-full items-center gap-3 rounded-r-md px-2 py-2 text-left transition-colors duration-180 hover:bg-sage-mist',
-                        m.type === mealType && 'bg-sage-mist/70',
-                      )}
-                    >
-                      <img src={m.image} alt="" className="h-9 w-9 rounded-r-sm object-cover" />
-                      <span className="flex-1">
-                        <span className="t-ui-sm block text-ink">{m.label}</span>
-                        <span className="t-label block text-[8.5px] text-ink-faint">{m.time}</span>
-                      </span>
-                      {m.type === mealType && <span className="h-1.5 w-1.5 rounded-full bg-champagne" />}
-                    </button>
+              <>
+                <motion.button
+                  type="button"
+                  aria-label="Close meal selector"
+                  onClick={() => setOpen(false)}
+                  className="fixed inset-0 z-[54] bg-ink/10 backdrop-blur-[1px] min-[640px]:hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+                <motion.ul
+                  role="listbox"
+                  aria-label="Choose meal"
+                  initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 10, scale: 0.98 }}
+                  transition={{ duration: 0.24, ease: EASE_GLIDE }}
+                  className="glass-strong fixed inset-x-4 bottom-[calc(6rem+env(safe-area-inset-bottom))] z-[65] max-h-[calc(100dvh-8rem)] overflow-y-auto rounded-r-xl p-2 shadow-e-3 min-[640px]:absolute min-[640px]:inset-x-auto min-[640px]:bottom-auto min-[640px]:right-0 min-[640px]:top-[calc(100%+8px)] min-[640px]:z-50 min-[640px]:w-[240px] min-[640px]:rounded-r-lg min-[640px]:p-1.5 min-[640px]:shadow-e-2"
+                >
+                  <li role="none" className="px-2 pb-2 pt-1 min-[640px]:hidden">
+                    <span className="t-label text-gold-deep">Choose Thursday meal</span>
                   </li>
-                ))}
-              </motion.ul>
+                  {MEAL_CONTEXTS.map((m) => (
+                    <li key={m.type}>
+                      <button
+                        type="button"
+                        role="option"
+                        aria-selected={m.type === mealType}
+                        onClick={() => {
+                          onMealType(m.type)
+                          setOpen(false)
+                        }}
+                        className={cn(
+                          'flex w-full items-center gap-3 rounded-r-md px-2 py-2 text-left transition-colors duration-180 hover:bg-sage-mist',
+                          m.type === mealType && 'bg-sage-mist/70',
+                        )}
+                      >
+                        <img src={m.image} alt="" className="h-9 w-9 rounded-r-sm object-cover" />
+                        <span className="flex-1">
+                          <span className="t-ui-sm block text-ink">{m.label}</span>
+                          <span className="t-label block text-[8.5px] text-ink-faint">{m.time}</span>
+                        </span>
+                        {m.type === mealType && <span className="h-1.5 w-1.5 rounded-full bg-champagne" />}
+                      </button>
+                    </li>
+                  ))}
+                </motion.ul>
+              </>
             )}
           </AnimatePresence>
         </div>
