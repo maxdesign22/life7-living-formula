@@ -71,7 +71,7 @@ signals.
 
 ### 1:58–2:25 — Protected shift
 
-Point to **Protected Constants**, then press **Compose the shift**. Let all four
+Point to **Protected Constants**, then press **Preview the coordinated update**. Let all four
 ledger cards resolve.
 
 > Protein, budget, preparation time and tonight's dinner are protected. LIFE7
@@ -79,7 +79,7 @@ ledger cards resolve.
 > downstream effect is visible in the Change Ledger, and the whole shift remains
 > reversible.
 
-Press **Apply 4 coordinated changes**.
+Press **Apply update to 4 areas**, then open **Today** to show the visible Continuum sync confirmation.
 
 ### 2:25–2:42 — Close
 
@@ -97,8 +97,8 @@ End. Do not continue into secondary screens.
 1. `/architect` → **Analyze with GPT-5.6** → **Apply all**.
 2. `/continuum` → **Restart demo** → **Try the winning demo phrase**.
 3. Confirm the extracted spinach/expiry/preparation-time signals.
-4. **Compose the shift** → inspect Today, Week, Shopping and Pantry.
-5. **Apply 4 coordinated changes**.
+4. **Preview the coordinated update** → inspect Today, Week, Shopping and Pantry.
+5. **Apply update to 4 areas** → open Today and show the synchronized demo state.
 
 ## Failure-safe narration
 

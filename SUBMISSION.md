@@ -152,7 +152,7 @@ Let the ring, cards, light wave and toast finish.
 
 Open **Continuum Shift** and press **Try the winning demo phrase** (or say: “The
 spinach expires tomorrow and I only have 20 minutes to cook”). Point to the
-transcript and the three extracted signals, then press **Compose the shift**.
+transcript and the three extracted signals, then press **Preview the coordinated update**.
 
 > I do not edit four screens. I tell LIFE7 what changed. It protects the protein
 > floor, budget, sleep window and family dinner, then reveals the smallest
@@ -182,7 +182,7 @@ End on the applied Continuum Shift and the four connected systems.
 7. Open https://life7.maxdesign.rs/continuum and press **Restart demo**.
 8. Use **Try the winning demo phrase** to test Voice Continuum without granting
    microphone access; confirm the extracted spinach, expiry and preparation-time signals.
-9. Press **Compose the shift**, inspect the four-system Change Ledger and apply it.
+9. Press **Preview the coordinated update**, inspect the four-system Change Ledger, apply it, then open Today to confirm the synchronized demo state.
 
 The app remains usable if model access is temporarily unavailable: the
 deterministic recommendations and calculations stay active.

@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import {
   Activity,
   ArrowRight,
@@ -21,6 +22,7 @@ import {
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useToast } from '@/components/life7'
+import { applyContinuumDemoState, clearContinuumDemoState } from '@/lib/continuumDemo'
 
 const EASE_GLIDE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -393,12 +395,14 @@ export default function Continuum() {
 
   const apply = () => {
     setPhase('applied')
-    toast('Continuum Shift applied — four systems moved as one.', { tone: 'gold' })
+    applyContinuumDemoState({ scenarioId: scenario.id, title: scenario.title, appliedAt: Date.now() })
+    toast('Update applied — Today, Week, Shopping and Pantry are now in sync.', { tone: 'gold' })
   }
 
   const reset = () => {
     if (timerRef.current) window.clearTimeout(timerRef.current)
     setPhase('idle')
+    clearContinuumDemoState()
   }
 
   const restartDemo = () => {
@@ -407,6 +411,7 @@ export default function Continuum() {
     setPhase('idle')
     setProtections(new Set(PROTECTIONS_BY_SCENARIO.sleep))
     setDemoKey((current) => current + 1)
+    clearContinuumDemoState()
     window.requestAnimationFrame(() => document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }))
     toast('Demo reset — ready for a clean Continuum run.', { tone: 'sage' })
   }
@@ -427,11 +432,34 @@ export default function Continuum() {
         </button>
       </header>
 
+      <section className="mb-6 rounded-r-xl border border-champagne/35 bg-soft-white/80 p-4 shadow-e-1 min-[760px]:p-5" aria-label="What Continuum does">
+        <div className="grid gap-4 min-[900px]:grid-cols-[minmax(0,1.25fr)_minmax(0,1fr)] min-[900px]:items-center">
+          <div>
+            <span className="t-label text-gold-deep">What Continuum does</span>
+            <h2 className="t-display-sm mt-1 text-ink">Keeps your seven-day plan useful when real life changes.</h2>
+            <p className="t-ui-sm mt-2 max-w-[700px] leading-relaxed text-ink-soft">Tell LIFE7 one change. It protects your non-negotiables, finds the smallest safe update, and coordinates Today, Week, Shopping and Pantry together.</p>
+          </div>
+          <ol className="grid grid-cols-3 gap-2" aria-label="Continuum steps">
+            {[
+              ['1', 'Tell', 'what changed'],
+              ['2', 'Review', 'the update'],
+              ['3', 'Apply', 'or undo'],
+            ].map(([number, title, detail]) => (
+              <li key={number} className="rounded-r-md border border-line bg-cream/55 px-3 py-3">
+                <span className="t-label text-gold-deep">{number}</span>
+                <span className="t-ui-sm mt-1 block font-bold text-ink">{title}</span>
+                <span className="t-ui-sm block text-ink-faint">{detail}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
       <VoiceShiftInput key={demoKey} onRecognised={recogniseVoiceChange} />
 
       <div className="grid gap-6 min-[1100px]:grid-cols-[300px_minmax(0,1fr)]">
         <section aria-label="Choose a life change">
-          <span className="t-label text-ink-faint">01 · What changed?</span>
+          <span className="t-label text-ink-faint">Examples · or choose a change</span>
           <div className="mt-3 grid gap-2 min-[640px]:grid-cols-2 min-[1100px]:grid-cols-1">
             {SCENARIOS.map((item) => {
               const Icon = item.icon
@@ -527,7 +555,7 @@ export default function Continuum() {
               <div className="mt-5 flex flex-wrap gap-2">
                 {phase === 'idle' && (
                   <button type="button" onClick={compose} className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-r-pill bg-champagne px-5 t-ui-sm font-bold text-forest transition-colors hover:bg-gold-light">
-                    Compose the shift <Sparkles size={16} />
+                    Preview the coordinated update <Sparkles size={16} />
                   </button>
                 )}
                 {phase === 'composing' && (
@@ -537,16 +565,29 @@ export default function Continuum() {
                 )}
                 {phase === 'ready' && (
                   <button type="button" onClick={apply} className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-r-pill bg-champagne px-5 t-ui-sm font-bold text-forest transition-colors hover:bg-gold-light">
-                    Apply 4 coordinated changes <ArrowRight size={16} />
+                    Apply update to 4 areas <ArrowRight size={16} />
                   </button>
                 )}
                 {phase === 'applied' && (
-                  <div className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-r-pill bg-sage-mist px-5 t-ui-sm font-bold text-forest"><Check size={16} /> Shift applied</div>
+                  <div className="flex min-h-11 flex-1 items-center justify-center gap-2 rounded-r-pill bg-sage-mist px-5 t-ui-sm font-bold text-forest"><Check size={16} /> Update applied to demo</div>
                 )}
                 {phase !== 'idle' && phase !== 'composing' && (
                   <button type="button" onClick={reset} aria-label="Reset shift" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-soft-white/65 hover:text-white"><RotateCcw size={16} /></button>
                 )}
               </div>
+              {phase === 'applied' && (
+                <div className="mt-3 rounded-r-lg border border-sage/40 bg-sage-mist/15 p-3">
+                  <p className="t-ui-sm font-semibold text-soft-white">Today, Week, Shopping and Pantry are synchronized.</p>
+                  <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+                    {[
+                      ['/today', 'Open Today'],
+                      ['/week', 'Open Week'],
+                      ['/shopping', 'Open Shopping'],
+                      ['/pantry', 'Open Pantry'],
+                    ].map(([to, label]) => <Link key={to} to={to} className="t-ui-sm font-semibold text-champagne underline decoration-champagne/50 underline-offset-4">{label}</Link>)}
+                  </div>
+                </div>
+              )}
               <p className="t-label mt-3 text-center text-soft-white/40">Reversible preview · no protected constant is changed</p>
             </div>
           </div>
@@ -556,11 +597,11 @@ export default function Continuum() {
       <section className="mt-6" aria-label="Change ledger">
         <div className="mb-3 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <span className="t-label text-gold-deep">02 · Change ledger</span>
-            <h2 className="t-display-sm mt-1 text-ink">One signal, four coordinated decisions.</h2>
+            <span className="t-label text-gold-deep">Step 2 · Review the proposed update</span>
+            <h2 className="t-display-sm mt-1 text-ink">One change updates four connected areas.</h2>
           </div>
           <span className={cn('t-label rounded-r-pill px-3 py-1.5', phase === 'ready' || phase === 'applied' ? 'bg-sage-mist text-forest' : 'bg-cream text-ink-faint')}>
-            {phase === 'ready' || phase === 'applied' ? 'Verified by LIFE7 rules' : 'Compose to reveal'}
+            {phase === 'ready' || phase === 'applied' ? 'Verified by LIFE7 rules' : 'Preview update to reveal'}
           </span>
         </div>
 

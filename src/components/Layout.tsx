@@ -1,8 +1,15 @@
-import { useEffect, useRef } from 'react'
-import { useLocation, useOutlet } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useOutlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Check, RotateCcw } from 'lucide-react'
 import AmbientLife from '@/components/AmbientLife'
 import Navbar from '@/components/Navbar'
+import {
+  clearContinuumDemoState,
+  CONTINUUM_DEMO_EVENT,
+  CONTINUUM_ROUTE_MESSAGES,
+  readContinuumDemoState,
+} from '@/lib/continuumDemo'
 
 const EASE_GLIDE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 const EASE_SOFT = [0.4, 0, 0.2, 1] as [number, number, number, number]
@@ -27,6 +34,17 @@ export default function Layout() {
   const outlet = useOutlet()
   const scrollRef = useRef<HTMLDivElement>(null)
   const pageRef = useRef<HTMLDivElement>(null)
+  const [continuumDemo, setContinuumDemo] = useState(readContinuumDemoState)
+
+  useEffect(() => {
+    const sync = () => setContinuumDemo(readContinuumDemoState())
+    window.addEventListener(CONTINUUM_DEMO_EVENT, sync)
+    window.addEventListener('storage', sync)
+    return () => {
+      window.removeEventListener(CONTINUUM_DEMO_EVENT, sync)
+      window.removeEventListener('storage', sync)
+    }
+  }, [])
 
   // Back to top on navigation. `behavior: 'instant'` overrides the scroller's
   // CSS `scroll-behavior: smooth` so route changes never animate a long
@@ -93,6 +111,29 @@ export default function Layout() {
             }}
             className="mx-auto min-h-full max-w-[1440px] px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-6 min-[768px]:px-6 min-[900px]:pb-16 min-[1024px]:px-10 min-[1024px]:pt-10"
           >
+            {continuumDemo && CONTINUUM_ROUTE_MESSAGES[continuumDemo.scenarioId][location.pathname] && (
+              <div className="mb-5 flex flex-col gap-3 rounded-r-lg border border-sage bg-sage-mist/85 px-4 py-3 shadow-e-1 min-[640px]:flex-row min-[640px]:items-center">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-forest text-soft-white">
+                  <Check size={15} />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="t-label text-green">Continuum demo sync active</p>
+                  <p className="t-ui-sm mt-0.5 font-semibold text-forest">
+                    {CONTINUUM_ROUTE_MESSAGES[continuumDemo.scenarioId][location.pathname]}
+                  </p>
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
+                  <Link to="/continuum" className="t-ui-sm font-bold text-forest underline decoration-sage underline-offset-4">Review shift</Link>
+                  <button
+                    type="button"
+                    onClick={() => clearContinuumDemoState()}
+                    className="t-ui-sm inline-flex items-center gap-1.5 font-semibold text-ink-soft hover:text-burgundy"
+                  >
+                    <RotateCcw size={13} /> Undo
+                  </button>
+                </div>
+              </div>
+            )}
             {outlet}
           </motion.div>
         </AnimatePresence>
