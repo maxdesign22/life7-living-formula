@@ -15,6 +15,7 @@ import {
   MoreHorizontal,
   X,
   Orbit,
+  Truck,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -38,6 +39,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/continuum', label: 'Continuum Shift', icon: Orbit, dot: 'gold' },
   { to: '/generator', label: 'Week Generator', icon: Sparkles },
   { to: '/shopping', label: 'Shopping', icon: ShoppingBasket, badge: '9' },
+  { to: '/dispatch', label: 'Dispatch', icon: Truck, dot: 'gold' },
   { to: '/pantry', label: 'Pantry', icon: Package, dot: 'burgundy' },
   { to: '/planner', label: 'Planner', icon: CalendarClock },
   { to: '/coach', label: 'AI Coach', icon: MessageCircle, dot: 'gold' },
@@ -49,6 +51,7 @@ const MORE_ITEMS: NavItem[] = [
   { to: '/generator', label: 'Week Generator', icon: Sparkles },
   { to: '/continuum', label: 'Continuum Shift', icon: Orbit, dot: 'gold' },
   { to: '/shopping', label: 'Shopping', icon: ShoppingBasket, badge: '9' },
+  { to: '/dispatch', label: 'Dispatch', icon: Truck, dot: 'gold' },
   { to: '/planner', label: 'Planner', icon: CalendarClock },
   { to: '/coach', label: 'AI Coach', icon: MessageCircle, dot: 'gold' },
   { to: '/progress', label: 'Progress', icon: TrendingUp },
@@ -314,7 +317,7 @@ function MobileDock() {
           <span className={cn('t-label absolute bottom-1 text-[7px]', path.startsWith('/continuum') ? 'text-gold-deep' : 'text-ink-faint')}>Shift</span>
         </Link>
 
-        <DockSlot item={NAV_ITEMS[6]} active={path.startsWith('/pantry')} />
+        <DockSlot item={NAV_ITEMS[7]} active={path.startsWith('/pantry')} />
 
         <button
           type="button"

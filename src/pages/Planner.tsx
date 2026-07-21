@@ -7,7 +7,7 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Plus, Sparkles } from 'lucide-react'
+import { Plus, Sparkles, Truck } from 'lucide-react'
 import { GlassCard, Life7Mark, MagneticButton, useToast } from '@/components/life7'
 import {
   DEFAULT_CHANNELS,
@@ -27,6 +27,7 @@ import { DEMO_WEEK } from '@/data/demoWeek'
 import type { DayPlan, PlannedMeal } from '@/data/demoWeek'
 import { mealTotals } from '@/lib/nutrition'
 import { getCanonicalShoppingList } from '@/lib/shopping'
+import { readDispatchOrder } from '@/lib/dispatch'
 import SunlightTimeline from '@/pages/planner/SunlightTimeline'
 import type { TimelineAction } from '@/pages/planner/SunlightTimeline'
 import WeekStrips from '@/pages/planner/WeekStrips'
@@ -126,6 +127,7 @@ export default function Planner() {
   )
   const nowMinutes = day.status === 'today' ? DEMO_NOW.timeMinutes : day.status === 'done' ? 1440 : -1
   const notifications = useMemo(() => getDemoNotifications(), [])
+  const dispatchOrder = useMemo(() => readDispatchOrder(), [])
 
   /* ------------------------------------------------------------- actions */
 
@@ -359,6 +361,24 @@ export default function Planner() {
           <AddEventPopover open={addOpen} onClose={() => setAddOpen(false)} onAdd={handleAddEvent} />
         </motion.div>
       </header>
+
+      {dispatchOrder && (
+        <motion.button
+          type="button"
+          onClick={() => navigate('/dispatch')}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="glass mb-6 flex w-full items-center gap-3 rounded-r-lg border-champagne/35 p-4 text-left shadow-e-2 transition-shadow hover:shadow-gold-glow"
+        >
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-sunrise text-forest"><Truck size={19} /></span>
+          <span className="min-w-0 flex-1">
+            <span className="t-label block text-gold-deep">Dispatch · {dispatchOrder.status.replaceAll('-', ' ')}</span>
+            <span className="t-ui-md mt-1 block truncate font-bold text-ink">{dispatchOrder.offer.itemLabel}</span>
+            <span className="t-ui-sm block text-ink-faint">{dispatchOrder.offer.merchant} · delivery connected to today</span>
+          </span>
+          <span className="t-ui-sm shrink-0 font-bold text-forest">Track</span>
+        </motion.button>
+      )}
 
       <div className="grid grid-cols-1 gap-6 min-[1024px]:grid-cols-[minmax(0,1fr)_360px]">
         {/* Zone A — sunlight timeline / week strips */}
