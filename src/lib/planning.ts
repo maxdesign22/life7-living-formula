@@ -104,9 +104,9 @@ export function applyDayType(week: WeekPlan, dayId: string, dayType: DayType): D
         m.mealType === 'breakfast' || m.mealType === 'lunch'
           ? (converted++,
             patchMeal(m, {
-              name: `${m.name} — portable jar`,
+              name: `${m.name}, portable jar`,
               portable: true,
-              note: 'Portable — assembled the night before, eats cold.',
+              note: 'Portable, assembled the night before, eats cold.',
             }))
           : m,
       );
@@ -120,7 +120,7 @@ export function applyDayType(week: WeekPlan, dayId: string, dayType: DayType): D
               items: m.items.map((it): MealItem =>
                 it.ingredientId === 'olive-oil' ? { ...it, grams: Math.max(0, it.grams - 6) } : it,
               ),
-              note: 'Rest day — lighter finish, assembly only.',
+              note: 'Rest day, lighter finish, assembly only.',
             })
           : m,
       );
@@ -134,7 +134,7 @@ export function applyDayType(week: WeekPlan, dayId: string, dayType: DayType): D
               items: m.items.map((it): MealItem =>
                 it.ingredientId === 'greek-yoghurt' ? { ...it, grams: it.grams + 30 } : it,
               ),
-              note: 'Training day — extra protein around the session.',
+              note: 'Training day, extra protein around the session.',
             })
           : m,
       );
@@ -145,11 +145,11 @@ export function applyDayType(week: WeekPlan, dayId: string, dayType: DayType): D
       meals = meals.map((m) =>
         m.mealType === 'dinner'
           ? patchMeal(m, {
-              name: 'Dinner out — market bistro (est.)',
+              name: 'Dinner out, market bistro (est.)',
               status: day.status === 'planned' ? 'planned' : m.status,
               prepMinutes: 1,
               cookMinutes: 0,
-              note: 'Social evening — estimated from the menu, macros held.',
+              note: 'Social evening, estimated from the menu, macros held.',
             })
           : m,
       );
@@ -159,7 +159,7 @@ export function applyDayType(week: WeekPlan, dayId: string, dayType: DayType): D
     case 'prep': {
       meals = meals.map((m) =>
         m.mealType === 'dinner'
-          ? patchMeal(m, { note: 'Prep day — rice and chicken batch-cooked at 17:00.' })
+          ? patchMeal(m, { note: 'Prep day, rice and chicken batch-cooked at 17:00.' })
           : m,
       );
       summary = `${day.dayName} becomes prep day: 35 minutes at 17:00 saves 52 across the week.`;
@@ -265,9 +265,9 @@ export function lockDay(week: WeekPlan, dayId: string, locked = true): WeekPlan 
 
 /** Deterministic optimise-week patches (week.md: Thu 71→74, Wed 74→77, Sat 80→82). */
 const OPTIMISE_PATCHES: Readonly<Record<string, { readonly to: number; readonly tweak: string }>> = {
-  thu: { to: 74, tweak: 'Greek yoghurt +30 g at snack — protein evens out.' },
-  wed: { to: 77, tweak: 'Tomato eggs gain spinach — fibre up on the social day.' },
-  sat: { to: 82, tweak: 'Rest-day dinner adds broccoli — micro coverage closes.' },
+  thu: { to: 74, tweak: 'Greek yoghurt +30 g at snack, protein evens out.' },
+  wed: { to: 77, tweak: 'Tomato eggs gain spinach, fibre up on the social day.' },
+  sat: { to: 82, tweak: 'Rest-day dinner adds broccoli, micro coverage closes.' },
 };
 
 export interface OptimiseChange {
@@ -310,7 +310,7 @@ export function optimiseWeek(week: WeekPlan): OptimiseResult {
     week: next,
     changes,
     skippedLocked,
-    message: 'Week rebalanced — protein evened across 7 days.',
+    message: 'Week rebalanced, protein evened across 7 days.',
     avgBefore: week.avgScore,
     avgAfter: next.avgScore,
   };

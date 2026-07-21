@@ -27,7 +27,7 @@ const INSIGHTS: readonly Insight[] = [
     run: 'planner',
   },
   {
-    copy: 'Fibre is your fastest-improving dimension — +9% per week. Broccoli deserves the credit.',
+    copy: 'Fibre is your fastest-improving dimension, +9% per week. Broccoli deserves the credit.',
     action: 'See sources',
     run: 'sources',
   },
@@ -40,7 +40,7 @@ export default function InsightsRow() {
   const { toast } = useToast()
 
   const run = (kind: Insight['run']) => {
-    if (kind === 'habit') toast('Habit applied — Wednesday breakfast now starts with a boiled egg.', { tone: 'sage' })
+    if (kind === 'habit') toast('Habit applied, Wednesday breakfast now starts with a boiled egg.', { tone: 'sage' })
     else if (kind === 'planner') navigate('/planner')
     else toast('Top fibre sources this week: broccoli ×4, oats ×4, spinach ×3.', { tone: 'gold' })
   }

@@ -271,7 +271,7 @@ export default function IntelligencePanel({
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="t-display-lg leading-none text-ink-faint">—</span>
+                <span className="t-display-lg leading-none text-ink-faint">…</span>
                 <span className="t-label mt-1 text-[9px] text-ink-faint">Meal score</span>
               </div>
             </div>
@@ -307,7 +307,7 @@ export default function IntelligencePanel({
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.25 + i * 0.06, ease: EASE_GLIDE }}
             >
-              <MetricBar label={DIMENSION_LABELS[k]} value={hasItems ? `${score.dims[k]}` : '—'} pct={score.dims[k]} />
+              <MetricBar label={DIMENSION_LABELS[k]} value={hasItems ? `${score.dims[k]}` : '…'} pct={score.dims[k]} />
               <AnimatePresence>
                 {dimFlash[k] != null && dimFlash[k]! > 0 && (
                   <motion.span
@@ -370,7 +370,7 @@ export default function IntelligencePanel({
             onClick={onBudgetAlternative}
             className="t-ui-sm mt-2 text-left text-burgundy underline-offset-2 hover:underline"
           >
-            €{(t.costEur - budgetEur).toFixed(2)} over your meal budget — see budget alternatives
+            €{(t.costEur - budgetEur).toFixed(2)} over your meal budget, see budget alternatives
           </button>
         )}
 
@@ -401,7 +401,7 @@ export default function IntelligencePanel({
           </AnimatePresence>
           {recs.length === 0 && (
             <AILine className="px-1 py-2 text-[15px]" delay={0.2}>
-              This formula is balanced — nothing to adjust right now.
+              This formula is balanced, nothing to adjust right now.
             </AILine>
           )}
         </div>

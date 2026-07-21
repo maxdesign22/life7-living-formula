@@ -473,7 +473,7 @@ export default function Today() {
   const markEaten = () => {
     if (eaten) return
     setEaten(true)
-    toast('Lunch logged — nice balance')
+    toast('Lunch logged, nice balance')
     window.setTimeout(() => {
       setScore(76)
       setMarkState('celebrate')
@@ -550,7 +550,7 @@ export default function Today() {
         <div>
           <span className="t-label text-ink-soft">Energy · today</span>
           <p className="t-ui-sm mt-2 text-ink-soft">
-            1,840 of 2,550 kcal target. Lunch adds 612 kcal — you land at <b className="text-ink">96%</b>.
+            1,840 of 2,550 kcal target. Lunch adds 612 kcal, you land at <b className="text-ink">96%</b>.
           </p>
         </div>
       )}
@@ -783,7 +783,7 @@ export default function Today() {
                 </div>
                 <p className="t-ui-sm mt-2 flex items-center gap-1.5 text-ink-soft">
                   <span className="h-1.5 w-1.5 rounded-full bg-burgundy" />
-                  Uses spinach — expires tomorrow.
+                  Uses spinach, expires tomorrow.
                 </p>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
                   {!eaten ? (
@@ -848,7 +848,7 @@ export default function Today() {
               />
             </p>
             <p className="t-ui-sm mt-3 text-ink-soft">
-              Suggested adjustment ready in Meal Architect — adds <b className="tnum">32 g</b> protein for{' '}
+              Suggested adjustment ready in Meal Architect. Adds <b className="tnum">32 g</b> protein for{' '}
               <b className="tnum">+118 kcal</b>.
             </p>
             <div className="mt-4 flex flex-wrap gap-2">
@@ -892,7 +892,7 @@ export default function Today() {
               <span className="t-label text-ink-soft">Shopping</span>
               <ShoppingBasket size={20} strokeWidth={1.5} className="animate-swing text-forest" />
             </div>
-            <p className="t-ui-lg text-ink">Market list ready — 6 items, ≈ €18.40.</p>
+            <p className="t-ui-lg text-ink">Market list ready, 6 items, ≈ €18.40.</p>
             <p className="t-ui-sm mt-1 text-ink-faint">Best before Saturday</p>
             <div className="mt-4 flex items-center justify-between gap-2">
               <Chip variant="sage">6 items</Chip>
@@ -1000,7 +1000,7 @@ export default function Today() {
                         onClick={() => {
                           setActivityTime(t)
                           setReschedOpen(false)
-                          toast(`Mobility moved to ${t} — Planner updated`)
+                          toast(`Mobility moved to ${t}, Planner updated`)
                         }}
                       >
                         <span className="tnum">{t}</span>
@@ -1097,7 +1097,7 @@ export default function Today() {
               <img src="/meal-omelette.jpg" alt="Spinach omelette" className="h-16 w-16 rounded-r-md object-cover" />
               <div>
                 <p className="t-display-sm text-[18px] text-ink">Spinach Omelette & Tomatoes</p>
-                <p className="t-ui-sm mt-0.5 text-ink-soft">Spinach added — nothing wasted.</p>
+                <p className="t-ui-sm mt-0.5 text-ink-soft">Spinach added, nothing wasted.</p>
               </div>
             </div>
             <div className="t-metric-sm tnum mt-3 flex gap-3 text-ink-soft">

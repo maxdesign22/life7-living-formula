@@ -85,7 +85,7 @@ export default function DiversityOrbit() {
                   className="cursor-pointer"
                   onMouseEnter={() => setHover(i)}
                   onMouseLeave={() => setHover(null)}
-                  onClick={() => toast(`Top sources — ${n.name}: ${n.sources}.`, { tone: 'gold' })}
+                  onClick={() => toast(`Top sources, ${n.name}: ${n.sources}.`, { tone: 'gold' })}
                 >
                   {/* slot track */}
                   <path d={arcPath(a0, a0 + slotLen, R)} fill="none" stroke="#F3EBDA" strokeWidth="13" strokeLinecap="round" />

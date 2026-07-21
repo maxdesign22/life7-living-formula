@@ -233,7 +233,7 @@ export default function ProfileCard({
 
   const commit = (patch: Partial<ProfileState>, weightChanged = false) => {
     onChange({ ...profile, ...patch })
-    toast('Profile updated — targets recalculated', { tone: 'gold' })
+    toast('Profile updated, targets recalculated', { tone: 'gold' })
     setGoalShimmer((n) => n + 1)
     if (weightChanged) {
       setWeightCaption(true)
@@ -290,7 +290,7 @@ export default function ProfileCard({
               const url = URL.createObjectURL(file)
               setAvatar(url)
               setRingFlash((n) => n + 1)
-              toast('Photo updated — looking well, Alex.', { tone: 'sage' })
+              toast('Photo updated, looking well, Alex.', { tone: 'sage' })
             }}
           />
         </div>
@@ -371,7 +371,7 @@ export default function ProfileCard({
       <p className="t-ui-sm mt-3 font-medium text-ink-faint">
         {imperial ? (
           <>
-            Showing imperial —{' '}
+            Showing imperial ·{' '}
             <CountUp value={Math.round(kgToLb(profile.weightKg))} className="font-bold text-ink" /> lb ·{' '}
             {cmToFtIn(profile.heightCm)}
           </>

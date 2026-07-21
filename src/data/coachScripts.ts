@@ -172,14 +172,14 @@ export const COACH_SCRIPTS: readonly CoachScript[] = [
     matchPatterns: ['missed lunch', 'skipped lunch', 'no lunch', 'missed a meal', 'missed meal'],
     thinkingMs: 950,
     reply:
-      'No problem. I moved 30 g protein to your snack and rebuilt dinner — spinach still gets used tonight.',
+      'No problem. I moved 30 g protein to your snack and rebuilt dinner. Spinach still gets used tonight.',
     cards: [
       {
         kind: 'recalculation',
         changes: [
-          { label: 'Lunch 12:30', before: 'Herb Chicken & Rice Bowl', after: 'missed — struck through' },
+          { label: 'Lunch 12:30', before: 'Herb Chicken & Rice Bowl', after: 'missed, struck through' },
           { label: 'Snack 16:00', before: 'Yoghurt & walnuts', after: 'Yoghurt 250 g + walnuts 30 g (+30 g protein)' },
-          { label: 'Dinner 19:30', before: 'Spinach omelette', after: 'Rebuilt — spinach still used' },
+          { label: 'Dinner 19:30', before: 'Spinach omelette', after: 'Rebuilt, spinach still used' },
         ],
       },
     ],
@@ -229,7 +229,7 @@ export const COACH_SCRIPTS: readonly CoachScript[] = [
     command: 'Give me a 15-minute dinner.',
     matchPatterns: ['15-minute', '15 minute', 'quick dinner', 'fast dinner', 'quick meal', 'dinner idea'],
     thinkingMs: 950,
-    reply: 'Spinach tomato omelette — 12 minutes, 36 g protein, uses tomorrow’s spinach.',
+    reply: 'Spinach tomato omelette, 12 minutes, 36 g protein, uses tomorrow’s spinach.',
     cards: [
       {
         kind: 'meal-preview',
@@ -285,16 +285,16 @@ export const QUICK_DINNER_ALTERNATES: readonly CoachCard[] = [
 ];
 
 export const QUICK_DINNER_ALTERNATE_REPLIES: readonly string[] = [
-  'Spinach tomato omelette — 12 minutes, 36 g protein, uses tomorrow’s spinach.',
-  'Greek yoghurt bowl — 4 minutes, 24 g protein, zero cooking.',
-  'Chicken rice jar — 9 minutes with prepped rice, 41 g protein.',
+  'Spinach tomato omelette, 12 minutes, 36 g protein, uses tomorrow’s spinach.',
+  'Greek yoghurt bowl, 4 minutes, 24 g protein, zero cooking.',
+  'Chicken rice jar, 9 minutes with prepped rice, 41 g protein.',
 ];
 
 /** Free-text fallback (unmatched input). */
 export const COACH_FALLBACK: Omit<CoachScript, 'command' | 'matchPatterns' | 'thinkingMs'> = {
   id: 'fallback',
   reply:
-    'I can adjust meals, days, budget, protein and timing. Try one of the commands below — or ask about any ingredient in your pantry.',
+    'I can adjust meals, days, budget, protein and timing. Try one of the commands below, or ask about any ingredient in your pantry.',
   cards: [],
   actions: [ACT('show-expiry-queue', 'Show my expiry queue', 'glass'), ACT('rebuild-today', 'Rebuild today', 'gold')],
 };
@@ -304,7 +304,7 @@ export const COACH_FALLBACK_THINKING_MS = 800;
 /** First-mount welcome message (verbatim from coach.md). */
 export const COACH_WELCOME = {
   reply:
-    'Good afternoon, Alex. Thursday is 71 — strong. Your spinach wants to be dinner tonight, and Friday’s training day is already fuelled. What shall we improve?',
+    'Good afternoon, Alex. Thursday is a strong 71. Your spinach wants to be dinner tonight, and Friday’s training day is already fuelled. What shall we improve?',
   actions: [
     ACT('fix-protein', 'Fix tonight’s protein', 'gold'),
     ACT('cheaper-week', 'Make week cheaper', 'glass'),
@@ -313,7 +313,7 @@ export const COACH_WELCOME = {
 } as const;
 
 /** Presence caption under the core. */
-export const COACH_PRESENCE_CAPTION = 'YOUR WEEK · YOUR PANTRY · YOUR GOALS — I REMEMBER';
+export const COACH_PRESENCE_CAPTION = 'YOUR WEEK · YOUR PANTRY · YOUR GOALS · I REMEMBER';
 
 /** Match free text to a script (deterministic, first pattern hit wins). */
 export function matchCoachScript(text: string): CoachScript | undefined {

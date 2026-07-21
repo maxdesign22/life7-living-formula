@@ -59,7 +59,7 @@ export const STORE_LABELS: Record<ShoppingStoreId, string> = {
   market: 'Farmers market',
   pharmacy: 'Pharmacy / wellness',
   online: 'Online delivery',
-  pantry: 'Pantry — already home',
+  pantry: 'Pantry · already home',
 };
 
 /** Display order for the shopping path. */
@@ -138,7 +138,7 @@ export function buildShoppingList(
         image: ing.image,
         badges: ['at-home'],
         purchased: true,
-        note: 'Already home — auto-deducted.',
+        note: 'Already home, auto-deducted.',
       });
       byStore.set('pantry', rows);
     }
@@ -165,7 +165,7 @@ export function buildShoppingList(
       image: ing.image,
       badges,
       purchased: false,
-      ...(expiringAtHome ? { note: 'You still have some — buy the smaller pack mid-week.' } : {}),
+      ...(expiringAtHome ? { note: 'You still have some, buy the smaller pack mid-week.' } : {}),
     });
     byStore.set(ing.store, rows);
   }
@@ -207,7 +207,7 @@ const SUPPLEMENT_ITEMS: readonly ShoppingItem[] = [
     image: 'ing-blueberries.png',
     badges: [],
     purchased: false,
-    note: 'Suggested by your Recovery trend — optional.',
+    note: 'Suggested by your Recovery trend, optional.',
   },
   {
     id: 'supp-magnesium',
@@ -218,7 +218,7 @@ const SUPPLEMENT_ITEMS: readonly ShoppingItem[] = [
     image: 'ing-walnuts.png',
     badges: [],
     purchased: false,
-    note: 'Suggested by your Recovery trend — optional.',
+    note: 'Suggested by your Recovery trend, optional.',
   },
 ];
 
@@ -256,7 +256,7 @@ export function getCanonicalShoppingList(): ShoppingList {
     items: [
       item('chicken-breast', 'Chicken breast', '800 g', 800, 6.8, 'ing-chicken.png'),
       item('greek-yoghurt', 'Greek yoghurt', '1 kg', 1000, 5.6, 'ing-yoghurt.png'),
-      item('broccoli', 'Broccoli', '400 g', 400, 0.9, 'ing-broccoli.png', ['use-first'], 'Buy fresh mid-week — your head expires soon.'),
+      item('broccoli', 'Broccoli', '400 g', 400, 0.9, 'ing-broccoli.png', ['use-first'], 'Buy fresh mid-week, your head expires soon.'),
       item('spinach', 'Spinach', '300 g', 300, 1.8, 'ing-spinach.png'),
       item('rice', 'Rice', '1 kg', 1000, 1.8, 'ing-rice.png'),
       item('eggs', 'Eggs', '×18', 990, 4.5, 'ing-eggs.png'),
@@ -350,7 +350,7 @@ export const SUBSTITUTIONS: readonly Substitution[] = [
     replacementLabel: 'Oats 400 g',
     savesEur: 3.3,
     proteinDeltaG: 4,
-    note: 'More fibre, slower carbs — breakfasts stay interesting.',
+    note: 'More fibre, slower carbs, breakfasts stay interesting.',
   },
   {
     ingredientId: 'feta',
@@ -383,7 +383,7 @@ export function budgetAlternative(original: {
       ingredientId: 'eggs',
       deltaGrams: 110,
       deltaEstimate: 7,
-      note: 'Eggs variant — similar protein lift, friendlier price.',
+      note: 'Eggs variant, similar protein lift, friendlier price.',
     };
   }
   return { ...original, deltaEstimate: 5, note: 'Smaller pack, same direction.' };
@@ -423,7 +423,7 @@ export function optimiseBudget(list: ShoppingList): BudgetOptimisation {
     totalBeforeEur,
     totalAfterEur: round2(totalBeforeEur - savedEur),
     savedEur,
-    message: 'Swap salmon for chicken on Friday and buy market tomatoes — same protein structure, €4.60 less.',
+    message: 'Swap salmon for chicken on Friday and buy market tomatoes, same protein structure, €4.60 less.',
   };
 }
 
@@ -448,12 +448,12 @@ export function purchaseProgress(list: ShoppingList): { readonly done: number; r
 
 /** Plain-text export (the real `life7-week24-shopping.txt` download). */
 export function exportListAsText(list: ShoppingList): string {
-  const lines: string[] = [`LIFE7 — Week 24 shopping list`, `Total €${list.totalEur.toFixed(2)} / budget €${list.budgetEur.toFixed(2)}`, ``];
+  const lines: string[] = [`LIFE7 | Week 24 shopping list`, `Total €${list.totalEur.toFixed(2)} / budget €${list.budgetEur.toFixed(2)}`, ``];
   for (const section of list.sections) {
-    lines.push(`${section.label.toUpperCase()} — €${section.subtotalEur.toFixed(2)}`);
+    lines.push(`${section.label.toUpperCase()} · €${section.subtotalEur.toFixed(2)}`);
     for (const i of section.items) {
       const badges = i.badges.length > 0 ? ` [${i.badges.join(', ')}]` : '';
-      lines.push(`  ${i.purchased ? '[x]' : '[ ]'} ${i.name} — ${i.quantityLabel}  €${i.priceEur.toFixed(2)}${badges}`);
+      lines.push(`  ${i.purchased ? '[x]' : '[ ]'} ${i.name} · ${i.quantityLabel}  €${i.priceEur.toFixed(2)}${badges}`);
     }
     lines.push(``);
   }

@@ -129,7 +129,7 @@ function GoalAdjustmentCard({ card, delay }: { card: Extract<CoachCard, { kind: 
   const proposedKcal = currentKcal + card.kcalDelta
   return (
     <CardShell delay={delay}>
-      <CardEyebrow>Goal adjustment — training days</CardEyebrow>
+      <CardEyebrow>Goal adjustment, training days</CardEyebrow>
       <div className="mt-3 space-y-3">
         <div className="grid gap-3 min-[520px]:grid-cols-2">
           <div className="rounded-r-sm bg-cream/60 p-3">
@@ -141,10 +141,10 @@ function GoalAdjustmentCard({ card, delay }: { card: Extract<CoachCard, { kind: 
             <span className="t-ui-sm mt-1 block font-bold text-forest">{card.proposedLabel}</span>
           </div>
         </div>
-        <MetricBar label="Protein — current" value={`${currentProtein} g`} pct={(currentProtein / 150) * 100} />
-        <MetricBar label="Protein — proposed" value="150 g" pct={100} targetPct={(currentProtein / 150) * 100} />
-        <MetricBar label="Energy — current" value={`${currentKcal.toLocaleString('en-US')} kcal`} pct={(currentKcal / 2800) * 100} />
-        <MetricBar label="Energy — proposed" value={`${proposedKcal.toLocaleString('en-US')} kcal`} pct={(proposedKcal / 2800) * 100} targetPct={(currentKcal / 2800) * 100} />
+        <MetricBar label="Protein, current" value={`${currentProtein} g`} pct={(currentProtein / 150) * 100} />
+        <MetricBar label="Protein, proposed" value="150 g" pct={100} targetPct={(currentProtein / 150) * 100} />
+        <MetricBar label="Energy, current" value={`${currentKcal.toLocaleString('en-US')} kcal`} pct={(currentKcal / 2800) * 100} />
+        <MetricBar label="Energy, proposed" value={`${proposedKcal.toLocaleString('en-US')} kcal`} pct={(proposedKcal / 2800) * 100} targetPct={(currentKcal / 2800) * 100} />
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         <Chip variant="gold" className="px-2.5 py-1 text-[12px]">

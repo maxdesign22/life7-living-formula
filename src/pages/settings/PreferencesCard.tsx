@@ -256,7 +256,7 @@ export default function PreferencesCard({
                       next.add('Vegetarian')
                       setRestrictions(next)
                       setConfirmVeg(false)
-                      toast('Week regenerated — vegetarian plan starts tomorrow.', { tone: 'sage' })
+                      toast('Week regenerated, vegetarian plan starts tomorrow.', { tone: 'sage' })
                     }}
                   >
                     Confirm

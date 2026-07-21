@@ -36,7 +36,7 @@ export default function About() {
     if (next >= 7) {
       setClicks(0)
       setMarkState('celebrate')
-      toast('You found the seventh segment — Joy.', { tone: 'gold' })
+      toast('You found the seventh segment, Joy.', { tone: 'gold' })
       window.setTimeout(() => setMarkState('rest'), 1600)
     }
   }
@@ -62,7 +62,7 @@ export default function About() {
           Version 0.9 · Prototype
         </span>
         <p className="t-ui-sm mt-3 font-medium text-ink-faint">
-          Designed as a living system — light, nature, rhythm, and you.
+          Designed as a living system: light, nature, rhythm, and you.
         </p>
       </div>
     </GlassCard>

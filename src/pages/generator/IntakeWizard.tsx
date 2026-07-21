@@ -79,7 +79,7 @@ const FAVOURITE_SUGGESTIONS = ['chicken', 'oats', 'banana'] as const
 
 function Spine({ step }: { step: number }) {
   return (
-    <div className="mb-8 flex items-center" aria-label={`Step ${step + 1} of 3 — ${STEPS[step]}`}>
+    <div className="mb-8 flex items-center" aria-label={`Step ${step + 1} of 3, ${STEPS[step]}`}>
       {STEPS.map((name, i) => (
         <div key={name} className={cn('flex items-center', i < STEPS.length - 1 && 'flex-1')}>
           <div className="flex items-center gap-2.5">
@@ -245,7 +245,7 @@ export default function IntakeWizard({ intake, onPatch, step, direction, onStep,
 
       <Shake tick={shake.goals ?? 0}>
         <div>
-          <FieldLabel hint="up to 2 — they blend">Goal</FieldLabel>
+          <FieldLabel hint="up to 2, they blend">Goal</FieldLabel>
           <div className="grid grid-cols-2 gap-2">
             {WIZARD_GOALS.map((g) => {
               const selected = intake.goals.includes(g)

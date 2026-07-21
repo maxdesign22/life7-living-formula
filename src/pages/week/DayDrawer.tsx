@@ -301,7 +301,7 @@ function DayDrawer({
             key="drawer"
             role="dialog"
             aria-modal="true"
-            aria-label={`${day.dayName} — day details`}
+            aria-label={`${day.dayName}, day details`}
             initial={isMobile ? { y: '100%' } : { x: '100%' }}
             animate={isMobile ? { y: 0 } : { x: 0 }}
             exit={isMobile ? { y: '100%' } : { x: '100%' }}
@@ -361,7 +361,7 @@ function DayDrawer({
             <div className="flex-1 space-y-6 overflow-y-auto px-6 pb-6">
               {/* meals */}
               <section aria-label={`${day.dayName} meals`}>
-                <p className="t-label mb-2.5 text-ink-soft">Meals — drag to another day</p>
+                <p className="t-label mb-2.5 text-ink-soft">Meals, drag to another day</p>
                 <div className="space-y-2.5">
                   <AnimatePresence initial={false}>
                     {day.meals.map((meal, i) => (
@@ -481,7 +481,7 @@ function DayDrawer({
                       </button>
                     </PopoverTrigger>
                     <PopoverContent className="glass-strong w-64 rounded-r-md border-line shadow-e-2">
-                      <p className="t-label mb-2 text-ink-soft">Day type — plan auto-adjusts</p>
+                      <p className="t-label mb-2 text-ink-soft">Day type, plan auto-adjusts</p>
                       <div className="space-y-1">
                         {DAY_TYPE_CHOICES.map((t) => {
                           const meta = DAY_TYPE_META[t]

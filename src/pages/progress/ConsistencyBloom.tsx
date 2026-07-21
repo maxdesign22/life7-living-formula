@@ -25,8 +25,8 @@ const BLOOMS: Record<Period, Petal[]> = {
   week: [
     { day: 'Mon', pct: 100, note: '4 of 4 meals as planned' },
     { day: 'Tue', pct: 100, note: '4 of 4 meals as planned' },
-    { day: 'Wed', pct: 75, notch: true, note: '3 of 4 — dinner out (Social)' },
-    { day: 'Thu', pct: 50, note: '2 of 4 so far — today is live' },
+    { day: 'Wed', pct: 75, notch: true, note: '3 of 4, dinner out (Social)' },
+    { day: 'Thu', pct: 50, note: '2 of 4 so far, today is live' },
     { day: 'Fri', pct: 92, ghost: true, note: 'planned readiness 92%' },
     { day: 'Sat', pct: 88, ghost: true, note: 'planned readiness 88%' },
     { day: 'Sun', pct: 95, ghost: true, note: 'planned readiness 95%' },

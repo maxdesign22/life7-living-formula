@@ -445,7 +445,7 @@ function PlanStage({
             <span className="tnum text-[12px] font-bold text-green">saves {plan.prepSchedule.savesMinutes} min</span>
           </div>
           <p className="t-ui-md mt-2 text-ink">
-            {plan.prepSchedule.tasks} — {plan.prepSchedule.totalMinutes} min total, saves {plan.prepSchedule.savesMinutes} min across the week.
+            {plan.prepSchedule.tasks} · {plan.prepSchedule.totalMinutes} min total, saves {plan.prepSchedule.savesMinutes} min across the week.
           </p>
           {/* reuse arcs Sun → Wed */}
           <div className="mt-4">

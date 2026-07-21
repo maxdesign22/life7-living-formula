@@ -36,10 +36,10 @@ const WEEK_CSS = `
 }
 .week-dash-flow { animation: week-dash-flow 9s linear infinite; }
 .week-watermark-drift { animation: week-watermark-drift 14s ease-in-out infinite; }
-/* contrast-tuned ScoreRings on the week screen — firmer track + ticks (ScoreRing is shared) */
+/* contrast-tuned ScoreRings on the week screen, firmer track + ticks (ScoreRing is shared) */
 .week-ring svg > circle:first-of-type { stroke: rgba(46,70,48,0.16); }
 .week-ring svg > g { opacity: 0.9; }
-/* per-day score-ring identity — re-tints the shared ScoreRing gradient stops
+/* per-day score-ring identity, re-tints the shared ScoreRing gradient stops
    and travelling cap through CSS vars set by the week cells (ScoreRing is shared) */
 .week-ring-day svg defs stop:nth-child(1) { stop-color: var(--day-deep, #B08A3E); }
 .week-ring-day svg defs stop:nth-child(2) { stop-color: var(--day-bright, #F2C14E); }
@@ -136,7 +136,7 @@ export default function Week() {
     const prev = weekRef.current
     const res = optimiseWeek(prev)
     if (res.changes.length === 0) {
-      toast('Week is already balanced — every unlocked day is at its best.', { tone: 'gold' })
+      toast('Week is already balanced. Every unlocked day is at its best.', { tone: 'gold' })
       return
     }
     setWeek(res.week)
@@ -163,11 +163,11 @@ export default function Week() {
       changed++
     }
     if (changed === 0) {
-      toast(`All ${lockedCount} days are locked — nothing to regenerate.`, { tone: 'gold' })
+      toast(`All ${lockedCount} days are locked. Nothing to regenerate.`, { tone: 'gold' })
       return
     }
     setWeek(w)
-    toast(`Regenerated ${changed} unlocked ${changed === 1 ? 'day' : 'days'} — meals reshuffled around the week.`, {
+    toast(`Regenerated ${changed} unlocked ${changed === 1 ? 'day' : 'days'}, meals reshuffled around the week.`, {
       action: undoable(prev),
     })
     announce('Unlocked days regenerated.')
@@ -179,12 +179,12 @@ export default function Week() {
       const day = prev.days.find((d) => d.id === dayId)
       if (!day) return
       if (day.locked) {
-        toast(`${day.dayName} is locked — unlock it to regenerate.`, { tone: 'gold' })
+        toast(`${day.dayName} is locked. Unlock it to regenerate.`, { tone: 'gold' })
         return
       }
       const res = regenerateDay(prev, dayId)
       setWeek(res.week)
-      toast(`${day.dayName} regenerated — score ${res.scoreBefore} → ${res.scoreAfter}.`, {
+      toast(`${day.dayName} regenerated, score ${res.scoreBefore} → ${res.scoreAfter}.`, {
         action: undoable(prev),
       })
       announce(`Meal score for ${day.dayName} changed to ${res.scoreAfter}.`)
@@ -200,8 +200,8 @@ export default function Week() {
       setWeek(lockDay(prev, dayId, !day.locked))
       toast(
         day.locked
-          ? `${day.dayName} unlocked — back in the system.`
-          : `${day.dayName} locked — excluded from optimise and regenerate.`,
+          ? `${day.dayName} unlocked, back in the system.`
+          : `${day.dayName} locked, excluded from optimise and regenerate.`,
       )
     },
     [toast],
@@ -220,7 +220,7 @@ export default function Week() {
       setWeek(
         assembleWeek(days, { weekNumber: prev.weekNumber, goalId: prev.goalId, budgetEur: prev.budgetEur }),
       )
-      toast(`${day.dayName} goal set to ${GOAL_PROFILES[goalId].label} — score re-tuned.`)
+      toast(`${day.dayName} goal set to ${GOAL_PROFILES[goalId].label}. Score re-tuned.`)
       announce(`${day.dayName} score updated after goal change.`)
     },
     [toast, announce],
@@ -241,7 +241,7 @@ export default function Week() {
       const to = prev.days.find((d) => d.id === toDayId)
       if (!to) return
       if (!to.meals.some((m) => m.mealType === mealType)) {
-        toast(`${to.dayName} has no ${mealType} slot — move cancelled.`, { tone: 'gold' })
+        toast(`${to.dayName} has no ${mealType} slot. Move cancelled.`, { tone: 'gold' })
         return
       }
       try {
@@ -249,7 +249,7 @@ export default function Week() {
         setWeek(res.week)
         const delta = Math.round(res.targetProteinDeltaG)
         toast(
-          `Moved ${res.mealName} to ${to.dayName} — ${to.dayName} protein ${delta >= 0 ? '+' : '−'}${Math.abs(delta)} g.`,
+          `Moved ${res.mealName} to ${to.dayName}, ${to.dayName} protein ${delta >= 0 ? '+' : '−'}${Math.abs(delta)} g.`,
           { tone: 'sage', action: undoable(prev) },
         )
         announce(`Moved ${res.mealName} to ${to.dayName}.`)
@@ -286,7 +286,7 @@ export default function Week() {
           )
         }, i * 80)
       })
-      toast(`Goal set to ${GOAL_PROFILES[goalId].label} — the whole week re-tunes.`, { tone: 'gold' })
+      toast(`Goal set to ${GOAL_PROFILES[goalId].label}. The whole week re-tunes.`, { tone: 'gold' })
       announce(`Week goal changed to ${GOAL_PROFILES[goalId].label}.`)
     },
     [toast, later, announce],
@@ -525,7 +525,7 @@ export default function Week() {
               </button>
             </PopoverTrigger>
             <PopoverContent align="end" className="glass-strong w-64 rounded-r-md border-line shadow-e-2">
-              <p className="t-label mb-2 text-ink-soft">Week goal — re-tunes every day</p>
+              <p className="t-label mb-2 text-ink-soft">Week goal · re-tunes every day</p>
               <div className="flex flex-wrap gap-1.5">
                 {WEEK_GOALS.map((g) => (
                   <Chip key={g} variant="gold" selected={g === week.goalId} onClick={() => handleWeekGoal(g)}>

@@ -34,7 +34,7 @@ const STEPS: readonly StepDef[] = [
     targetId: 'arch-zone-canvas',
     prefer: 'bottom',
     title: 'The living plate',
-    body: 'Ingredients land here as objects. Drag them, adjust quantities — the formula responds instantly.',
+    body: 'Ingredients land here as objects. Drag them or adjust quantities. The formula responds instantly.',
   },
   {
     targetId: 'arch-zone-intel',

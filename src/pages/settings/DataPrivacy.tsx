@@ -34,7 +34,7 @@ export default function DataPrivacy() {
     a.download = 'life7-alex-data.json'
     a.click()
     URL.revokeObjectURL(url)
-    toast('Exported life7-alex-data.json — everything, in your hands.', { tone: 'sage' })
+    toast('Exported life7-alex-data.json. Everything is in your hands.', { tone: 'sage' })
   }
 
   const importData = (file: File) => {
@@ -43,7 +43,7 @@ export default function DataPrivacy() {
       try {
         const parsed = JSON.parse(String(reader.result)) as { profile?: { id?: string }; week?: unknown }
         if (parsed?.profile?.id === 'alex' && parsed.week) {
-          toast('Demo data imported — week refreshed from file.', { tone: 'sage' })
+          toast('Demo data imported. Week refreshed from file.', { tone: 'sage' })
         } else {
           toast('That file is not a LIFE7 export.', { tone: 'burgundy' })
         }
@@ -101,7 +101,7 @@ export default function DataPrivacy() {
                 className="t-ui-sm font-bold text-burgundy underline-offset-2 hover:underline"
                 onClick={() => {
                   sessionStorage.clear()
-                  toast('Prototype reset — back to the first morning.', { tone: 'sage' })
+                  toast('Prototype reset. Back to the first morning.', { tone: 'sage' })
                   window.setTimeout(() => window.location.reload(), 900)
                 }}
               >

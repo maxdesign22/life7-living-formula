@@ -149,8 +149,7 @@ export default function PantryCard({
           ) : (
             <p className="t-ui-sm flex items-center gap-1.5 text-gold-deep">
               <Sparkles size={12} strokeWidth={1.5} />
-              Not planned —
-              <button
+              Not planned: <button
                 type="button"
                 className="font-bold underline-offset-2 hover:underline"
                 onClick={() =>

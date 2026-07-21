@@ -304,7 +304,7 @@ export function getWasteStats(pantry: PantryState): WasteStats {
     useFirstWins: 14,
     quote:
       'This week you are on track to waste nothing. Last month the average household threw away €11.40 of food.',
-    tip: 'Bananas at 68% — freeze two tonight for Saturday’s oats.',
+    tip: 'Bananas at 68%, freeze two tonight for Saturday’s oats.',
     tipAction: 'Do it',
   };
 }

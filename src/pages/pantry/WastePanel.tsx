@@ -46,8 +46,8 @@ export default function WastePanel({
 
   const tips = [
     { text: stats.tip, action: stats.tipAction, run: onFreezeBananas },
-    { text: 'Spinach at 82% — tonight’s dinner already uses 100 g of it.', action: 'View plan', run: () => navigate('/week') },
-    { text: 'Oats, rice and olive oil are at 100% — beautifully stocked.', action: 'Nice', run: () => toast('Nothing to do. Calm kitchen.', { tone: 'sage' }) },
+    { text: 'Spinach is at 82%. Tonight’s dinner already uses 100 g of it.', action: 'View plan', run: () => navigate('/week') },
+    { text: 'Oats, rice and olive oil are at 100%. Beautifully stocked.', action: 'Nice', run: () => toast('Nothing to do. Calm kitchen.', { tone: 'sage' }) },
   ]
 
   useEffect(() => {

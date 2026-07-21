@@ -123,7 +123,7 @@ export default function Pantry() {
     }
     setPantry((p) => relabel(addPantryItem(p, yoghurt)))
     setScanOpen(false)
-    toast('Greek yoghurt 500 g added — scan recognised.', { tone: 'sage' })
+    toast('Greek yoghurt 500 g added, scan recognised.', { tone: 'sage' })
   }
 
   const onFreezeBananas = () => {
@@ -141,7 +141,7 @@ export default function Pantry() {
       plannedUsage: [],
     }
     setPantry((p) => relabel(addPantryItem(p, frozen)))
-    toast('Two bananas moved to the freezer — Saturday’s oats are safe.', { tone: 'gold' })
+    toast('Two bananas moved to the freezer, Saturday’s oats are safe.', { tone: 'gold' })
   }
 
   const onUpdate = (id: string, patch: Partial<Pick<PantryItem, 'location' | 'expiresInDays'>>) =>
@@ -184,7 +184,7 @@ export default function Pantry() {
             type="button"
             onClick={scrollToWaste}
             className="glass flex items-center gap-2.5 rounded-r-lg px-3 py-2 shadow-e-1 transition-shadow duration-300 hover:shadow-gold-glow"
-            aria-label={`Waste reduction score ${wasteScore} — jump to details`}
+            aria-label={`Waste reduction score ${wasteScore}, jump to details`}
           >
             <ScoreRing value={wasteScore} size={56} strokeWidth={5}>
               {(count) => (

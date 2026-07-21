@@ -72,7 +72,7 @@ function buildDayEvents(day: DayPlan): TimelineEvent[] {
         `${day.id}-${meal.mealType}`,
         meal.time,
         'meal',
-        `${meal.mealType[0].toUpperCase()}${meal.mealType.slice(1)} — ${meal.name}`,
+        `${meal.mealType[0].toUpperCase()}${meal.mealType.slice(1)}, ${meal.name}`,
         `${Math.round(t.kcal)} kcal · P ${Math.round(t.protein)} g`,
         { actionLabel: 'View', mealId: meal.id, done: meal.status === 'eaten' },
       ),
@@ -85,9 +85,9 @@ function buildDayEvents(day: DayPlan): TimelineEvent[] {
 }
 
 const EXPANDED_NOTES: Partial<Record<TimelineEvent['type'], string>> = {
-  wake: 'Sunrise alarm fades in over ten minutes — no harsh tone.',
+  wake: 'Sunrise alarm fades in over ten minutes. No harsh tone.',
   hydration: 'Glasses today also fill the hydration ring on Today.',
-  supplement: 'Take with food — it pairs with breakfast.',
+  supplement: 'Take with food. It pairs with breakfast.',
   movement: 'A short walk smooths the post-lunch glucose curve.',
   sleep: 'Quiet hours hold every reminder until morning.',
   prep: "Tomorrow's breakfast is decided tonight.",
@@ -139,11 +139,11 @@ export default function Planner() {
       if (a.kind === 'done') {
         const nextDone = !a.event.done
         setEvents(markEventDone(events, a.event.id, nextDone))
-        if (nextDone) toast('Logged — nice rhythm.', { tone: 'sage' })
+        if (nextDone) toast('Logged, nice rhythm.', { tone: 'sage' })
         return
       }
       if (a.kind === 'glass') {
-        toast('Glass logged — 400 ml added to today.', { tone: 'sage' })
+        toast('Glass logged, 400 ml added to today.', { tone: 'sage' })
         return
       }
       if (a.kind === 'view') {
@@ -183,7 +183,7 @@ export default function Planner() {
         actionLabel: 'Done',
       })
       setEvents(addEvent(events, ev))
-      toast('Event added — the day re-flowed around it.', { tone: 'gold' })
+      toast('Event added, the day re-flowed around it.', { tone: 'gold' })
     },
     [events, setEvents, toast],
   )
@@ -220,7 +220,7 @@ export default function Planner() {
   const handleMute = useCallback(
     (n: DemoNotification) => {
       setMutedIds((prev) => new Set(prev).add(n.id))
-      toast('This type is muted — future ones arrive silently.', {
+      toast('This type is muted, future ones arrive silently.', {
         tone: 'sage',
         action: {
           label: 'Undo',
@@ -392,7 +392,7 @@ export default function Planner() {
                 transition={{ duration: 0.35, ease: EASE_GLIDE }}
               >
                 <p className="t-serif-quote mb-6 text-[17px] text-ink-soft">
-                  Seven days, one rhythm — pick a strip to open its sunlight path.
+                  Seven days, one rhythm. Pick a strip to open its sunlight path.
                 </p>
                 <WeekStrips
                   todayIndex={DEMO_NOW.dayIndex}
@@ -444,7 +444,7 @@ export default function Planner() {
           if (drawerMeal) {
             const ev = events.find((e) => e.mealId === drawerMeal.id)
             if (ev) setEvents(markEventDone(events, ev.id, true))
-            toast('Meal logged — enjoy.', { tone: 'sage' })
+            toast('Meal logged, enjoy.', { tone: 'sage' })
           }
           setDrawerMeal(null)
         }}
@@ -456,7 +456,7 @@ export default function Planner() {
         onFinish={() => {
           if (cooking) {
             setEvents(markEventDone(events, cooking.eventId, true))
-            toast('Cooking finished — the evening re-balanced itself.', { tone: 'sage' })
+            toast('Cooking finished, the evening re-balanced itself.', { tone: 'sage' })
           }
           setCooking(null)
         }}

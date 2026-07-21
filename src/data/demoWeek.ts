@@ -186,9 +186,9 @@ const DAY_SPECS: readonly DaySpec[] = [
     ['snack', 'Greek Yoghurt & Walnuts',
       [{ ingredientId: 'greek-yoghurt', grams: 200 }, { ingredientId: 'walnuts', grams: 15 }],
       2, 0, PHOTO.yoghurt, 'eaten'],
-    ['dinner', 'Dinner out — market bistro (est.)',
+    ['dinner', 'Dinner out, market bistro (est.)',
       [{ ingredientId: 'chicken-breast', grams: 120 }, { ingredientId: 'rice', grams: 150 }, { ingredientId: 'tomato', grams: 80 }, { ingredientId: 'olive-oil', grams: 20 }, { ingredientId: 'feta', grams: 40 }],
-      1, 0, PHOTO.chicken, 'out', 'Social evening — estimated from the menu.'],
+      1, 0, PHOTO.chicken, 'out', 'Social evening, estimated from the menu.'],
   ]),
   // ------------------------------------------------ Thursday 71 · today
   D('normal', 'today', 71, 2060, 118, 8.9, 21, 'ing-spinach.png', [
@@ -233,7 +233,7 @@ const DAY_SPECS: readonly DaySpec[] = [
       2, 0, PHOTO.bananaBar, 'planned'],
     ['dinner', 'Chicken Avocado Salad Bowl',
       [{ ingredientId: 'chicken-breast', grams: 120 }, { ingredientId: 'tomato', grams: 150 }, { ingredientId: 'spinach', grams: 100 }, { ingredientId: 'avocado', grams: 80 }, { ingredientId: 'olive-oil', grams: 10 }, { ingredientId: 'feta', grams: 30 }],
-      3, 0, PHOTO.chicken, 'planned', 'Rest day — assembly only.'],
+      3, 0, PHOTO.chicken, 'planned', 'Rest day, assembly only.'],
   ]),
   // --------------------------------------------------- Sunday 84 · Prep day
   D('prep', 'planned', 84, 2180, 136, 9.7, 22, 'ing-eggs.png', [
@@ -248,7 +248,7 @@ const DAY_SPECS: readonly DaySpec[] = [
       2, 0, PHOTO.yoghurt, 'planned'],
     ['dinner', 'Salmon Greens',
       [{ ingredientId: 'salmon-fillet', grams: 140 }, { ingredientId: 'spinach', grams: 100 }, { ingredientId: 'broccoli', grams: 100 }, { ingredientId: 'olive-oil', grams: 10 }],
-      5, 8, PHOTO.salmon, 'planned', 'Prep day — rice and chicken batch-cooked at 17:00.'],
+      5, 8, PHOTO.salmon, 'planned', 'Prep day, rice and chicken batch-cooked at 17:00.'],
   ]),
 ];
 /* eslint-enable @typescript-eslint/no-magic-numbers */

@@ -50,7 +50,7 @@ export const DAILY_INSIGHT_COPY =
   'You are at 72% of your energy target but only 48% of your protein target. Your next meal should prioritise lean protein and vegetables.';
 
 export const DAILY_INSIGHT_SUBLINE =
-  'Suggested adjustment ready in Meal Architect — adds 32 g protein for +118 kcal.';
+  'Suggested adjustment ready in Meal Architect. Adds 32 g protein for +118 kcal.';
 
 // --------------------------------------------------------------------- coach
 
@@ -349,10 +349,10 @@ export class MockAIService implements AIService {
     const pantry = createDemoPantry();
     const summary = getPantrySummary(pantry);
     return [
-      `Profile — ${USER_PROFILE.name}, ${USER_PROFILE.age}, Healthy & Strong`,
-      `Week 24 — Thursday, day 4 of 7`,
-      `Pantry — ${summary.itemCount} items · ${summary.expiringSoon} expiring`,
-      `Targets — ${DAILY_TARGETS.kcal} kcal · P ${DAILY_TARGETS.proteinG} g`,
+      `Profile · ${USER_PROFILE.name}, ${USER_PROFILE.age}, Healthy & Strong`,
+      `Week 24 · Thursday, day 4 of 7`,
+      `Pantry · ${summary.itemCount} items · ${summary.expiringSoon} expiring`,
+      `Targets · ${DAILY_TARGETS.kcal} kcal · P ${DAILY_TARGETS.proteinG} g`,
     ];
   }
 }

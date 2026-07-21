@@ -137,7 +137,7 @@ export default function Architect() {
         ingredientId: 'eggs',
         ingredientName: eggs.name,
         deltaGrams: 110,
-        title: `Add ${eggs.name} — 110 g`,
+        title: `Add ${eggs.name} · 110 g`,
         deltaEstimate: 7,
         recomputedDelta:
           rescoreMeal(items, { ingredientId: 'eggs', deltaGrams: 110 }, scoreOpts).total - score.total,

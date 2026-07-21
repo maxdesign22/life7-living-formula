@@ -205,7 +205,7 @@ export default function Membership({
     setReserved(true)
     setBoostActive(true)
     if (!boostTarget) setBoostTarget('Steady energy')
-    toast('Founding preview reserved — no charge, no card.', { tone: 'gold' })
+    toast('Founding preview reserved. No charge, no card.', { tone: 'gold' })
   }
 
   return (

@@ -96,7 +96,7 @@ export default function Shopping() {
       priceOverride: round2(item.priceEur - sub.savesEur),
       swapUsed: true,
     })
-    toast(`Swap applied — ${sub.replacementLabel}, saves ${eur(sub.savesEur)}.`, { tone: 'gold' })
+    toast(`Swap applied, ${sub.replacementLabel}, saves ${eur(sub.savesEur)}.`, { tone: 'gold' })
   }
 
   const onOptimise = () => {
@@ -107,7 +107,7 @@ export default function Shopping() {
     setOptimised(true)
     setFlashRows(new Set(Object.keys(opt)))
     window.setTimeout(() => setFlashRows(new Set()), 1800)
-    toast(`Optimised — total ${eur(optimisation.totalAfterEur)}, ${eur(optimisation.savedEur)} saved.`, {
+    toast(`Optimised, total ${eur(optimisation.totalAfterEur)}, ${eur(optimisation.savedEur)} saved.`, {
       tone: 'gold',
       action: {
         label: 'Undo',
@@ -160,15 +160,15 @@ export default function Shopping() {
     const text = exportListAsText(currentList())
     const nav = navigator as Navigator & { share?: (d: { title: string; text: string }) => Promise<void> }
     if (typeof nav.share === 'function') {
-      nav.share({ title: 'LIFE7 — Week 24 shopping list', text }).catch(() => undefined)
+      nav.share({ title: 'LIFE7 | Week 24 shopping list', text }).catch(() => undefined)
       toast('List shared.', { tone: 'sage' })
     } else if (navigator.clipboard) {
       navigator.clipboard.writeText(text).then(
         () => toast('List copied.', { tone: 'sage' }),
-        () => toast('Copy failed — export the list instead.', { tone: 'burgundy' }),
+        () => toast('Copy failed, export the list instead.', { tone: 'burgundy' }),
       )
     } else {
-      toast('Sharing not available — export the list instead.', { tone: 'burgundy' })
+      toast('Sharing not available, export the list instead.', { tone: 'burgundy' })
     }
   }
 
@@ -300,19 +300,19 @@ export default function Shopping() {
 
       {/* print-only clean list (no chrome) */}
       <div className="life7-print-area" aria-hidden="true">
-        <h1>LIFE7 — Week 24 shopping list</h1>
+        <h1>LIFE7 | Week 24 shopping list</h1>
         <p>
           Total {eur(total)} / budget {eur(list.budgetEur)}
         </p>
         {sections.map((s) => (
           <div key={s.store}>
             <h2>
-              {s.label} — {eur(s.store === 'pantry' ? 0 : s.remainingEur)}
+              {s.label} · {eur(s.store === 'pantry' ? 0 : s.remainingEur)}
             </h2>
             <ul>
               {s.items.map((i) => (
                 <li key={i.id}>
-                  {i.purchased ? '☑' : '☐'} {i.displayName} — {i.quantityLabel}
+                  {i.purchased ? '☑' : '☐'} {i.displayName} · {i.quantityLabel}
                   {s.store === 'pantry' ? '' : `  ${eur(i.displayPrice)}`}
                 </li>
               ))}

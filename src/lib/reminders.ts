@@ -59,18 +59,18 @@ export function buildThursdayTimeline(): readonly TimelineEvent[] {
   return [
     EV('wake', '06:30', 'wake', 'Wake up', 'Light exposure 10 min', { actionLabel: 'Done', done: true }),
     EV('hydration-1', '07:00', 'hydration', 'Water 400 ml', 'Before coffee', { actionLabel: '+1 glass', done: true }),
-    EV('breakfast', '08:00', 'meal', 'Breakfast — Banana Walnut Oats', '480 kcal · P 22 g', {
+    EV('breakfast', '08:00', 'meal', 'Breakfast, Banana Walnut Oats', '480 kcal · P 22 g', {
       actionLabel: 'View',
       mealId: 'thu-breakfast',
       done: true,
     }),
     EV('supplement-d3', '10:30', 'supplement', 'Vitamin D3', 'With food', { actionLabel: 'Mark taken' }),
-    EV('lunch', '12:30', 'meal', 'Lunch — Herb Chicken & Rice Bowl', '612 kcal · P 44 g', {
+    EV('lunch', '12:30', 'meal', 'Lunch, Herb Chicken & Rice Bowl', '612 kcal · P 44 g', {
       actionLabel: 'Start cooking (18 min)',
       mealId: 'thu-lunch',
     }),
     EV('walk', '14:00', 'movement', 'Walk 15 min', 'Post-lunch glucose curve', { actionLabel: 'Done' }),
-    EV('snack', '16:00', 'meal', 'Snack — Greek Yoghurt & Walnuts', '310 kcal · P 18 g', {
+    EV('snack', '16:00', 'meal', 'Snack, Greek Yoghurt & Walnuts', '310 kcal · P 18 g', {
       actionLabel: 'View',
       mealId: 'thu-snack',
     }),
@@ -79,7 +79,7 @@ export function buildThursdayTimeline(): readonly TimelineEvent[] {
       route: '/shopping',
     }),
     EV('prep-oats', '18:30', 'prep', 'Prep tomorrow’s oats', '4 min', { actionLabel: 'Done' }),
-    EV('dinner', '19:30', 'meal', 'Dinner — Spinach Tomato Omelette', '540 kcal · P 36 g · uses expiring spinach', {
+    EV('dinner', '19:30', 'meal', 'Dinner, Spinach Tomato Omelette', '540 kcal · P 36 g · uses expiring spinach', {
       actionLabel: 'Start cooking',
       mealId: 'thu-dinner',
     }),
@@ -107,8 +107,8 @@ export function rescheduleEvent(
   const next = events
     .map((e) => (e.id === id ? { ...e, minutes: snapped, time: `${hh}:${mm}` } : e))
     .sort((a, b) => a.minutes - b.minutes);
-  const shortName = moved.title.split(' — ')[0];
-  return { events: next, toast: `${shortName} moved to ${hh}:${mm} — afternoon recalibrated.` };
+  const shortName = moved.title.split(' … ')[0];
+  return { events: next, toast: `${shortName} moved to ${hh}:${mm}, afternoon recalibrated.` };
 }
 
 /** Mark an event done (check draw + mint tint at the UI layer). */
@@ -144,7 +144,7 @@ export const DEFAULT_CHANNELS: readonly ReminderChannel[] = [
   { id: 'telegram', label: 'Telegram', enabled: false, caption: 'Available on mobile app', placeholder: true },
 ];
 
-export const PLACEHOLDER_TOAST = 'Coming with the mobile app — you’re on the list.';
+export const PLACEHOLDER_TOAST = 'Coming with the mobile app, you’re on the list.';
 
 /** Toggle a channel; placeholder channels never enable, they return a toast. */
 export function toggleChannel(
@@ -247,7 +247,7 @@ export function sendTest(
     return { ok: false, toast: PLACEHOLDER_TOAST, notification };
   }
   if (!channel.enabled) {
-    return { ok: false, toast: `${channel.label} is off — enable it to receive tests.`, notification };
+    return { ok: false, toast: `${channel.label} is off, enable it to receive tests.`, notification };
   }
   return { ok: true, toast: `Test sent to ${channel.label}: “${notification.body}”`, notification };
 }

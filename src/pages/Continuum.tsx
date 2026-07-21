@@ -325,8 +325,8 @@ function VoiceShiftInput({ onRecognised }: { onRecognised: (id: ShiftId) => void
                 </div>
               </div>
             )}
-            {voiceState === 'unsupported' && <p className="t-ui-sm text-ink-soft">Voice capture is not available in this browser. Type the change below — Continuum works the same way.</p>}
-            {voiceState === 'error' && <p className="t-ui-sm text-burgundy">I need one clearer signal — mention sleep, dinner time, budget or an expiring ingredient.</p>}
+            {voiceState === 'unsupported' && <p className="t-ui-sm text-ink-soft">Voice capture is not available in this browser. Type the change below. Continuum works the same way.</p>}
+            {voiceState === 'error' && <p className="t-ui-sm text-burgundy">I need one clearer signal. Mention sleep, dinner time, budget or an expiring ingredient.</p>}
             {(voiceState === 'idle' || voiceState === 'unsupported') && !transcript && (
               <button type="button" onClick={useDemoPhrase} className="t-ui-sm font-semibold text-gold-deep underline decoration-champagne underline-offset-4">Try the winning demo phrase</button>
             )}
@@ -396,7 +396,7 @@ export default function Continuum() {
   const apply = () => {
     setPhase('applied')
     applyContinuumDemoState({ scenarioId: scenario.id, title: scenario.title, appliedAt: Date.now() })
-    toast('Update applied — Today, Week, Shopping and Pantry are now in sync.', { tone: 'gold' })
+    toast('Update applied. Today, Week, Shopping and Pantry are now in sync.', { tone: 'gold' })
   }
 
   const reset = () => {
@@ -413,7 +413,7 @@ export default function Continuum() {
     setDemoKey((current) => current + 1)
     clearContinuumDemoState()
     window.requestAnimationFrame(() => document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }))
-    toast('Demo reset — ready for a clean Continuum run.', { tone: 'sage' })
+    toast('Demo reset. Ready for a clean Continuum run.', { tone: 'sage' })
   }
 
   return (
@@ -425,7 +425,7 @@ export default function Continuum() {
             <span className="t-label rounded-r-pill border border-champagne/30 bg-sunrise/55 px-2.5 py-1 text-[8px] text-gold-deep">Interactive prototype</span>
           </div>
           <h1 className="t-display-lg mt-2 text-ink">Continuum Shift</h1>
-          <p className="t-serif-quote mt-2 max-w-[720px] text-ink-soft">One real-life change. Seven days recompose — without breaking what matters.</p>
+          <p className="t-serif-quote mt-2 max-w-[720px] text-ink-soft">One real-life change. Seven days recompose without breaking what matters.</p>
         </div>
         <button type="button" onClick={restartDemo} className="t-ui-sm flex min-h-10 items-center gap-2 rounded-r-pill border border-line bg-soft-white/70 px-3.5 font-semibold text-ink-soft shadow-e-1 transition-colors hover:border-champagne hover:text-forest">
           <RotateCcw size={14} /> Restart demo
@@ -538,7 +538,7 @@ export default function Continuum() {
                   <span className="flex items-baseline gap-2">
                     <span className="t-metric-sm tnum text-soft-white/45 line-through">{scenario.before}</span>
                     <ArrowRight size={14} className="text-champagne" />
-                    <motion.span key={`${scenario.id}-${phase}`} className="t-metric-lg tnum text-champagne">{phase === 'idle' || phase === 'composing' ? '—' : scenario.after}</motion.span>
+                    <motion.span key={`${scenario.id}-${phase}`} className="t-metric-lg tnum text-champagne">{phase === 'idle' || phase === 'composing' ? '…' : scenario.after}</motion.span>
                   </span>
                 </div>
                 <div className="mt-3 h-1.5 overflow-hidden rounded-r-pill bg-white/10">

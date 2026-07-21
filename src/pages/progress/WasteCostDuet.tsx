@@ -36,7 +36,7 @@ function WasteCard() {
         <div className="flex items-baseline justify-between">
           <div>
             <span className="t-label text-gold-deep">Food waste</span>
-            <p className="t-ui-sm mt-1 font-medium text-ink-soft">Kilograms per week — good direction is down</p>
+            <p className="t-ui-sm mt-1 font-medium text-ink-soft">Kilograms per week, good direction is down</p>
           </div>
           <span className="t-metric-sm tnum text-green">−38%</span>
         </div>

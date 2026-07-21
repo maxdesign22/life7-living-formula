@@ -31,16 +31,16 @@ interface ChatMsg {
 
 /** Deterministic toast copy for one-shot apply actions. */
 const ACTION_TOASTS: Readonly<Record<string, string>> = {
-  'apply-all-swaps': 'All swaps applied — week total now €53.00.',
-  'update-wednesday': 'Wednesday updated — zero cooking, prep 6 min.',
-  'apply-replacement': 'Friday dinner replaced — €3.50 saved.',
+  'apply-all-swaps': 'All swaps applied, week total now €53.00.',
+  'update-wednesday': 'Wednesday updated, zero cooking, prep 6 min.',
+  'apply-replacement': 'Friday dinner replaced, €3.50 saved.',
   'keep-salmon': 'Salmon stays. Friday unchanged.',
-  'apply-to-week': 'Protein shift applied to the week — +18 g on training days.',
+  'apply-to-week': 'Protein shift applied to the week, +18 g on training days.',
   'training-only': 'Protein shift applied to training days only.',
-  'accept-new-plan': 'Today recalculated — snack and dinner rebuilt.',
-  'make-portable': 'Friday is portable — oat jars packed.',
+  'accept-new-plan': 'Today recalculated, snack and dinner rebuilt.',
+  'make-portable': 'Friday is portable, oat jars packed.',
   'breakfast-only': 'Friday breakfast is portable; the rest stays cooked.',
-  'apply-expiry': 'Expiry order applied — spinach tonight, bananas Saturday.',
+  'apply-expiry': 'Expiry order applied, spinach tonight, bananas Saturday.',
   'add-to-today': 'Added to today at 19:30.',
 }
 

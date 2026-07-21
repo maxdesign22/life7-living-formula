@@ -36,7 +36,7 @@ export default function PageStub({ eyebrow, title, caption }: { eyebrow: string;
       >
         <GlassCard size="xl" className="min-h-[320px]">
           <EmptyState
-            line="This screen is being assembled — the living system takes shape here."
+            line="This screen is being assembled, the living system takes shape here."
             actionLabel="Back to Today"
             onAction={() => navigate('/today')}
           />

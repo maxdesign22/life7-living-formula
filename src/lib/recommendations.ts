@@ -144,8 +144,8 @@ function toRecommendation(
     deltaGrams: candidate.deltaGrams,
     title:
       candidate.deltaGrams >= 0
-        ? `Add ${ingredient.name} — ${grams} g`
-        : `Reduce ${ingredient.name} — ${grams} g`,
+        ? `Add ${ingredient.name} · ${grams} g`
+        : `Reduce ${ingredient.name} · ${grams} g`,
     why: rule.why,
     affectedDims: rule.affectedDims,
     deltaEstimate: rule.deltaEstimate,
@@ -280,8 +280,8 @@ export function getDayRecommendations(
       deltaGrams: candidate.deltaGrams,
       title:
         candidate.deltaGrams >= 0
-          ? `Add ${ingredient.name} — ${grams} g`
-          : `Reduce ${ingredient.name} — ${grams} g`,
+          ? `Add ${ingredient.name} · ${grams} g`
+          : `Reduce ${ingredient.name} · ${grams} g`,
       why: rule.why,
       affectedDims: rule.affectedDims,
       deltaEstimate: rule.deltaEstimate,

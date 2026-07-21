@@ -180,7 +180,7 @@ function ItemRow({
         {isPantry ? (
           <span
             className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-sage text-forest"
-            title="Already home — auto-deducted"
+            title="Already home, auto-deducted"
           >
             <Check size={14} strokeWidth={2.5} />
           </span>
@@ -227,7 +227,7 @@ function ItemRow({
         >
           <span className="relative inline-block max-w-full">
             <span className="t-ui-md block truncate font-semibold text-ink">
-              {item.displayName} — {item.quantityLabel}
+              {item.displayName} · {item.quantityLabel}
             </span>
             {!isPantry && (
               <motion.span
@@ -315,7 +315,7 @@ function ItemRow({
 
         {/* price */}
         <span className="t-metric-sm tnum w-auto shrink-0 whitespace-nowrap text-right text-[13px] text-ink min-[640px]:w-16 min-[640px]:text-[15px]">
-          {isPantry ? '—' : eur(item.displayPrice)}
+          {isPantry ? '…' : eur(item.displayPrice)}
         </span>
 
         {/* pharmacy: ghost remove; others: ⋯ menu */}
@@ -392,7 +392,7 @@ function ItemRow({
                   </div>
                 </>
               ) : (
-                <p className="t-ui-sm text-ink-faint">Not tied to a specific meal — stocked staple.</p>
+                <p className="t-ui-sm text-ink-faint">Not tied to a specific meal, stocked staple.</p>
               )}
               <p className="t-ui-sm mt-1.5 text-ink-faint">
                 {item.note ?? `Store note: restocked weekly at the ${store === 'pantry' ? 'pantry' : store}.`}
