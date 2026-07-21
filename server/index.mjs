@@ -9,6 +9,7 @@ import { z } from 'zod'
 const HOST = '127.0.0.1'
 const PORT = Number(process.env.PORT ?? 8787)
 const MODEL = process.env.OPENAI_MODEL ?? 'gpt-5.6-sol'
+const VISION_MODEL = process.env.OPENAI_VISION_MODEL ?? MODEL
 const API_KEY = process.env.OPENAI_API_KEY
 const SAFETY_SALT = process.env.LIFE7_SAFETY_SALT ?? 'life7-local-development'
 const DATA_DIR = process.env.LIFE7_DATA_DIR ?? '/var/lib/life7'
@@ -91,6 +92,45 @@ const JournalEntrySchema = z.object({
 })
 
 const JournalPayloadSchema = z.object({ entries: z.array(JournalEntrySchema).max(1500) })
+
+const VISION_INGREDIENTS = [
+  ['eggs', 'Eggs'], ['chicken-breast', 'Chicken breast'], ['greek-yoghurt', 'Greek yoghurt'],
+  ['rice', 'Rice'], ['oats', 'Oats'], ['tomato', 'Tomato'], ['spinach', 'Spinach'],
+  ['broccoli', 'Broccoli'], ['olive-oil', 'Olive oil'], ['walnuts', 'Walnuts'], ['banana', 'Banana'],
+  ['salmon-fillet', 'Salmon'], ['lentils', 'Lentils'], ['feta', 'Feta'], ['avocado', 'Avocado'],
+  ['blueberries', 'Blueberries'], ['sourdough', 'Sourdough'], ['turkey-breast', 'Turkey breast'],
+  ['tuna', 'Tuna'], ['tofu', 'Tofu'], ['cottage-cheese', 'Cottage cheese'], ['milk', 'Milk'],
+  ['chickpeas', 'Chickpeas'], ['black-beans', 'Black beans'], ['quinoa', 'Quinoa'],
+  ['wholegrain-pasta', 'Wholegrain pasta'], ['potato', 'Potato'], ['sweet-potato', 'Sweet potato'],
+  ['carrot', 'Carrot'], ['bell-pepper', 'Bell pepper'], ['cucumber', 'Cucumber'], ['onion', 'Onion'],
+  ['apple', 'Apple'], ['orange', 'Orange'], ['almonds', 'Almonds'], ['peanut-butter', 'Peanut butter'],
+]
+
+const VisionSchema = z.object({
+  sceneSummary: z.string().min(1).max(220),
+  overallConfidence: z.enum(['high', 'medium', 'low']),
+  items: z.array(z.object({
+    ingredientId: z.enum(VISION_INGREDIENTS.map(([id]) => id)),
+    name: z.string().min(1).max(80),
+    estimatedGrams: z.number().min(1).max(10_000),
+    confidence: z.enum(['high', 'medium', 'low']),
+    evidence: z.string().min(1).max(180),
+  })).min(1).max(16),
+  recipe: z.object({
+    title: z.string().min(1).max(120),
+    servings: z.number().int().min(1).max(8),
+    prepMinutes: z.number().int().min(0).max(180),
+    cookMinutes: z.number().int().min(0).max(300),
+    usedIngredientIds: z.array(z.string().max(80)).min(1).max(16),
+    optionalStaples: z.array(z.string().max(80)).max(8),
+    steps: z.array(z.string().min(1).max(260)).min(2).max(9),
+    nutritionEstimate: z.object({
+      kcal: z.number().min(0).max(20_000), proteinG: z.number().min(0).max(2_000),
+      fibreG: z.number().min(0).max(1_000), vegetablesG: z.number().min(0).max(10_000),
+    }),
+    foodSafety: z.string().min(1).max(260),
+  }),
+})
 
 const rateWindowMs = 15 * 60 * 1000
 const maxRequestsPerWindow = 12
@@ -180,6 +220,41 @@ async function writeJournal(req, res) {
   return json(res, 200, { entries: payload.entries, syncedAt })
 }
 
+async function analyzeKitchen(req, res) {
+  if (!openai) return json(res, 503, { error: 'Kitchen Vision is not configured yet.' })
+  const address = clientAddress(req)
+  if (isRateLimited(`vision:${address}`)) return json(res, 429, { error: 'Too many scans. Please try again shortly.' })
+  let body
+  try {
+    body = await readJson(req, 8_000_000)
+  } catch (error) {
+    const status = error instanceof Error && error.message === 'PAYLOAD_TOO_LARGE' ? 413 : 400
+    return json(res, status, { error: status === 413 ? 'The image is too large.' : 'Invalid image request.' })
+  }
+  const image = typeof body?.image === 'string' ? body.image : ''
+  if (!/^data:image\/(jpeg|png|webp);base64,[a-zA-Z0-9+/=]+$/.test(image) || image.length > 7_500_000) {
+    return json(res, 400, { error: 'Use a JPEG, PNG or WebP image under 5 MB.' })
+  }
+
+  const catalog = VISION_INGREDIENTS.map(([id, name]) => `${id}: ${name}`).join(', ')
+  const response = await openai.responses.parse({
+    model: VISION_MODEL,
+    reasoning: { effort: 'low' },
+    store: false,
+    safety_identifier: safetyIdentifier(address),
+    input: [{
+      role: 'user',
+      content: [
+        { type: 'input_text', text: `Inspect this kitchen-food photograph. Identify only clearly visible edible ingredients from this allow-listed catalog: ${catalog}. Estimate edible grams conservatively from visible scale and common package sizes. Never claim exact weight; confidence must fall when scale, packaging, occlusion or depth is unclear. Then compose one practical recipe primarily from detected items. Optional staples may include only water, salt, pepper, oil, vinegar and common dry spices. Recipe steps must refer to the confirmed ingredient list and must not repeat gram quantities because the user can correct them. Do not infer allergens, freshness, safety or hidden contents from appearance. Include a calm food-safety note. Return the structured contract.` },
+        { type: 'input_image', image_url: image, detail: 'low' },
+      ],
+    }],
+    text: { format: zodTextFormat(VisionSchema, 'life7_kitchen_vision'), verbosity: 'low' },
+  })
+  if (!response.output_parsed) throw new Error('Kitchen Vision did not return structured output.')
+  return json(res, 200, { ...response.output_parsed, model: response.model ?? VISION_MODEL, responseId: response.id })
+}
+
 function sanitizedAnalysis(parsed, input) {
   const allowed = new Set(input.recommendations.map((item) => item.id))
   const priorityIds = []
@@ -254,6 +329,7 @@ const server = createServer(async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/architect/analyze') return await analyze(req, res)
     if (req.url === '/api/journal' && req.method === 'GET') return await readJournal(req, res)
     if (req.url === '/api/journal' && req.method === 'PUT') return await writeJournal(req, res)
+    if (req.url === '/api/kitchen/analyze' && req.method === 'POST') return await analyzeKitchen(req, res)
     return json(res, 404, { error: 'Not found.' })
   } catch (error) {
     const status = error?.status === 429 ? 429 : 502

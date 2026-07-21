@@ -45,6 +45,8 @@ commit history and includes:
 - adding the voice-first Food Journal, confirmation-before-save flow,
   precise portion correction, explicit server sync, seven/thirty-day summaries
   and non-diagnostic nutrition trend signals;
+- building Kitchen Vision: camera/image input, allow-listed ingredient
+  recognition, user-confirmed gram estimates and a structured cook-now recipe;
 - diagnosing and fixing mobile overflow, incomplete scrolling, overlapping
   planner cards, dense statistics and low-contrast states across the product;
 - deploying the frontend and API to Hetzner with HTTPS, Nginx, systemd, health

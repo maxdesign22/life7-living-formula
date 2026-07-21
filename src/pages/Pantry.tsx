@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Plus, ScanBarcode } from 'lucide-react'
+import { Camera, Plus, ScanBarcode } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { EmptyState, MagneticButton, ScoreRing, useToast } from '@/components/life7'
@@ -26,6 +26,7 @@ import {
   saveScannerDemoState,
 } from '@/lib/scannerDemo'
 import { clearContinuumDemoState, CONTINUUM_DEMO_EVENT, readContinuumDemoState } from '@/lib/continuumDemo'
+import { applyKitchenVisionToPantry } from '@/lib/kitchenVision'
 import { EASE_GLIDE, ingredientOf, KineticWords, labelFor } from './pantry/bits'
 import PantryCard from './pantry/PantryCard'
 import FilterRail, { type SortId } from './pantry/FilterRail'
@@ -45,10 +46,10 @@ export default function Pantry() {
   const [pantry, setPantry] = useState<PantryState>(() => {
     const scanned = readScannerDemoState()
     const continuum = readContinuumDemoState()
-    return applyScannerPlanToPantry(
+    return applyKitchenVisionToPantry(applyScannerPlanToPantry(
       applyScannerToPantry(createDemoPantry(), scanned),
       scanned !== null && continuum?.scenarioId === 'expiry',
-    )
+    ))
   })
   const [category, setCategory] = useState<IngredientCategory | 'all'>('all')
   const [location, setLocation] = useState<StorageLocation | 'all'>('all')
@@ -250,7 +251,10 @@ export default function Pantry() {
           </button>
 
           <MagneticButton variant="glass" size="md" icon={<ScanBarcode size={15} strokeWidth={1.5} />} onClick={() => setScanOpen(true)}>
-            Scan item
+            Scan label
+          </MagneticButton>
+          <MagneticButton variant="glass" size="md" icon={<Camera size={15} strokeWidth={1.5} />} onClick={() => navigate('/vision')}>
+            Scan kitchen
           </MagneticButton>
           <MagneticButton variant="primary" size="md" icon={<Plus size={15} strokeWidth={2} />} onClick={() => setAddOpen(true)}>
             Add food

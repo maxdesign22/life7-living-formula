@@ -17,6 +17,7 @@ import {
   Orbit,
   Truck,
   NotebookPen,
+  Camera,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -43,6 +44,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/shopping', label: 'Shopping', icon: ShoppingBasket, badge: '9' },
   { to: '/dispatch', label: 'Dispatch', icon: Truck, dot: 'gold' },
   { to: '/pantry', label: 'Pantry', icon: Package, dot: 'burgundy' },
+  { to: '/vision', label: 'Kitchen Vision', icon: Camera, dot: 'gold' },
   { to: '/planner', label: 'Planner', icon: CalendarClock },
   { to: '/coach', label: 'AI Coach', icon: MessageCircle, dot: 'gold' },
   { to: '/progress', label: 'Progress', icon: TrendingUp },
@@ -54,6 +56,7 @@ const MORE_ITEMS: NavItem[] = [
   { to: '/continuum', label: 'Continuum Shift', icon: Orbit, dot: 'gold' },
   { to: '/shopping', label: 'Shopping', icon: ShoppingBasket, badge: '9' },
   { to: '/dispatch', label: 'Dispatch', icon: Truck, dot: 'gold' },
+  { to: '/vision', label: 'Kitchen Vision', icon: Camera, dot: 'gold' },
   { to: '/planner', label: 'Planner', icon: CalendarClock },
   { to: '/coach', label: 'AI Coach', icon: MessageCircle, dot: 'gold' },
   { to: '/progress', label: 'Progress', icon: TrendingUp },
