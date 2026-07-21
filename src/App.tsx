@@ -12,6 +12,7 @@ import Planner from '@/pages/Planner'
 import Coach from '@/pages/Coach'
 import Progress from '@/pages/Progress'
 import Settings from '@/pages/Settings'
+import Continuum from '@/pages/Continuum'
 
 /** `/` → first-run splash once per session, otherwise straight to /today */
 function RootGate() {
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/today" element={<Today />} />
           <Route path="/architect" element={<Architect />} />
           <Route path="/week" element={<Week />} />
+          <Route path="/continuum" element={<Continuum />} />
           <Route path="/generator" element={<Generator />} />
           <Route path="/shopping" element={<Shopping />} />
           <Route path="/pantry" element={<Pantry />} />

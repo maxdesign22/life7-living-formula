@@ -89,11 +89,11 @@ export default function ActionBar({
       initial={{ y: 24, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.5, delay: 0.4, ease: EASE_GLIDE }}
-      className="sticky bottom-24 z-40 min-[900px]:bottom-4"
+      className="sticky bottom-24 z-40 min-w-0 min-[900px]:bottom-4"
     >
-      <div className="glass-strong relative flex flex-wrap items-center gap-x-4 gap-y-3 rounded-r-pill px-4 py-3 shadow-e-3 min-[768px]:px-5">
+      <div className="glass-strong relative flex min-w-0 flex-col gap-3 rounded-r-xl px-3 py-3 shadow-e-3 min-[640px]:flex-row min-[640px]:flex-wrap min-[640px]:items-center min-[640px]:gap-x-4 min-[640px]:gap-y-3 min-[640px]:rounded-r-pill min-[768px]:px-5">
         {/* progress */}
-        <div className="relative flex items-center gap-3">
+        <div className="relative flex w-full items-center gap-3 min-[640px]:w-auto">
           {celebrate && <Confetti />}
           <ScoreRing value={pct} size={44} strokeWidth={4} animated={false}>
             <span className="t-label text-[8px] text-ink-soft">{Math.round(pct)}%</span>
@@ -109,7 +109,7 @@ export default function ActionBar({
         <span className="hidden h-8 w-px bg-line min-[768px]:block" />
 
         {/* actions */}
-        <div className="flex flex-1 flex-wrap items-center justify-end gap-2">
+        <div className="grid w-full grid-cols-2 gap-2 min-[640px]:flex min-[640px]:flex-1 min-[640px]:flex-wrap min-[640px]:items-center min-[640px]:justify-end">
           <MagneticButton variant="primary" size="sm" icon={<Truck size={14} strokeWidth={1.5} />} onClick={onOrderOnline}>
             Order online
           </MagneticButton>
@@ -159,12 +159,14 @@ export default function ActionBar({
               )}
             </AnimatePresence>
           </span>
-          <MagneticButton variant="glass" size="sm" icon={<Share2 size={14} strokeWidth={1.5} />} onClick={onShare}>
-            Share
-          </MagneticButton>
-          <MagneticButton variant="glass" size="sm" icon={<Printer size={14} strokeWidth={1.5} />} onClick={onPrint}>
-            Print
-          </MagneticButton>
+          <span className="hidden min-[640px]:contents">
+            <MagneticButton variant="glass" size="sm" icon={<Share2 size={14} strokeWidth={1.5} />} onClick={onShare}>
+              Share
+            </MagneticButton>
+            <MagneticButton variant="glass" size="sm" icon={<Printer size={14} strokeWidth={1.5} />} onClick={onPrint}>
+              Print
+            </MagneticButton>
+          </span>
           <MagneticButton
             variant="gold"
             size="sm"

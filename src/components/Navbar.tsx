@@ -14,6 +14,7 @@ import {
   Settings,
   MoreHorizontal,
   X,
+  Orbit,
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -34,6 +35,7 @@ const NAV_ITEMS: NavItem[] = [
   { to: '/today', label: 'Today', icon: Sun },
   { to: '/architect', label: 'Meal Architect', icon: ChefHat },
   { to: '/week', label: 'LIFE7 Week', icon: Hexagon },
+  { to: '/continuum', label: 'Continuum Shift', icon: Orbit, dot: 'gold' },
   { to: '/generator', label: 'Week Generator', icon: Sparkles },
   { to: '/shopping', label: 'Shopping', icon: ShoppingBasket, badge: '9' },
   { to: '/pantry', label: 'Pantry', icon: Package, dot: 'burgundy' },
@@ -43,6 +45,9 @@ const NAV_ITEMS: NavItem[] = [
 ]
 
 const MORE_ITEMS: NavItem[] = [
+  { to: '/week', label: 'LIFE7 Week', icon: Hexagon },
+  { to: '/generator', label: 'Week Generator', icon: Sparkles },
+  { to: '/continuum', label: 'Continuum Shift', icon: Orbit, dot: 'gold' },
   { to: '/shopping', label: 'Shopping', icon: ShoppingBasket, badge: '9' },
   { to: '/planner', label: 'Planner', icon: CalendarClock },
   { to: '/coach', label: 'AI Coach', icon: MessageCircle, dot: 'gold' },
@@ -272,7 +277,7 @@ function MobileDock() {
   const [open, setOpen] = useState(false)
   const location = useLocation()
   const path = location.pathname
-  const moreActive = MORE_ITEMS.some((i) => path.startsWith(i.to))
+  const moreActive = MORE_ITEMS.some((i) => i.to !== '/continuum' && path.startsWith(i.to))
 
   return (
     <>
@@ -285,30 +290,30 @@ function MobileDock() {
 
         {/* center: LIFE7 Week — a deliberately simple, high-contrast mark stays
             legible at mobile dock size (the full living mark is too detailed). */}
-        <Link to="/week" aria-label="LIFE7 Week" className="relative flex h-full flex-1 items-start justify-center">
+        <Link to="/continuum" aria-label="Continuum Shift" className="relative flex h-full flex-1 items-start justify-center">
           <span
             className={cn(
               'animate-breathe -mt-[14px] flex h-[52px] w-[52px] items-center justify-center rounded-full border shadow-e-2 transition-all duration-300',
-              path.startsWith('/week')
+              path.startsWith('/continuum')
                 ? 'border-forest bg-forest shadow-gold-glow'
                 : 'border-champagne/70 bg-sunrise text-forest',
             )}
           >
-            <Hexagon
+            <Orbit
               size={27}
               strokeWidth={1.8}
-              className={path.startsWith('/week') ? 'text-soft-white' : 'text-forest'}
+              className={path.startsWith('/continuum') ? 'text-soft-white' : 'text-forest'}
             />
             <span
               className={cn(
                 'absolute h-2.5 w-2.5 rounded-full ring-2 ring-soft-white/80',
-                path.startsWith('/week') ? 'bg-champagne' : 'bg-gold-deep',
+                path.startsWith('/continuum') ? 'bg-champagne' : 'bg-gold-deep',
               )}
             />
           </span>
         </Link>
 
-        <DockSlot item={NAV_ITEMS[5]} active={path.startsWith('/pantry')} />
+        <DockSlot item={NAV_ITEMS[6]} active={path.startsWith('/pantry')} />
 
         <button
           type="button"

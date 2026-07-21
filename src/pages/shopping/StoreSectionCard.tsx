@@ -45,13 +45,13 @@ export default function StoreSectionCard({
       transition={{ duration: 0.56, delay: 0.1 + staggerIndex * 0.07, ease: EASE_GLIDE }}
       className="scroll-mt-24"
     >
-      <GlassCard flat className="overflow-visible">
+      <GlassCard flat className="min-w-0 overflow-visible">
         {/* header */}
         <button
           type="button"
           onClick={onToggle}
           aria-expanded={open}
-          className="relative flex w-full items-center gap-3 overflow-hidden rounded-t-r-lg px-5 py-4 text-left"
+          className="relative flex w-full min-w-0 items-center gap-2 overflow-hidden rounded-t-r-lg px-3 py-3.5 text-left min-[640px]:gap-3 min-[640px]:px-5 min-[640px]:py-4"
         >
           {/* gold flash on path-node jump */}
           <motion.span
@@ -93,7 +93,7 @@ export default function StoreSectionCard({
               transition={{ duration: 0.38, ease: EASE_GLIDE }}
               className="overflow-hidden"
             >
-              <ul className="flex flex-col gap-1 px-3 pb-4">
+              <ul className="flex min-w-0 flex-col gap-1 px-1.5 pb-3 min-[640px]:px-3 min-[640px]:pb-4">
                 <AnimatePresence initial={false}>
                   {section.items.map((item, i) => (
                     <ItemRow
@@ -172,7 +172,7 @@ function ItemRow({
       />
       <div
         className={cn(
-          'relative flex items-center gap-3 rounded-r-md px-2 py-2 transition-colors duration-200 hover:bg-cream/50',
+          'relative grid min-w-0 grid-cols-[28px_40px_minmax(0,1fr)_auto_auto] items-center gap-2 rounded-r-md px-1.5 py-2 transition-colors duration-200 hover:bg-cream/50 min-[640px]:flex min-[640px]:gap-3 min-[640px]:px-2',
           isPantry && 'opacity-60',
         )}
       >
@@ -209,8 +209,8 @@ function ItemRow({
         )}
 
         {/* illustration */}
-        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-r-sm bg-cream">
-          <img src={`/${item.image}`} alt="" className="h-10 w-10 object-contain" loading="lazy" />
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-r-sm bg-cream min-[640px]:h-11 min-[640px]:w-11">
+          <img src={`/${item.image}`} alt="" className="h-9 w-9 object-contain min-[640px]:h-10 min-[640px]:w-10" loading="lazy" />
         </span>
 
         {/* name + quantity (+ strikethrough) */}
@@ -245,10 +245,14 @@ function ItemRow({
           {item.note && item.badges.includes('use-first') && (
             <span className="t-ui-sm block text-burgundy/80">{item.note}</span>
           )}
+          <span className="mt-1 flex flex-wrap gap-1 min-[640px]:hidden">
+            {item.badges.includes('use-first') && <span className="rounded-r-pill bg-burgundy/10 px-1.5 py-0.5 text-[9px] font-bold text-burgundy">use first</span>}
+            {item.badges.includes('swap') && substitution && <span className="rounded-r-pill bg-sunrise px-1.5 py-0.5 text-[9px] font-bold text-gold-deep">swap available</span>}
+          </span>
         </motion.button>
 
         {/* badges */}
-        <span className="flex shrink-0 items-center gap-1.5">
+        <span className="hidden shrink-0 items-center gap-1.5 min-[640px]:flex">
           {item.badges.includes('at-home') && !isPantry && (
             <Chip variant="sage" className="px-2 py-0.5 text-[11px]">at home</Chip>
           )}
@@ -310,7 +314,7 @@ function ItemRow({
         </span>
 
         {/* price */}
-        <span className="t-metric-sm tnum w-16 shrink-0 whitespace-nowrap text-right text-ink">
+        <span className="t-metric-sm tnum w-auto shrink-0 whitespace-nowrap text-right text-[13px] text-ink min-[640px]:w-16 min-[640px]:text-[15px]">
           {isPantry ? '—' : eur(item.displayPrice)}
         </span>
 

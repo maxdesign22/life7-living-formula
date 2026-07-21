@@ -15,6 +15,7 @@ import {
   Clock3,
   Sparkles,
   Watch,
+  Flag,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import {
@@ -132,7 +133,10 @@ function StatChip({
               )}
             >
               {def.attention && (
-                <span className="animate-halo-ping absolute inset-0 rounded-full border border-gold-deep/45" aria-hidden="true" />
+                <>
+                  <span className="animate-halo-ping absolute inset-0 rounded-full border border-burgundy/40" aria-hidden="true" />
+                  <span className="absolute -right-0.5 -top-0.5 h-2 w-2 rounded-full bg-burgundy ring-2 ring-soft-white" aria-hidden="true" />
+                </>
               )}
               <Icon size={14} strokeWidth={1.6} className={def.attention ? 'text-gold-deep' : 'text-forest'} />
             </span>
@@ -676,9 +680,9 @@ export default function Today() {
                   <p className="t-ui-sm mt-1 text-ink-soft">Four numbers. One priority.</p>
                 </div>
                 <span className="relative inline-flex items-center gap-2 rounded-r-pill border border-gold-deep/20 bg-sunrise px-3 py-1.5 text-[10px] font-bold text-gold-deep shadow-[0_6px_18px_-12px_rgba(176,138,62,0.8)]">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-halo-ping absolute inset-0 rounded-full bg-gold-deep/55" />
-                    <span className="relative h-2 w-2 rounded-full bg-gold-deep" />
+                  <span className="relative flex h-5 w-5 items-center justify-center rounded-full bg-burgundy/10 text-burgundy">
+                    <span className="animate-halo-ping absolute inset-0 rounded-full border border-burgundy/45" />
+                    <Flag size={11} fill="currentColor" strokeWidth={1.5} />
                   </span>
                   Protein needs attention
                 </span>

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components -- timeline geometry is shared with Planner interactions */
 /**
  * Zone A — the Sunlight Timeline (planner.md): a vertical spine rendered as a
  * gradient of daylight (sunrise gold → champagne midday → sage dusk → forest
@@ -13,6 +14,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import type { PanInfo } from 'framer-motion'
 import { Check, GripVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useIsMobile } from '@/hooks/use-mobile'
 import type { TimelineEvent } from '@/lib/reminders'
 import { isPast } from '@/lib/reminders'
 import { EASE_GLIDE, fmtTime } from './ui'
@@ -37,6 +39,7 @@ export interface TimelineAction {
 }
 
 interface RowProps {
+  mobile?: boolean
   event: TimelineEvent
   side: 'left' | 'right'
   nowMinutes: number
@@ -52,6 +55,7 @@ interface RowProps {
 }
 
 function EventRow({
+  mobile = false,
   event,
   side,
   nowMinutes,
@@ -176,13 +180,17 @@ function EventRow({
 
   return (
     <div
-      className="absolute left-0 w-full transition-[top] duration-500 ease-glide"
-      style={{ top: yOf(event.minutes), zIndex: dragging ? 40 : 10 }}
+      className={cn(
+        'left-0 w-full transition-[top] duration-500 ease-glide',
+        mobile ? 'relative mb-3 pl-11' : 'absolute',
+      )}
+      style={{ top: mobile ? undefined : yOf(event.minutes), zIndex: dragging ? 40 : 10 }}
     >
       {/* node ring on the spine */}
       <motion.div
         className={cn(
-          'absolute left-1/2 flex h-[22px] w-[22px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border-2 bg-soft-white shadow-e-1 transition-colors duration-300',
+          'absolute flex h-[22px] w-[22px] items-center justify-center rounded-full border-2 bg-soft-white shadow-e-1 transition-colors duration-300',
+          mobile ? 'left-4 top-7 -translate-x-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2 -translate-y-1/2',
           done && 'border-sage bg-sage-mist',
         )}
         style={{ borderColor: done ? '#C9D6C0' : visual.color }}
@@ -194,7 +202,7 @@ function EventRow({
       </motion.div>
 
       {/* 24px curved stem from ring to card */}
-      <svg
+      {!mobile && <svg
         className={cn('absolute top-[-9px] h-[18px] w-[36px]', side === 'right' ? 'left-[calc(50%+10px)]' : 'right-[calc(50%+10px)]')}
         viewBox="0 0 36 18"
         fill="none"
@@ -210,21 +218,21 @@ function EventRow({
           animate={{ pathLength: 1 }}
           transition={{ delay: entranceDelay + 0.1, duration: 0.4, ease: EASE_GLIDE }}
         />
-      </svg>
+      </svg>}
 
       {/* event card */}
       <motion.div
         className={cn(
-          'absolute w-[min(300px,calc(50%-52px))]',
-          side === 'right' ? 'left-[calc(50%+46px)]' : 'right-[calc(50%+46px)]',
+          mobile ? 'relative w-full' : 'absolute w-[min(300px,calc(50%-52px))]',
+          !mobile && (side === 'right' ? 'left-[calc(50%+46px)]' : 'right-[calc(50%+46px)]'),
         )}
-        style={{ top: -30 }}
+        style={{ top: mobile ? 0 : -30 }}
         initial={{ opacity: 0, scale: 0.82, y: 10 }}
-        animate={{ opacity: past && !done ? 0.45 : done ? 0.85 : 1, scale: 1, y: 0 }}
+        animate={{ opacity: mobile ? (past && !done ? 0.9 : done ? 0.96 : 1) : past && !done ? 0.45 : done ? 0.85 : 1, scale: 1, y: 0 }}
         transition={{ delay: entranceDelay, duration: 0.5, ease: EASE_GLIDE }}
       >
         <motion.div
-          drag="y"
+          drag={mobile ? false : 'y'}
           dragMomentum={false}
           dragSnapToOrigin
           onDragStart={() => setDragging(true)}
@@ -233,8 +241,9 @@ function EventRow({
           onTap={onToggleExpand}
           whileDrag={{ scale: 1.03 }}
           className={cn(
-            'glass relative cursor-grab select-none overflow-hidden rounded-r-lg p-4 shadow-e-1 transition-shadow duration-220 ease-soft hover:shadow-e-2 active:cursor-grabbing',
-            done && 'bg-sage-mist/60',
+            'glass relative select-none overflow-hidden rounded-r-lg border p-4 shadow-e-1 transition-shadow duration-220 ease-soft hover:shadow-e-2',
+            mobile ? 'cursor-pointer border-line bg-soft-white/90' : 'cursor-grab border-transparent active:cursor-grabbing',
+            done && (mobile ? 'border-sage/70 bg-sage-mist/85' : 'bg-sage-mist/60'),
             dragging && 'shadow-e-2',
           )}
         >
@@ -297,6 +306,7 @@ export default function SunlightTimeline({
   onToggleExpand,
   renderExpanded,
 }: SunlightTimelineProps) {
+  const isMobile = useIsMobile()
   const [dragPreview, setDragPreview] = useState<{ id: string; minutes: number } | null>(null)
   // the sun creeps in real time — +1 minute every 60 s
   const [creep, setCreep] = useState(0)
@@ -327,6 +337,42 @@ export default function SunlightTimeline({
       }),
     [events, shimmerFrom],
   )
+
+  if (isMobile) {
+    const completed = events.filter((event) => event.done).length
+    return (
+      <div className="relative mx-auto w-full max-w-[520px]">
+        <div className="mb-4 flex items-center justify-between gap-3 rounded-r-lg border border-champagne/25 bg-soft-white/90 px-4 py-3 shadow-e-1">
+          <div>
+            <span className="t-label text-gold-deep">Today’s living timeline</span>
+            <p className="t-ui-sm mt-1 font-semibold text-ink">{completed} complete · {events.length - completed} still ahead</p>
+          </div>
+          <span className="t-label tnum rounded-r-pill bg-forest px-3 py-1.5 text-soft-white">Now {fmtTime(now)}</span>
+        </div>
+        <div className="relative">
+          <span className="absolute bottom-5 left-[15px] top-4 w-[2px] rounded-r-pill bg-gradient-to-b from-sunlight via-champagne to-forest/70" aria-hidden="true" />
+          {rows.map(({ event, side, delay, shimmerIndex }) => (
+            <EventRow
+              key={event.id}
+              mobile
+              event={event}
+              side={side}
+              nowMinutes={now}
+              entranceDelay={delay * 0.45}
+              expanded={expandedId === event.id}
+              shimmerNonce={shimmerFrom && event.minutes >= shimmerFrom.minutes ? shimmerFrom.nonce : 0}
+              shimmerIndex={shimmerIndex}
+              onToggleExpand={() => onToggleExpand(expandedId === event.id ? null : event.id)}
+              onAction={onAction}
+              onDragPreview={handleDragPreview}
+              onDragSettle={handleDragSettle}
+              renderExpanded={renderExpanded}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="relative mx-auto w-full max-w-[680px]" style={{ height: TIMELINE_HEIGHT + 40 }}>

@@ -64,6 +64,8 @@ export default function Shopping() {
   const prevDone = useRef(done)
   useEffect(() => {
     if (done === totalItems && totalItems > 0 && prevDone.current !== done) {
+      // Celebration is intentionally edge-triggered when the final row is checked.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCelebrate(true)
       toast('Week fully stocked.', { tone: 'gold' })
       const t = window.setTimeout(() => setCelebrate(false), 1200)
@@ -183,8 +185,8 @@ export default function Shopping() {
   return (
     <div className="mx-auto max-w-[1280px]">
       {/* header */}
-      <header className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
+      <header className="mb-6 flex min-w-0 flex-wrap items-end justify-between gap-4">
+        <div className="min-w-0">
           <motion.span
             className="t-label block text-gold-deep"
             initial={{ opacity: 0 }}
@@ -206,12 +208,12 @@ export default function Shopping() {
           </motion.p>
         </div>
         <motion.div
-          className="flex items-center gap-3"
+          className="flex w-full items-center gap-2 min-[520px]:w-auto min-[520px]:gap-3"
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2, ease: EASE_GLIDE }}
         >
-          <div className="glass rounded-r-pill px-4 py-2 shadow-e-1">
+          <div className="glass min-w-0 flex-1 rounded-r-pill px-3 py-2 shadow-e-1 min-[520px]:flex-none min-[520px]:px-4">
             <TweenMoney value={total} className="t-metric-sm tnum whitespace-nowrap text-ink" />
             <span className="t-ui-sm tnum text-ink-faint"> / {eur(list.budgetEur)}</span>
           </div>
@@ -234,8 +236,8 @@ export default function Shopping() {
 
       <div className="mt-6 grid items-start gap-6 min-[1024px]:grid-cols-[1fr_320px]">
         {/* Zone B — store sections (+ vertical mini-rail <1024) */}
-        <div className="flex items-start gap-4">
-          <div className="sticky top-4 min-[1024px]:hidden">
+        <div className="flex min-w-0 items-start gap-4">
+          <div className="sticky top-4 hidden min-[768px]:block min-[1024px]:hidden">
             <ShoppingPathRail sections={sections} onJump={onJump} />
           </div>
           <div className="flex min-w-0 flex-1 flex-col gap-4">
@@ -274,7 +276,7 @@ export default function Shopping() {
       </div>
 
       {/* Zone D — sticky action bar */}
-      <div className="mt-6">
+      <div className="mt-6 min-w-0">
         <ActionBar
           done={done}
           total={totalItems}

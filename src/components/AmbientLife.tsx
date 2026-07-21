@@ -170,13 +170,13 @@ function AmbientLifeInner() {
       <img
         src="/botanical-sprig-1.svg"
         alt=""
-        className="sprig-sway-a absolute -left-10 bottom-0 h-[46vh] max-h-[480px] opacity-[0.14]"
+        className="sprig-sway-a absolute -left-10 bottom-0 h-[46vh] max-h-[480px] opacity-[0.035] min-[900px]:opacity-[0.08]"
         style={{ filter: 'blur(0.4px)' }}
       />
       <img
         src="/botanical-sprig-2.svg"
         alt=""
-        className="sprig-sway-b absolute -right-8 top-0 h-[40vh] max-h-[420px] opacity-[0.14]"
+        className="sprig-sway-b absolute -right-8 top-0 h-[40vh] max-h-[420px] opacity-[0.035] min-[900px]:opacity-[0.08]"
         style={{ filter: 'blur(0.4px)' }}
       />
 
