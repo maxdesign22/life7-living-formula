@@ -224,17 +224,19 @@ export default function IntakeWizard({ intake, onPatch, step, direction, onStep,
                 type="button"
                 onClick={() => onPatch({ activity: a.id })}
                 initial={{ opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0, scale: selected ? 1.02 : 1 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ ...EASE_SPRING, delay: i * 0.06 }}
                 className={cn(
-                  'flex h-full flex-col items-start gap-1.5 rounded-r-md border p-3 text-left transition-colors duration-180',
-                  selected ? 'border-champagne bg-sage/60 ring-1 ring-champagne' : 'glass hover:border-sand',
+                  'flex min-h-[104px] h-full flex-col items-start gap-1.5 rounded-r-md border p-3 text-left transition-colors duration-180',
+                  selected
+                    ? 'border-forest bg-forest text-soft-white shadow-e-1 ring-1 ring-forest/20'
+                    : 'glass border-sand/70 hover:border-champagne hover:bg-sunrise/35',
                 )}
                 aria-pressed={selected}
               >
-                <Icon size={16} strokeWidth={1.5} className={selected ? 'text-gold-deep' : 'text-ink-soft'} />
-                <span className="t-ui-sm text-ink">{a.label}</span>
-                <span className="text-[11px] leading-[1.3] text-ink-faint">{a.caption}</span>
+                <Icon size={17} strokeWidth={1.7} className={selected ? 'text-champagne' : 'text-ink-soft'} />
+                <span className={cn('t-ui-sm', selected ? 'text-soft-white' : 'text-ink')}>{a.label}</span>
+                <span className={cn('text-[11px] leading-[1.35]', selected ? 'text-soft-white/75' : 'text-ink-faint')}>{a.caption}</span>
               </motion.button>
             )
           })}

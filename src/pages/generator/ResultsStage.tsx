@@ -21,15 +21,24 @@ export type StageStatus = 'empty' | 'thinking' | 'plan'
 
 function EmptyStage() {
   return (
-    <div className="relative flex min-h-[560px] flex-col items-center justify-center overflow-hidden rounded-r-xl px-8 text-center">
+    <div className="relative flex min-h-[440px] flex-col items-center justify-center overflow-hidden rounded-r-xl px-8 text-center min-[640px]:min-h-[560px]">
       <img
         src="/botanical-sprig-2.svg"
         alt=""
         aria-hidden="true"
         className="pointer-events-none absolute -right-10 top-1/2 h-[130%] -translate-y-1/2 opacity-30"
       />
-      <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.7, ease: EASE_GLIDE }}>
-        <Life7Mark size={120} state="rest" />
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: [1, 1.025, 1] }}
+        transition={{ opacity: { duration: 0.6 }, scale: { duration: 5.8, repeat: Infinity, ease: 'easeInOut' } }}
+        className="relative flex h-40 w-40 items-center justify-center rounded-full border border-champagne/45 bg-[radial-gradient(circle,rgba(247,223,167,0.82)_0%,rgba(255,253,247,0.72)_58%,rgba(255,253,247,0)_74%)] shadow-gold-glow"
+      >
+        <span className="absolute inset-3 rounded-full border border-gold-deep/15" aria-hidden="true" />
+        <Life7Mark size={126} state="rest" />
+        <span className="t-label absolute -bottom-3 rounded-r-pill bg-soft-white/90 px-3 py-1 text-[8px] text-gold-deep shadow-e-1">
+          LIFE7 composition
+        </span>
       </motion.div>
       <motion.p
         className="t-serif-quote relative mt-8 max-w-[30ch] text-ink-soft"

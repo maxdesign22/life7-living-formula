@@ -57,9 +57,21 @@ export default function Layout() {
     <div className="h-[100dvh] overflow-hidden bg-ivory text-ink">
       <AmbientLife />
       <Navbar />
-      <div
+      <main
         ref={scrollRef}
-        className="relative z-10 h-[100dvh] overflow-y-auto overscroll-y-contain [scroll-behavior:smooth] min-[900px]:ml-[108px] min-[1200px]:ml-[280px]"
+        data-app-scroll
+        aria-label="LIFE7 content"
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === 'End') {
+            event.preventDefault()
+            event.currentTarget.scrollTo({ top: event.currentTarget.scrollHeight, behavior: 'auto' })
+          } else if (event.key === 'Home') {
+            event.preventDefault()
+            event.currentTarget.scrollTo({ top: 0, behavior: 'auto' })
+          }
+        }}
+        className="relative z-10 h-[100dvh] touch-pan-y overflow-x-hidden overflow-y-auto overscroll-y-contain outline-none [-webkit-overflow-scrolling:touch] [scroll-behavior:smooth] min-[900px]:ml-[108px] min-[900px]:[scrollbar-gutter:stable] min-[1200px]:ml-[280px]"
       >
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -79,12 +91,12 @@ export default function Layout() {
               const el = pageRef.current
               if (el) el.style.filter = ''
             }}
-            className="mx-auto max-w-[1440px] px-4 pb-28 pt-6 min-[768px]:px-6 min-[900px]:pb-16 min-[1024px]:px-10 min-[1024px]:pt-10"
+            className="mx-auto min-h-full max-w-[1440px] px-4 pb-[calc(9rem+env(safe-area-inset-bottom))] pt-6 min-[768px]:px-6 min-[900px]:pb-16 min-[1024px]:px-10 min-[1024px]:pt-10"
           >
             {outlet}
           </motion.div>
         </AnimatePresence>
-      </div>
+      </main>
     </div>
   )
 }

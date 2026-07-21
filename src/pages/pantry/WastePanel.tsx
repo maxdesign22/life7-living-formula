@@ -20,7 +20,7 @@ function CountUp({ value, decimals = 0, prefix = '', suffix = '' }: { value: num
     return () => controls.stop()
   }, [inView, value, decimals])
   return (
-    <span ref={ref} className="tnum">
+    <span ref={ref} className="tnum whitespace-nowrap">
       {prefix}
       {display}
       {suffix}
@@ -53,16 +53,15 @@ export default function WastePanel({
   useEffect(() => {
     const t = window.setInterval(() => setTipIndex((i) => (i + 1) % tips.length), 10000)
     return () => window.clearInterval(t)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tips.length])
 
   const tip = tips[tipIndex]
 
   return (
     <GlassCard className="border-transparent bg-sage-mist/60 p-6 min-[768px]:p-7">
-      <div className="grid items-center gap-7 min-[900px]:grid-cols-[auto_1fr_1.2fr]">
+      <div className="grid items-center gap-7 min-[768px]:grid-cols-2 min-[1500px]:grid-cols-[minmax(360px,auto)_minmax(270px,1fr)_minmax(300px,1.2fr)]">
         {/* left: score */}
-        <div className="flex items-center gap-5">
+        <div className="flex items-center gap-5 min-[768px]:col-span-2 min-[1500px]:col-span-1">
           <ScoreRing value={stats.score} size={120} strokeWidth={9}>
             {(count) => (
               <span className="t-metric-lg tnum text-[30px] text-ink">
@@ -77,21 +76,21 @@ export default function WastePanel({
         </div>
 
         {/* middle: stats */}
-        <div className="grid grid-cols-3 gap-3">
-          <div className="rounded-r-md bg-soft-white/70 p-3.5 text-center shadow-e-1">
-            <p className="t-metric-lg text-[26px] text-forest">
+        <div className="grid min-w-0 grid-cols-3 gap-2 min-[480px]:gap-3">
+          <div className="min-w-0 rounded-r-md bg-soft-white/70 px-2 py-3.5 text-center shadow-e-1 min-[480px]:px-3">
+            <p className="t-metric-lg text-[clamp(18px,1.55vw,25px)] leading-none text-forest">
               <CountUp value={stats.foodSavedKg} decimals={1} suffix=" kg" />
             </p>
             <p className="t-label mt-1 text-[9px] text-ink-soft">Food saved this month</p>
           </div>
-          <div className="rounded-r-md bg-soft-white/70 p-3.5 text-center shadow-e-1">
-            <p className="t-metric-lg text-[26px] text-forest">
+          <div className="min-w-0 rounded-r-md bg-soft-white/70 px-2 py-3.5 text-center shadow-e-1 min-[480px]:px-3">
+            <p className="t-metric-lg text-[clamp(18px,1.55vw,25px)] leading-none text-forest">
               <CountUp value={stats.moneySavedEur} decimals={2} prefix="€" />
             </p>
             <p className="t-label mt-1 text-[9px] text-ink-soft">Money saved</p>
           </div>
-          <div className="rounded-r-md bg-soft-white/70 p-3.5 text-center shadow-e-1">
-            <p className="t-metric-lg text-[26px] text-forest">
+          <div className="min-w-0 rounded-r-md bg-soft-white/70 px-2 py-3.5 text-center shadow-e-1 min-[480px]:px-3">
+            <p className="t-metric-lg text-[clamp(18px,1.55vw,25px)] leading-none text-forest">
               <CountUp value={stats.useFirstWins} />
             </p>
             <p className="t-label mt-1 text-[9px] text-ink-soft">Use-first wins</p>

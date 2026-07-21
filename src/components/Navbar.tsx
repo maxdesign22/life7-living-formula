@@ -278,20 +278,33 @@ function MobileDock() {
     <>
       <nav
         aria-label="Primary mobile"
-        className="glass fixed inset-x-3 bottom-3 z-50 flex h-16 items-stretch rounded-r-pill px-2 shadow-e-3 min-[900px]:hidden"
+        className="glass fixed inset-x-3 bottom-[calc(0.75rem+env(safe-area-inset-bottom))] z-50 flex h-16 items-stretch rounded-r-pill px-2 shadow-e-3 min-[900px]:hidden"
       >
         <DockSlot item={NAV_ITEMS[0]} active={path.startsWith('/today')} />
         <DockSlot item={NAV_ITEMS[1]} active={path.startsWith('/architect')} />
 
-        {/* center: LIFE7 Week — elevated living mark */}
+        {/* center: LIFE7 Week — a deliberately simple, high-contrast mark stays
+            legible at mobile dock size (the full living mark is too detailed). */}
         <Link to="/week" aria-label="LIFE7 Week" className="relative flex h-full flex-1 items-start justify-center">
           <span
             className={cn(
-              'glass -mt-[14px] flex h-[52px] w-[52px] items-center justify-center rounded-full shadow-e-2 transition-shadow duration-300',
-              path.startsWith('/week') && 'shadow-gold-glow',
+              'animate-breathe -mt-[14px] flex h-[52px] w-[52px] items-center justify-center rounded-full border shadow-e-2 transition-all duration-300',
+              path.startsWith('/week')
+                ? 'border-forest bg-forest shadow-gold-glow'
+                : 'border-champagne/70 bg-sunrise text-forest',
             )}
           >
-            <Life7Mark size={34} />
+            <Hexagon
+              size={27}
+              strokeWidth={1.8}
+              className={path.startsWith('/week') ? 'text-soft-white' : 'text-forest'}
+            />
+            <span
+              className={cn(
+                'absolute h-2.5 w-2.5 rounded-full ring-2 ring-soft-white/80',
+                path.startsWith('/week') ? 'bg-champagne' : 'bg-gold-deep',
+              )}
+            />
           </span>
         </Link>
 
