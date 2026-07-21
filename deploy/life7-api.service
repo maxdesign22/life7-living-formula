@@ -1,0 +1,26 @@
+[Unit]
+Description=LIFE7 GPT-5.6 API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=life7
+Group=life7
+WorkingDirectory=/opt/life7-api/current
+EnvironmentFile=-/etc/life7/api.env
+ExecStart=/usr/bin/node /opt/life7-api/current/index.mjs
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+MemoryMax=256M
+
+[Install]
+WantedBy=multi-user.target

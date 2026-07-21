@@ -1,0 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..600;1,9..144,300..600&family=Manrope:wght@400..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* shadcn vars re-tuned to the LIFE7 warm palette */
+    --background: 43 58% 95%;          /* ivory */
+    --foreground: 33 15% 15%;          /* ink */
+    --card: 45 100% 98%;               /* soft-white */
+    --card-foreground: 33 15% 15%;
+    --popover: 45 100% 98%;
+    --popover-foreground: 33 15% 15%;
+    --primary: 120 21% 23%;            /* forest */
+    --primary-foreground: 45 100% 98%;
+    --secondary: 40 46% 90%;           /* cream */
+    --secondary-foreground: 120 21% 23%;
+    --muted: 40 46% 90%;
+    --muted-foreground: 38 11% 39%;    /* ink-soft */
+    --accent: 96 22% 80%;              /* sage */
+    --accent-foreground: 120 21% 23%;
+    --destructive: 349 37% 36%;        /* burgundy */
+    --destructive-foreground: 45 100% 98%;
+    --border: 42 43% 85%;              /* sand */
+    --input: 42 43% 85%;
+    --ring: 39 59% 63%;                /* champagne */
+    --radius: 0.625rem;
+    --sidebar-background: 43 58% 95%;
+    --sidebar-foreground: 33 15% 15%;
+    --sidebar-primary: 120 21% 23%;
+    --sidebar-primary-foreground: 45 100% 98%;
+    --sidebar-accent: 40 46% 90%;
+    --sidebar-accent-foreground: 120 21% 23%;
+    --sidebar-border: 42 43% 85%;
+    --sidebar-ring: 39 59% 63%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-ivory text-ink font-sans antialiased;
+    font-feature-settings: "ss01" 1;
+    text-rendering: optimizeLegibility;
+  }
+  .font-display, h1, h2, h3 {
+    font-variation-settings: "opsz" auto, "SOFT" 50, "WONK" 0;
+  }
+  ::selection {
+    background: #F7DFA7;
+    color: #2B2620;
+  }
+  :focus-visible {
+    outline: 2px solid #D9B26A;
+    outline-offset: 2px;
+  }
+  /* warm thin scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #E9DFC8;
+    border-radius: 999px;
+    border: 3px solid #FAF6EC;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #D9B26A;
+  }
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #E9DFC8 transparent;
+  }
+}
+
+@layer components {
+  /* ---- Typography scale (design.md §3) ---- */
+  .t-display-xl {
+    @apply font-display font-normal;
+    font-size: 64px; line-height: 1.02; letter-spacing: -0.02em;
+  }
+  .t-display-lg {
+    @apply font-display font-normal;
+    font-size: 44px; line-height: 1.08; letter-spacing: -0.015em;
+  }
+  .t-display-md {
+    @apply font-display;
+    font-size: 32px; line-height: 1.15; letter-spacing: -0.01em; font-weight: 500;
+  }
+  .t-display-sm {
+    @apply font-display;
+    font-size: 24px; line-height: 1.2; letter-spacing: -0.005em; font-weight: 500;
+  }
+  .t-serif-quote {
+    @apply font-display italic font-normal;
+    font-size: 20px; line-height: 1.45;
+  }
+  .t-ui-lg { font-size: 17px; line-height: 1.5; font-weight: 500; }
+  .t-ui-md { font-size: 15px; line-height: 1.5; font-weight: 500; }
+  .t-ui-sm { font-size: 13px; line-height: 1.45; font-weight: 600; letter-spacing: 0.01em; }
+  .t-label {
+    font-size: 11px; line-height: 1.3; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase;
+  }
+  .t-metric-lg {
+    font-size: 34px; line-height: 1.1; font-weight: 700; letter-spacing: -0.01em;
+    font-feature-settings: "tnum" 1;
+  }
+  .t-metric-sm {
+    font-size: 15px; line-height: 1.2; font-weight: 700;
+    font-feature-settings: "tnum" 1;
+  }
+  .tnum { font-feature-settings: "tnum" 1; }
+
+  /* ---- Glass surface (design.md §4) ---- */
+  .glass {
+    background: rgba(255, 253, 247, 0.66);
+    backdrop-filter: blur(18px) saturate(1.15);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    border: 1px solid rgba(46, 70, 48, 0.10);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: #FFFDF7; }
+  }
+  .glass-strong {
+    background: rgba(255, 253, 247, 0.82);
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
+    border: 1px solid rgba(46, 70, 48, 0.10);
+  }
+
+  /* ---- Forest glass (dark panels) ---- */
+  .forest-glass {
+    background: linear-gradient(160deg, #2E4630, #243A27);
+    box-shadow: inset 0 0 0 1px rgba(217, 178, 106, 0.35);
+  }
+
+  /* ---- Signature gradients ---- */
+  .bg-sunlight-field {
+    background:
+      radial-gradient(60% 50% at 70% 10%, rgba(247, 223, 167, 0.55), transparent 70%),
+      radial-gradient(50% 40% at 15% 85%, rgba(201, 214, 192, 0.45), transparent 70%),
+      #FAF6EC;
+  }
+  .bg-score-gradient {
+    background: linear-gradient(135deg, #B08A3E, #F2C14E, #5C7A54);
+  }
+  .bg-sun-core {
+    background: radial-gradient(circle at 38% 34%, #FFE9B8, #F2C14E 55%, #D9A84E);
+  }
+  .bg-metric-fill {
+    background: linear-gradient(90deg, #E4ECDD, #5C7A54);
+  }
+  .bg-light-wave {
+    background: linear-gradient(100deg, transparent, rgba(255, 233, 184, 0.9), transparent);
+  }
+  .bg-sage-wave {
+    background: linear-gradient(100deg, transparent, rgba(201, 214, 192, 0.85), transparent);
+  }
+  .bg-sunrise-gold {
+    background: linear-gradient(135deg, #F7DFA7, #D9B26A);
+  }
+
+  /* ---- Ambient drift keyframes (sunlight field layers) ---- */
+  .ambient-drift-a { animation: ambient-drift-a 26s ease-in-out infinite alternate; }
+  .ambient-drift-b { animation: ambient-drift-b 34s ease-in-out infinite alternate; }
+  .sun-disc-breathe { animation: sun-disc-breathe 18s ease-in-out infinite; }
+  .sprig-sway-a { animation: sprig-sway 11s ease-in-out infinite alternate; transform-origin: 50% 100%; }
+  .sprig-sway-b { animation: sprig-sway 14s ease-in-out infinite alternate-reverse; transform-origin: 50% 0%; }
+
+  /* organic blob shape (sun core, plates, ambient blobs only) */
+  .blob {
+    border-radius: 46% 54% 52% 48% / 48% 46% 54% 52%;
+    animation: blob-morph 12s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes ambient-drift-a {
+  0% { transform: translate3d(-3%, -2%, 0); }
+  100% { transform: translate3d(3%, 4%, 0); }
+}
+@keyframes ambient-drift-b {
+  0% { transform: translate3d(2.5%, 2%, 0); }
+  100% { transform: translate3d(-2.5%, -3%, 0); }
+}
+@keyframes sun-disc-breathe {
+  0%, 100% { transform: scale(1); opacity: 0.35; }
+  50% { transform: scale(1.04); opacity: 0.42; }
+}
+@keyframes sprig-sway {
+  0% { transform: rotate(-2.2deg); }
+  100% { transform: rotate(2.2deg); }
+}
+@keyframes blob-morph {
+  0% { border-radius: 46% 54% 52% 48% / 48% 46% 54% 52%; }
+  100% { border-radius: 49% 51% 49% 51% / 51% 49% 51% 49%; }
+}
+
+/* ---- Reduced motion: calm everything (design.md §5) ---- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

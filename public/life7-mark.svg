@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 160 160" fill="none">
+  <defs>
+    <radialGradient id="sunCore" cx="38%" cy="34%" r="72%">
+      <stop offset="0%" stop-color="#FFE9B8"/>
+      <stop offset="55%" stop-color="#F2C14E"/>
+      <stop offset="100%" stop-color="#D9A84E"/>
+    </radialGradient>
+    <filter id="halo" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7"/>
+    </filter>
+  </defs>
+  <!-- hairline orbit rings -->
+  <circle cx="80" cy="80" r="40" stroke="#2E4630" stroke-opacity="0.10" stroke-width="1"/>
+  <circle cx="80" cy="80" r="52" stroke="#2E4630" stroke-opacity="0.10" stroke-width="1"/>
+  <circle cx="80" cy="80" r="64" stroke="#2E4630" stroke-opacity="0.10" stroke-width="1"/>
+  <!-- sun disc glow + core -->
+  <circle cx="80" cy="80" r="33" fill="#F2C14E" opacity="0.30" filter="url(#halo)"/>
+  <circle cx="80" cy="80" r="28" fill="url(#sunCore)"/>
+  <!-- seed-heart: heart whose stem grows into a two-leaf sprout -->
+  <path d="M80 90
+           C 74 84, 68.5 79.5, 68.5 74
+           C 68.5 69.8, 71.2 67.2, 74.4 67.2
+           C 76.6 67.2, 78.9 68.6, 80 70.6
+           C 81.1 68.6, 83.4 67.2, 85.6 67.2
+           C 88.8 67.2, 91.5 69.8, 91.5 74
+           C 91.5 79.5, 86 84, 80 90 Z
+           M80 90 C 80 94.5, 80 97.5, 80 100
+           M80 96.5 C 77.6 95.4, 75.9 93.6, 75.4 91.2
+           M80 98.5 C 82.6 97.4, 84.4 95.6, 85 93.2"
+        stroke="#FFFDF7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- seven orbit segments: Nutrition, Hydration, Recovery, Movement, Stress, Focus, Joy -->
+    <path d="M 80.00 40.00 A 40 40 0 0 1 102.37 46.84" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="1.00"/>
+    <path d="M 120.66 47.58 A 52 52 0 0 1 131.83 75.86" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.85"/>
+    <path d="M 142.40 94.24 A 64 64 0 0 1 123.76 126.70" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.80"/>
+    <path d="M 97.36 116.04 A 40 40 0 0 1 74.24 119.58" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.75"/>
+    <path d="M 57.44 126.85 A 52 52 0 0 1 35.10 106.22" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.70"/>
+    <path d="M 17.60 94.24 A 64 64 0 0 1 20.31 56.92" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.62"/>
+    <path d="M 48.73 55.06 A 40 40 0 0 1 68.02 41.84" stroke="#D9B26A" stroke-width="2.5" stroke-linecap="round" fill="none" opacity="0.55"/>
+</svg>

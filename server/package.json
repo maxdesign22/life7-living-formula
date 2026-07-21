@@ -1,0 +1,14 @@
+{
+  "name": "life7-api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node index.mjs",
+    "check": "node --check index.mjs"
+  },
+  "dependencies": {
+    "openai": "6.48.0",
+    "zod": "4.4.3"
+  }
+}
