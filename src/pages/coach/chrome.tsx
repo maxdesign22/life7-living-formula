@@ -6,7 +6,7 @@
  */
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUp, Pin } from 'lucide-react'
+import { ArrowUp, Mic, Pin, Square, Volume2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Life7Mark } from '@/components/life7'
 import { getAIService } from '@/lib/aiService'
@@ -15,6 +15,35 @@ import { COACH_PRESENCE_CAPTION, COACH_SCRIPTS } from '@/data/coachScripts'
 const EASE_GLIDE = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
 export type CoreState = 'rest' | 'listening' | 'thinking' | 'answering'
+export type CoachVoiceState = 'idle' | 'listening' | 'speaking' | 'unsupported' | 'error'
+
+interface SpeechRecognitionResultLike {
+  readonly isFinal: boolean
+  readonly [index: number]: { readonly transcript: string }
+}
+
+interface SpeechRecognitionEventLike {
+  readonly resultIndex: number
+  readonly results: {
+    readonly length: number
+    readonly [index: number]: SpeechRecognitionResultLike
+  }
+}
+
+interface SpeechRecognitionLike {
+  lang: string
+  continuous: boolean
+  interimResults: boolean
+  onstart: (() => void) | null
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null
+  onerror: ((event: { error: string }) => void) | null
+  onend: (() => void) | null
+  start: () => void
+  stop: () => void
+  abort: () => void
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike
 
 /* ------------------------------------------------------------------- core */
 
@@ -228,15 +257,26 @@ export function ContextPin() {
 export function Composer({
   busy,
   onSend,
+  onVoiceSend,
   onFocusChange,
+  voiceState,
+  onVoiceStateChange,
+  onStopSpeaking,
 }: {
   busy: boolean
   onSend: (text: string) => void
+  onVoiceSend: (text: string) => void
   onFocusChange: (focused: boolean) => void
+  voiceState: CoachVoiceState
+  onVoiceStateChange: (state: CoachVoiceState) => void
+  onStopSpeaking: () => void
 }) {
   const [text, setText] = useState('')
   const [sweepKey, setSweepKey] = useState(0)
   const areaRef = useRef<HTMLTextAreaElement>(null)
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
+
+  useEffect(() => () => recognitionRef.current?.abort(), [])
 
   const autosize = () => {
     const el = areaRef.current
@@ -255,6 +295,73 @@ export function Composer({
   }
 
   const canSend = text.trim().length > 0 && !busy
+
+  const toggleVoice = () => {
+    if (voiceState === 'speaking') {
+      onStopSpeaking()
+      return
+    }
+    if (voiceState === 'listening') {
+      recognitionRef.current?.stop()
+      return
+    }
+
+    const voiceWindow = window as Window & {
+      SpeechRecognition?: SpeechRecognitionConstructor
+      webkitSpeechRecognition?: SpeechRecognitionConstructor
+    }
+    const Recognition = voiceWindow.SpeechRecognition ?? voiceWindow.webkitSpeechRecognition
+    if (!Recognition) {
+      onVoiceStateChange('unsupported')
+      return
+    }
+
+    const recognition = new Recognition()
+    recognitionRef.current = recognition
+    recognition.lang = 'en-US'
+    recognition.continuous = false
+    recognition.interimResults = true
+    let recognitionFailed = false
+    recognition.onstart = () => {
+      setText('')
+      onVoiceStateChange('listening')
+    }
+    recognition.onresult = (event) => {
+      let spoken = ''
+      let isFinal = false
+      for (let index = event.resultIndex; index < event.results.length; index += 1) {
+        spoken += event.results[index][0]?.transcript ?? ''
+        if (event.results[index].isFinal) isFinal = true
+      }
+      const clean = spoken.trim()
+      setText(clean)
+      requestAnimationFrame(autosize)
+      if (isFinal && clean) {
+        onVoiceSend(clean)
+        setText('')
+        setSweepKey((key) => key + 1)
+        requestAnimationFrame(autosize)
+      }
+    }
+    recognition.onerror = () => {
+      recognitionFailed = true
+      onVoiceStateChange('error')
+    }
+    recognition.onend = () => {
+      if (!recognitionFailed) onVoiceStateChange('idle')
+    }
+    recognition.start()
+  }
+
+  const voiceLabel = voiceState === 'listening'
+    ? 'Listening — tap to stop'
+    : voiceState === 'speaking'
+      ? 'LIFE7 is speaking — tap to stop'
+      : voiceState === 'unsupported'
+        ? 'Voice needs Chrome, Edge or Safari'
+        : voiceState === 'error'
+          ? 'Microphone unavailable — try again'
+          : 'Talk to LIFE7'
 
   return (
     <div className="glass relative flex items-end gap-1.5 overflow-hidden rounded-[28px] p-2 pl-1.5 shadow-e-3">
@@ -279,10 +386,28 @@ export function Composer({
             send()
           }
         }}
-        placeholder="Ask LIFE7 anything…"
+        placeholder={voiceState === 'listening' ? 'Listening…' : 'Ask LIFE7 anything…'}
         aria-label="Message LIFE7 coach"
         className="t-ui-md max-h-[78px] flex-1 resize-none bg-transparent px-2 py-2.5 text-ink placeholder:text-ink-faint focus:outline-none"
       />
+      <motion.button
+        type="button"
+        onClick={toggleVoice}
+        disabled={busy && voiceState !== 'speaking'}
+        aria-label={voiceLabel}
+        title={voiceLabel}
+        whileTap={{ scale: 0.9 }}
+        className={cn(
+          'relative flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition-all duration-200',
+          voiceState === 'listening' && 'border-burgundy/30 bg-burgundy text-white shadow-[0_0_0_6px_rgba(137,53,66,0.10)]',
+          voiceState === 'speaking' && 'border-champagne bg-sunrise text-gold-deep shadow-gold-glow',
+          voiceState !== 'listening' && voiceState !== 'speaking' && 'border-line bg-soft-white/75 text-forest hover:border-champagne hover:bg-sunrise',
+          busy && voiceState !== 'speaking' && 'cursor-default opacity-40',
+        )}
+      >
+        {voiceState === 'listening' ? <Square size={13} fill="currentColor" /> : voiceState === 'speaking' ? <Volume2 size={17} /> : <Mic size={17} />}
+        {voiceState === 'listening' && <span className="absolute inset-0 -z-10 animate-ping rounded-full border border-burgundy/35" />}
+      </motion.button>
       <motion.button
         type="button"
         onClick={send}

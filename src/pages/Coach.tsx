@@ -15,7 +15,7 @@ import type { CoachReply } from '@/lib/aiService'
 import { COACH_SCRIPTS, type CoachAction } from '@/data/coachScripts'
 import AiMessage from './coach/AiMessage'
 import { Composer, CoachCore, QuickCommands, ThinkingDots } from './coach/chrome'
-import type { CoreState } from './coach/chrome'
+import type { CoachVoiceState, CoreState } from './coach/chrome'
 import { EASE_GLIDE, KineticWords } from './generator/bits'
 
 /* ------------------------------------------------------------------ model */
@@ -55,23 +55,63 @@ export default function Coach() {
   const [composerFocused, setComposerFocused] = useState(false)
   const [used, setUsed] = useState<ReadonlySet<string>>(new Set())
   const [conversationId, setConversationId] = useState(0)
+  const [voiceState, setVoiceState] = useState<CoachVoiceState>('idle')
 
   const nextId = useRef(1)
   const dinnerStep = useRef(0)
   const busyRef = useRef(false)
+  const voiceReplyRequested = useRef(false)
   const timers = useRef<number[]>([])
   const endRef = useRef<HTMLDivElement>(null)
 
   const typing = messages.some((m) => m.role === 'ai' && !m.typed)
   const busy = thinking || typing
-  const coreState: CoreState = thinking ? 'thinking' : typing ? 'answering' : composerFocused ? 'listening' : 'rest'
+  const coreState: CoreState = voiceState === 'listening'
+    ? 'listening'
+    : voiceState === 'speaking'
+      ? 'answering'
+      : thinking
+        ? 'thinking'
+        : typing
+          ? 'answering'
+          : composerFocused
+            ? 'listening'
+            : 'rest'
 
   const later = useCallback((ms: number, fn: () => void) => {
     const t = window.setTimeout(fn, ms)
     timers.current.push(t)
   }, [])
 
-  useEffect(() => () => timers.current.forEach((t) => window.clearTimeout(t)), [])
+  useEffect(() => () => {
+    timers.current.forEach((t) => window.clearTimeout(t))
+    window.speechSynthesis?.cancel()
+  }, [])
+
+  const stopSpeaking = useCallback(() => {
+    window.speechSynthesis?.cancel()
+    setVoiceState('idle')
+  }, [])
+
+  const speakReply = useCallback((text: string) => {
+    if (!('speechSynthesis' in window)) {
+      setVoiceState('unsupported')
+      return
+    }
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = 'en-US'
+    utterance.rate = 0.96
+    utterance.pitch = 0.98
+    const voices = window.speechSynthesis.getVoices()
+    utterance.voice = voices.find((voice) => /Samantha|Jenny|Aria|Google UK English Female/i.test(voice.name))
+      ?? voices.find((voice) => voice.lang.toLowerCase().startsWith('en'))
+      ?? null
+    utterance.onstart = () => setVoiceState('speaking')
+    utterance.onend = () => setVoiceState('idle')
+    utterance.onerror = () => setVoiceState('error')
+    window.speechSynthesis.speak(utterance)
+  }, [])
 
   /* ---------------------------------------------------------- messaging */
 
@@ -85,15 +125,20 @@ export default function Coach() {
       later(reply.thinkingMs, () => {
         setThinking(false)
         setMessages((prev) => [...prev, { id: nextId.current++, role: 'ai', text: reply.text, reply, typed: false, applied: [] }])
+        if (voiceReplyRequested.current) {
+          voiceReplyRequested.current = false
+          speakReply(reply.text)
+        }
       })
     },
-    [later],
+    [later, speakReply],
   )
 
   const runCommand = useCallback(
-    async (command: string) => {
+    async (command: string, source: 'text' | 'voice' = 'text') => {
       if (busyRef.current) return
       busyRef.current = true
+      voiceReplyRequested.current = source === 'voice'
       pushUser(command)
       const script = COACH_SCRIPTS.find((s) => s.command === command)
       if (script) setUsed((prev) => new Set(prev).add(script.id))
@@ -186,6 +231,8 @@ export default function Coach() {
     setMessages([])
     setThinking(false)
     setUsed(new Set())
+    stopSpeaking()
+    voiceReplyRequested.current = false
     dinnerStep.current = 0
     setConversationId((c) => c + 1)
   }
@@ -284,7 +331,15 @@ export default function Coach() {
           <div className="pointer-events-none absolute inset-x-0 -top-6 h-12 bg-gradient-to-b from-transparent to-ivory/90" aria-hidden="true" />
           <div className="relative space-y-3">
             <QuickCommands used={used} busy={busy} onRun={(c) => void runCommand(c)} />
-            <Composer busy={busy} onSend={(t) => void runCommand(t)} onFocusChange={setComposerFocused} />
+            <Composer
+              busy={busy}
+              onSend={(text) => void runCommand(text)}
+              onVoiceSend={(text) => void runCommand(text, 'voice')}
+              onFocusChange={setComposerFocused}
+              voiceState={voiceState}
+              onVoiceStateChange={setVoiceState}
+              onStopSpeaking={stopSpeaking}
+            />
           </div>
         </div>
       </div>
