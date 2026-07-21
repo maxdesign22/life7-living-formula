@@ -311,6 +311,7 @@ function MobileDock() {
               )}
             />
           </span>
+          <span className={cn('t-label absolute bottom-1 text-[7px]', path.startsWith('/continuum') ? 'text-gold-deep' : 'text-ink-faint')}>Shift</span>
         </Link>
 
         <DockSlot item={NAV_ITEMS[6]} active={path.startsWith('/pantry')} />

@@ -66,13 +66,14 @@ assembled in parallel** — document against the target below, not the stub.
 | `/today` | Today | Daily command center: living score hero (74, ghost target 85), stat chips (energy 72 %, hydration 1.4/2.4 L), next-meal card with cooking mode, verbatim AI insight, week strip. |
 | `/architect` | Meal Architect (flagship) | 3-zone laboratory: ingredient library → living meal canvas → intelligence panel; canonical 58 → 86 apply-all transformation with light wave and undo. |
 | `/week` | LIFE7 Week | Breathing seven-day honeycomb (Mon 82 … Sun 84, avg 79); day-type marking, regenerate/lock, optimise-week (Thu 71→74 · Wed 74→77 · Sat 80→82). |
+| `/continuum` | Continuum Shift | Four real-life change scenarios preserve explicit constraints, compose the smallest cross-system change set and expose a reversible Change Ledger. |
 | `/generator` | AI Week Generator | Intake wizard (defaults = Alex) → deterministic thinking theater → full 7-day plan: score 84 · €62.40 · 22 min prep · 71 % pantry usage. |
 | `/shopping` | Shopping | Store-grouped, pantry-deducted list (€62.40 / €70 across supermarket/market/pharmacy/online), swap popovers, optimise-budget €62.40 → €57.80, real .txt export. |
 | `/pantry` | Pantry | 11 living freshness cards with decay rings and planned-usage chips, use-soon filter, expiry queue, waste score 86, scan placeholder drawer. |
 | `/planner` | Planner | Sunlight orbit timeline (06:30–23:00) with drag-rescheduling, channel routing with quiet hours, the four verbatim notifications, send-test toasts. |
 | `/coach` | AI Coach | Conversational space with breathing core: welcome + 8 quick-command scripts, free-text pattern matching, meal/savings/expiry cards, action endings. |
 | `/progress` | Progress | Editorial hand-built SVG analytics: meal-score river, stat row (78 +6 · 82 % · 21 min −4 · 0.3 kg −38 %), waste & cost duet, Week/Month/Quarter. |
-| `/settings` | Settings | Profile & preferences, LIFE7 Core (€500/yr) vs Boost (+€240/yr) tiers, data export/import/reset. |
+| `/settings` | Settings | Profile and preferences, LIFE7 Continuum founding-preview concept (€29/month indicative, no checkout), data export/import/reset. |
 
 Navigation badges are live: Shopping shows the open-item count (`9`), Pantry
 shows a burgundy dot while anything expires < 48 h (2 items in the demo:
@@ -87,7 +88,8 @@ spinach, bananas), Coach pulses gold on new insight.
 | Barcode scan / camera | Pantry scan drawer | Laser-sweep theater; "detects Greek yoghurt 500 g" after 2.6 s. |
 | WhatsApp / Telegram | `src/lib/reminders.ts` — `DEFAULT_CHANNELS` entries with `placeholder: true` | Toggle returns `PLACEHOLDER_TOAST` ("Coming with the mobile app — you're on the list."); never enables. |
 | Push delivery / send-to-phone | `src/lib/reminders.ts` — `routeNotification`, `sendTest` | Renders routing outcomes and toast previews; nothing leaves the browser. |
-| Subscription & payment | Settings Boost card | `life7-core` vs `life7-boost` flag on `USER_PROFILE` (`src/data/profile.ts`); demo toggle, no checkout. |
+| Subscription & payment | Settings Continuum preview | Local founding-preview reservation only; no checkout, card collection or payment. |
+| Continuum Shift composition | `/continuum` | Deterministic, rule-verified demo scenarios; changes are not model-generated or persisted. |
 | Real-time clock | `DEMO_NOW` in `src/data/profile.ts` | Fixed at Week 24, Thursday 14:20. |
 
 Everything else is real computation: scoring, nutrition, price math, planning
@@ -111,7 +113,7 @@ profile `.json`).
    channel model in `reminders.ts`; port quiet-hours routing server-side.
 6. **Mobile companion app** — scan/camera, send-to-phone, haptics; the
    prototype's placeholders define the contract.
-7. **Commerce** — real grocery ordering hand-off per store; Boost checkout.
+7. **Commerce** — real grocery ordering hand-off per store; validate demand before implementing Continuum checkout.
 8. **Accessibility & QA hardening** — live-region audits, contrast sweep,
    e2e suite (§8) wired into CI.
 

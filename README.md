@@ -6,8 +6,9 @@ LIFE7 Living Formula is an intelligent seven-day nutrition system: your
 ingredients, your goal, one connected week of meals, shopping, pantry and
 reminders — scored, optimised and explained through a calm editorial interface.
 
-**Live demo:** [life7.maxdesign.rs](https://life7.maxdesign.rs) · flagship flow:
-[Meal Architect](https://life7.maxdesign.rs/architect)
+**Live demo:** [life7.maxdesign.rs](https://life7.maxdesign.rs) · flagship flows:
+[Meal Architect](https://life7.maxdesign.rs/architect) for the live GPT-5.6 proof and
+[Continuum Shift](https://life7.maxdesign.rs/continuum) for the connected product idea.
 
 The product combines a deterministic TypeScript nutrition engine with a real
 server-side **GPT-5.6 Sol** analysis layer. LIFE7 computes nutrition, price,
@@ -44,7 +45,7 @@ Companion docs:
 ├── deploy/                     # systemd, Nginx and atomic VPS deployment configuration
 ├── src/
 │   ├── main.tsx                # createRoot + BrowserRouter
-│   ├── App.tsx                 # Routes: splash gate (sessionStorage) + 10 screens under Layout
+│   ├── App.tsx                 # Routes: splash gate (sessionStorage) + 11 screens under Layout
 │   ├── index.css               # Google Fonts import, shadcn vars re-tuned to LIFE7 palette,
 │   │                           #   t-* typography classes, .glass/.forest-glass, gradients,
 │   │                           #   ambient keyframes, prefers-reduced-motion guard
@@ -90,6 +91,7 @@ Companion docs:
 │       ├── Today.tsx           #   Daily command center (living score hero, next meal, insight)
 │       ├── Architect.tsx       #   /architect — Meal Architect (flagship; 3-zone score laboratory)
 │       ├── Week.tsx            #   /week — LIFE7 Week honeycomb
+│       ├── Continuum.tsx       #   /continuum — cross-system adaptive Shift + protected constants
 │       ├── Generator.tsx       #   /generator — AI Week Generator intake wizard
 │       ├── Shopping.tsx        #   /shopping — store-grouped shopping command center
 │       ├── Pantry.tsx          #   /pantry — living freshness inventory
@@ -201,14 +203,15 @@ demo data.
 | 1 | **Splash** (`/`, first load) | Let it play (or click to skip) | LIFE7 mark assembles segment-by-segment, tagline types character-by-character: *"Seven days. One intelligent system. Better living."* |
 | 2 | **Today** (`/today`) | Point at the hero; tap the hydration chip; press **Start cooking (18 min)**, then **Mark as eaten** | Living score hero (ScoreRing 300 px, value 74, ghost target 85), energy 72 % / hydration 1.4 of 2.4 L chips, cooking-mode overlay with step timers; marking lunch eaten sweeps a sage wave and nudges the ring 74 → 76. |
 | 3 | **Meal Architect** (`/architect`) — the money moment | Press **Apply all** in the intelligence panel | Thursday Lunch starts at **58**; three recommendation cards (＋ Greek yoghurt 120 g, ＋ broccoli 80 g, − olive oil 8 g; Σ Δ +28); the ring tweens **58 → 86**, dimension bars re-render, a light wave sweeps the panel, toast offers undo. |
-| 4 | **LIFE7 Week** (`/week`) | Press **Optimise week** | Breathing honeycomb of seven days (Mon 82 · Tue 78 · Wed 74 · Thu 71 · Fri 86 · Sat 80 · Sun 84; avg 79 · €62.40 · 22 min). Optimise ticks **Thu 71→74, Wed 74→77, Sat 80→82**, toast *"Week rebalanced — protein evened across 7 days."* Undo available. |
-| 5 | **AI Week Generator** (`/generator`) | Step through the intake wizard (defaults = Alex's profile) and generate | Four deterministic "thinking" lines → full 7-day plan with summary band: **week score 84 · €62.40 total (€7.60 under budget) · prep avg 22 min · pantry usage 71 %**, shopping preview, leftovers and expiry plan, Sunday 17:00 prep schedule (35 min saves 52). |
-| 6 | **AI Coach** (`/coach`) | Click quick-command chips: **Make the week cheaper.**, **I missed lunch.**, **Use what expires first.** | Shimmer-thinking (900–1400 ms, deterministic per command), then scripted replies with cards and actions — e.g. *"I found €9.40 without touching your protein."* Free text pattern-matches the same 8 scripts; unmatched input gets the fallback. |
-| 7 | **Shopping** (`/shopping`) | Press **Optimise budget** (header or optimiser card) | Store-grouped list — Supermarket €31.20 · Farmers market €12.60 · Pharmacy €8.40 · Online €10.20 — total **€62.40 / €70** with pantry already deducted (€8.20 saved). Optimise runs the 3-step swap script: total tweens **€62.40 → €57.80**. Export downloads a real `life7-week24-shopping.txt`. |
-| 8 | **Pantry** (`/pantry`) | Toggle **Use soon**, open the spinach card, try **Scan item** | 11 living freshness cards (green → champagne → burgundy rings; ≤ 48 h items pulse), expiry queue led by spinach (82 %, 2 days), waste score **86** with *"on track to waste nothing"* panel. Scan is a placeholder drawer that "recognises" Greek yoghurt after 2.6 s. |
-| 9 | **Planner** (`/planner`) | Drag a timeline event; toggle WhatsApp; press **Send test** | Thursday sunlight timeline (06:30 wake → 23:00 sleep), the four verbatim notifications (*"Your lunch is ready in 8 minutes."* …), quiet hours 22:30–06:30 (everything held except expiry alerts), WhatsApp/Telegram toggles return *"Coming with the mobile app — you're on the list."* |
-| 10 | **Progress** (`/progress`) | Switch Week / Month / Quarter | Hand-built SVG analytics (no chart library): meal-score river (28 points), stat row (avg meal score 78 +6 · goal alignment 82 % · cooking 21 min −4 · waste 0.3 kg −38 %), declining waste bars. |
-| 11 | **Settings** (`/settings`) | Review tiers; press **Export my data** | LIFE7 Core **€500 / year** (current plan) vs LIFE7 Boost **+€240 / year** (demo toggle, no payment UI); export downloads a real `life7-alex-data.json`; import and reset-prototype round out the data zone. |
+| 4 | **Continuum Shift** (`/continuum`) — the product moat | Select a real-life change, confirm the Protected Constants, press **Compose the shift**, then apply | One signal recomposes the smallest connected set of decisions across Today, Week, Shopping and Pantry. The verified before/after Change Ledger is visible and reversible; this is a deterministic interactive prototype. |
+| 5 | **LIFE7 Week** (`/week`) | Press **Optimise week** | Breathing honeycomb of seven days (Mon 82 · Tue 78 · Wed 74 · Thu 71 · Fri 86 · Sat 80 · Sun 84; avg 79 · €62.40 · 22 min). Optimise ticks **Thu 71→74, Wed 74→77, Sat 80→82**, toast *"Week rebalanced — protein evened across 7 days."* Undo available. |
+| 6 | **AI Week Generator** (`/generator`) | Step through the intake wizard (defaults = Alex's profile) and generate | Four deterministic "thinking" lines → full 7-day plan with summary band: **week score 84 · €62.40 total (€7.60 under budget) · prep avg 22 min · pantry usage 71 %**, shopping preview, leftovers and expiry plan, Sunday 17:00 prep schedule (35 min saves 52). |
+| 7 | **AI Coach** (`/coach`) | Click quick-command chips: **Make the week cheaper.**, **I missed lunch.**, **Use what expires first.** | Shimmer-thinking (900–1400 ms, deterministic per command), then scripted replies with cards and actions — e.g. *"I found €9.40 without touching your protein."* Free text pattern-matches the same 8 scripts; unmatched input gets the fallback. |
+| 8 | **Shopping** (`/shopping`) | Press **Optimise budget** (header or optimiser card) | Store-grouped list — Supermarket €31.20 · Farmers market €12.60 · Pharmacy €8.40 · Online €10.20 — total **€62.40 / €70** with pantry already deducted (€8.20 saved). Optimise runs the 3-step swap script: total tweens **€62.40 → €57.80**. Export downloads a real `life7-week24-shopping.txt`. |
+| 9 | **Pantry** (`/pantry`) | Toggle **Use soon**, open the spinach card, try **Scan item** | 11 living freshness cards (green → champagne → burgundy rings; ≤ 48 h items pulse), expiry queue led by spinach (82 %, 2 days), waste score **86** with *"on track to waste nothing"* panel. Scan is a placeholder drawer that "recognises" Greek yoghurt after 2.6 s. |
+| 10 | **Planner** (`/planner`) | Drag a timeline event; toggle WhatsApp; press **Send test** | Thursday sunlight timeline (06:30 wake → 23:00 sleep), the four verbatim notifications (*"Your lunch is ready in 8 minutes."* …), quiet hours 22:30–06:30 (everything held except expiry alerts), WhatsApp/Telegram toggles return *"Coming with the mobile app — you're on the list."* |
+| 11 | **Progress** (`/progress`) | Switch Week / Month / Quarter | Hand-built SVG analytics (no chart library): meal-score river (28 points), stat row (avg meal score 78 +6 · goal alignment 82 % · cooking 21 min −4 · waste 0.3 kg −38 %), declining waste bars. |
+| 12 | **Settings** (`/settings`) | Open **LIFE7 Continuum** and reserve the founding preview; press **Export my data** | Transparent upgrade concept with indicative €29/month founding price, no checkout and no charge; export downloads a real `life7-alex-data.json`; import and reset-prototype round out the data zone. |
 
 ## What is mocked vs what is real
 
@@ -221,7 +224,8 @@ demo data.
 | Barcode scan / camera | Pantry → Scan item drawer | Simulated laser sweep; "detects" a demo item after 2.6 s. |
 | WhatsApp / Telegram channels | `src/lib/reminders.ts` (`placeholder: true`) | Toggling returns the *"Coming with the mobile app"* toast. |
 | Send-to-phone / push delivery | Planner notification stack | Rendered cards + `sendTest()` toast previews; nothing leaves the browser. |
-| Subscription/payment | Settings → LIFE7 Boost | Demo toggle only; no checkout. |
+| Subscription/payment | Settings → LIFE7 Continuum | Founding-preview reservation only; no checkout, card collection or payment. |
+| Continuum Shift composition | `/continuum` | Deterministic interactive scenarios; rule-verified demo changes are not persisted or model-generated. |
 
 **Real (actual computation, not theater):**
 

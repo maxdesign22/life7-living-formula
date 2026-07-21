@@ -6,18 +6,21 @@
 
 **Tagline:** Seven days. One intelligent system. Better living.
 
-**One sentence:** LIFE7 turns the food already in your home, your goals, time
-and budget into one explainable seven-day nutrition system.
+**One sentence:** LIFE7 is a seven-day decision engine that finds the smallest
+connected set of food, schedule, pantry and shopping changes needed when life
+shifts — without breaking what the user chose to protect.
 
 **Live demo:** https://life7.maxdesign.rs
 
-**Best judging route:** https://life7.maxdesign.rs/architect
+**Best judging routes:** https://life7.maxdesign.rs/architect (live GPT-5.6
+proof) and https://life7.maxdesign.rs/continuum (flagship product idea)
 
 ## Description
 
-Most nutrition apps ask people to log the past. LIFE7 helps them decide what to
-do next. It connects a meal architect, weekly plan, pantry freshness, shopping,
-budget optimisation and reminders into one living formula.
+Most nutrition apps ask people to log the past or generate another static plan.
+LIFE7 helps them decide what to do next — and what else must move when reality
+changes. It connects a meal architect, weekly plan, pantry freshness, shopping,
+budget optimisation and schedule into one living formula.
 
 The flagship Meal Architect begins with a real lunch scored at 58 across seven
 dimensions. LIFE7's deterministic engine identifies the smallest useful
@@ -27,9 +30,16 @@ It cannot invent nutrition numbers or silently override restrictions, budget or
 preparation limits. One action applies the changes and makes the verified
 before/after transformation visible.
 
+Continuum Shift then demonstrates the larger product idea. A short night, late
+dinner, tighter budget or expiring ingredient becomes one input. LIFE7
+recomposes the smallest connected set of decisions across Today, Week, Shopping
+and Pantry while preserving explicit Protected Constants such as a protein
+floor, budget ceiling, sleep window or family dinner. A Change Ledger explains
+every downstream effect before the user accepts the reversible shift.
+
 The result is not a chatbot attached to a dashboard. It is a coherent consumer
-product in which AI explains decisions while a domain engine remains the source
-of truth.
+product in which AI explains decisions, a domain engine remains the source of
+truth, and adaptation stays visible and reversible.
 
 ## What was built with Codex and GPT-5.6 during Build Week
 
@@ -43,6 +53,9 @@ of truth.
   response and graceful fallback states.
 - Decluttered the dense statistics surface while preserving all seven
   dimensions and the 58 → 86 proof moment.
+- Built Continuum Shift: four real-life change scenarios, user-controlled
+  Protected Constants, an animated cross-system composition and a transparent
+  before/after Change Ledger.
 - Deployed the frontend and API to Hetzner using Nginx, HTTPS, systemd hardening
   and atomic releases.
 - Used Codex to inspect the domain model, implement the API/UI boundary, run
@@ -63,10 +76,11 @@ of truth.
 
 ### Design
 
-- Ten connected product screens share a coherent editorial visual system.
+- Eleven connected product screens share a coherent editorial visual system.
 - The main interaction is a legible before/after decision, not an AI text dump.
 - Motion communicates state: thinking, verified recommendation, apply and score
   improvement.
+- Continuum turns a complex system response into one calm, reversible flow.
 
 ### Potential impact
 
@@ -76,12 +90,17 @@ of truth.
   expiry, cost and preparation time.
 - The system turns recommendations into an immediately applicable meal and
   week, reducing the gap between advice and action.
+- Protected Constants give people control over what optimisation is never
+  allowed to sacrifice.
 
 ### Quality of the idea
 
-- LIFE7 treats nutrition as a connected seven-day operating system, rather than
-  a calorie diary or isolated recipe chatbot.
-- Its core product idea is the trust boundary: generative AI handles judgment
+- LIFE7 treats nutrition as a connected seven-day decision system, rather than
+  a calorie diary, isolated recipe chatbot or static generated plan.
+- Its differentiator is not a score alone. It combines verified intervention
+  deltas with the smallest connected change set, Protected Constants and a
+  reversible Change Ledger.
+- Its technical trust boundary remains explicit: generative AI handles judgment
   and explanation while a transparent domain engine owns every number.
 
 ## Video script — 2:45 maximum
@@ -91,7 +110,8 @@ of truth.
 > Nutrition apps tell us what happened. LIFE7 helps decide what to do next —
 > using your ingredients, goal, budget and time across one connected week.
 
-Show the Today screen and move directly to Meal Architect.
+Show the Today screen, point to the central **Shift** entry, then move directly
+to Meal Architect.
 
 ### 0:18–0:55 — Establish the deterministic baseline
 
@@ -121,22 +141,26 @@ Press **Apply all**.
 
 Let the ring, cards, light wave and toast finish.
 
-### 1:58–2:25 — Connected product
+### 1:58–2:30 — Continuum Shift — the product moat
 
-Move quickly through Week, Pantry and Shopping.
+Open **Continuum Shift**, select **I slept only 5 hours**, then press
+**Compose the shift**.
 
-> The decision is not trapped in a chat. It propagates into the weekly plan,
-> uses food before it expires and produces a pantry-deducted shopping list that
-> can optimise against a real budget.
+> One real-life change now moves four systems as one. LIFE7 protects the protein
+> floor, budget, sleep window and family dinner, then reveals the smallest
+> coordinated changes across Today, Week, Shopping and Pantry. Nothing important
+> changes silently, and the entire shift is reversible.
 
-### 2:25–2:45 — Codex and closing
+Show the verified Change Ledger and apply the shift.
+
+### 2:30–2:45 — Codex and closing
 
 > Codex helped turn the product into a deployed full-stack system: it mapped the
 > domain engine, built the secure GPT-5.6 boundary, integrated the live states,
-> deployed to Hetzner and tested the public flow. LIFE7 makes the next healthy
-> decision smaller, clearer and immediately actionable.
+> deployed to Hetzner and tested the public flow. Most apps optimise a meal or
+> generate a plan. LIFE7 protects the week.
 
-End on the improved Meal Architect score or LIFE7 mark.
+End on the applied Continuum Shift and the four connected systems.
 
 ## Judge testing instructions
 
@@ -147,6 +171,8 @@ End on the improved Meal Architect score or LIFE7 mark.
    limited to Greek yoghurt, broccoli and olive oil.
 5. Press **Apply all** and confirm the score reaches 86.
 6. Use Undo in the toast if you want to repeat the transformation.
+7. Open https://life7.maxdesign.rs/continuum, choose any life change, press
+   **Compose the shift**, inspect the four-system Change Ledger and apply it.
 
 The app remains usable if model access is temporarily unavailable: the
 deterministic recommendations and calculations stay active.
@@ -167,6 +193,8 @@ deterministic recommendations and calculations stay active.
 ## Honest scope disclosure
 
 The Meal Architect uses the real GPT-5.6 Sol integration described above.
-Coach, week-generation narrative, scanning, messaging delivery and commerce
-remain deterministic or simulated demo experiences. Nutrition guidance is
+Continuum Shift is a deterministic interactive product prototype; its changes
+are rule-verified demo scenarios, not model-generated or persisted. Coach,
+week-generation narrative, scanning, messaging delivery and commerce remain
+deterministic or simulated demo experiences. Nutrition guidance is
 informational and not medical advice.
