@@ -65,17 +65,17 @@ Press **Apply all**. Let 58 → 86 and the light wave finish.
 Press **Try the winning demo phrase**. Point to the transcript and extracted
 signals.
 
-> I do not edit four screens. I tell LIFE7 what changed: I slept only five hours
-> and still want to protect Friday training. LIFE7 shows exactly what it heard
-> before it composes anything. LIFE7 does not store the audio.
+> I do not edit four screens. I tell LIFE7 what changed: the spinach expires
+> tomorrow and I only have twenty minutes to cook. LIFE7 shows exactly what it
+> heard before it composes anything. LIFE7 does not store the audio.
 
 ### 1:58–2:25 — Protected shift
 
 Point to **Protected Constants**, then press **Compose the shift**. Let all four
 ledger cards resolve.
 
-> Protein, budget, sleep and family dinner are protected. LIFE7 finds the
-> smallest coordinated change across Today, Week, Shopping and Pantry. Every
+> Protein, budget, preparation time and tonight's dinner are protected. LIFE7
+> finds the smallest coordinated change across Today, Week, Shopping and Pantry. Every
 > downstream effect is visible in the Change Ledger, and the whole shift remains
 > reversible.
 
@@ -96,7 +96,7 @@ End. Do not continue into secondary screens.
 
 1. `/architect` → **Analyze with GPT-5.6** → **Apply all**.
 2. `/continuum` → **Restart demo** → **Try the winning demo phrase**.
-3. Confirm the extracted sleep/recovery/training signals.
+3. Confirm the extracted spinach/expiry/preparation-time signals.
 4. **Compose the shift** → inspect Today, Week, Shopping and Pantry.
 5. **Apply 4 coordinated changes**.
 

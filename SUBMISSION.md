@@ -150,8 +150,8 @@ Let the ring, cards, light wave and toast finish.
 
 ### 1:58–2:30 — Continuum Shift — the product moat
 
-Open **Continuum Shift** and press **Try the winning demo phrase** (or say: “I
-slept only five hours and still want to protect Friday training”). Point to the
+Open **Continuum Shift** and press **Try the winning demo phrase** (or say: “The
+spinach expires tomorrow and I only have 20 minutes to cook”). Point to the
 transcript and the three extracted signals, then press **Compose the shift**.
 
 > I do not edit four screens. I tell LIFE7 what changed. It protects the protein
@@ -181,7 +181,7 @@ End on the applied Continuum Shift and the four connected systems.
 6. Use Undo in the toast if you want to repeat the transformation.
 7. Open https://life7.maxdesign.rs/continuum and press **Restart demo**.
 8. Use **Try the winning demo phrase** to test Voice Continuum without granting
-   microphone access; confirm the extracted sleep, recovery and training signals.
+   microphone access; confirm the extracted spinach, expiry and preparation-time signals.
 9. Press **Compose the shift**, inspect the four-system Change Ledger and apply it.
 
 The app remains usable if model access is temporarily unavailable: the

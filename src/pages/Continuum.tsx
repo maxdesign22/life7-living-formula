@@ -150,7 +150,12 @@ const SYSTEM_ICONS: Record<ShiftChange['system'], LucideIcon> = {
   Pantry: PackageCheck,
 }
 
-const PROTECTIONS = ['Protein floor', 'Budget ceiling', 'Sleep window', 'Family dinner'] as const
+const PROTECTIONS_BY_SCENARIO: Record<ShiftId, readonly string[]> = {
+  sleep: ['Protein floor', 'Budget ceiling', 'Sleep window', 'Friday training'],
+  schedule: ['Protein floor', 'Budget ceiling', 'Sleep window', 'Family dinner'],
+  budget: ['Protein floor', 'Budget ceiling', 'Complete dinners', 'Prep time'],
+  expiry: ['Protein floor', 'Budget ceiling', 'Prep time', 'Tonight’s dinner'],
+}
 
 const VOICE_SIGNALS: Record<ShiftId, readonly string[]> = {
   sleep: ['Sleep · 5 hours', 'Recovery risk', 'Protect training'],
@@ -230,7 +235,7 @@ function VoiceShiftInput({ onRecognised }: { onRecognised: (id: ShiftId) => void
     recognition.start()
   }
 
-  const useDemoPhrase = () => interpret('I slept only five hours and still want to protect Friday training.')
+  const useDemoPhrase = () => interpret('The spinach expires tomorrow and I only have 20 minutes to cook.')
   const matchedScenario = matchedId ? SCENARIOS.find((item) => item.id === matchedId) : null
 
   return (
@@ -297,7 +302,7 @@ function VoiceShiftInput({ onRecognised }: { onRecognised: (id: ShiftId) => void
                   setVoiceState('idle')
                   setMatchedId(null)
                 }}
-                placeholder="e.g. I slept five hours and dinner is late…"
+                placeholder="e.g. The spinach expires tomorrow…"
                 className="min-h-11 min-w-0 flex-1 rounded-r-pill border border-line bg-white/65 px-4 t-ui-sm text-ink outline-none transition-colors placeholder:text-ink-faint focus:border-champagne"
               />
               <button type="submit" disabled={!transcript.trim()} className="min-h-11 rounded-r-pill bg-forest px-5 t-ui-sm font-bold text-soft-white transition-colors hover:bg-green disabled:cursor-not-allowed disabled:opacity-40">
@@ -362,7 +367,7 @@ function ContinuumCore({ phase }: { phase: Phase }) {
 export default function Continuum() {
   const [selectedId, setSelectedId] = useState<ShiftId>('sleep')
   const [phase, setPhase] = useState<Phase>('idle')
-  const [protections, setProtections] = useState<ReadonlySet<string>>(new Set(PROTECTIONS))
+  const [protections, setProtections] = useState<ReadonlySet<string>>(new Set(PROTECTIONS_BY_SCENARIO.sleep))
   const [demoKey, setDemoKey] = useState(0)
   const timerRef = useRef<number | null>(null)
   const { toast } = useToast()
@@ -376,6 +381,7 @@ export default function Continuum() {
     if (timerRef.current) window.clearTimeout(timerRef.current)
     setSelectedId(id)
     setPhase('idle')
+    setProtections(new Set(PROTECTIONS_BY_SCENARIO[id]))
   }
 
   const recogniseVoiceChange = (id: ShiftId) => choose(id)
@@ -399,7 +405,7 @@ export default function Continuum() {
     if (timerRef.current) window.clearTimeout(timerRef.current)
     setSelectedId('sleep')
     setPhase('idle')
-    setProtections(new Set(PROTECTIONS))
+    setProtections(new Set(PROTECTIONS_BY_SCENARIO.sleep))
     setDemoKey((current) => current + 1)
     window.requestAnimationFrame(() => document.querySelector('main')?.scrollTo({ top: 0, behavior: 'smooth' }))
     toast('Demo reset — ready for a clean Continuum run.', { tone: 'sage' })
@@ -462,7 +468,7 @@ export default function Continuum() {
             </div>
             <p className="t-ui-sm mt-2 text-ink-faint">Continuum may move the plan, never these promises.</p>
             <div className="mt-3 flex flex-wrap gap-1.5">
-              {PROTECTIONS.map((item) => {
+              {PROTECTIONS_BY_SCENARIO[selectedId].map((item) => {
                 const active = protections.has(item)
                 return (
                   <button

@@ -20,7 +20,7 @@
   scroll reaches the exact end (`remaining: 0`).
 - Live Meal Architect request resolves as `gpt-5.6-sol · LIFE7 verified`.
 - Canonical transformation reaches 58 → 86 and exposes Undo.
-- Voice demo phrase produces the sleep, recovery and training signals.
+- Voice demo phrase produces the spinach, expiry and preparation-time signals.
 - A separate budget sentence selects the Budget scenario.
 - Continuum Compose → four-system ledger → Apply completes.
 - **Restart demo** restores the voice prompt, sleep scenario, Protected
