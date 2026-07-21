@@ -321,7 +321,7 @@ export default function ProfileCard({
         ) : (
           <EditableNumber label="Weight" value={profile.weightKg} suffix="kg" min={40} max={220} onCommit={(v) => commit({ weightKg: v }, true)} />
         )}
-        <div className="relative col-span-2 overflow-hidden rounded-r-sm">
+        <div className="relative col-span-2 rounded-r-sm">
           {/* one soft champagne shimmer over the goal row after any edit —
               sweeps once, then unmounts (the old `animate-wave-sweep` beam
               snapped back to translateX(0) at the end and parked over the
